@@ -5,7 +5,7 @@
 ### 简单示例
 一个基本的CMakeLists.txt是这样的：
 
-```CMakeLists.txt
+```cmake
 PROJECT (HELLO)
 SET(SRC_LIST main.c module1.c module2.c)
 ADD_EXECUTABLE(hello ${SRC_LIST})
@@ -26,7 +26,7 @@ add_executable定义了一个**target**，其名字为hello，其类型为execut
 假设lib1文件夹下有一个动态链接库， lib2文件夹下有一个静态连接库，我们的hello组件怎么使用他们？
 
 
-```CMakeLists.txt
+```cmake
 PROJECT (HELLO)
 SET(SRC_LIST main.c module1.c module2.c)
 ADD_EXECUTABLE(hello ${SRC_LIST})
@@ -40,13 +40,13 @@ add_subdirectory相当于C或是makefile中的include，这要求lib1, lib2文�
 
 lib1下的CMakeLists.txt:
 
-```CMakeLists.txt
+```cmake
 set(Sources lib1.c lib1_module1.c)
 add_library(lib1 SHARED ${Sources})
 ```
 
 lib2下的CMakeLists.txt:
-```
+```cmake
 add_library(lib2 STATIC lib2.c lib2_module1.c)
 ```
 
@@ -56,25 +56,25 @@ add_library(lib2 STATIC lib2.c lib2_module1.c)
 
 如果lib1中有一个lib1.h，在main.c中需要包含，我们可以在main.c中写为
 
-```c
+```cmake
 #include "lib1/lib1.h"
 ```
 
 但有时候我们想写基于lib1的目录的相对路径，比如想包含的是lib1/api/api.h，我们希望在main.c中写
 
-```c
+```cmake
 #include "api/api.h"
 ```
 
 这时我们希望在hello中加一个头文件搜索路径，即在gcc中加一条`-Ilib1`，代码应该这样写：
 
-```CMakeLists.txt
+```cmake
 target_include_directories(hello lib1)
 ```
 
 全文为：
 
-```CMakeLists.txt
+```cmake
 PROJECT (HELLO)
 SET(SRC_LIST main.c module1.c module2.c)
 ADD_EXECUTABLE(hello ${SRC_LIST})
@@ -90,7 +90,7 @@ target_include_directories(hello lib1)
 
 target_link_libraries和target_include_directories两条指令都只作用于hello这个**target**，如果你在当前CMakeLists.txt中还定义了别的**target**，则是不起作用的。
 
-```CMakeLists.txt
+```cmake
 PROJECT (HELLO)
 SET(SRC_LIST main.c module1.c module2.c)
 ADD_EXECUTABLE(hello ${SRC_LIST})
@@ -107,7 +107,7 @@ target_include_directories(hello lib1)
 
 target_link_libraries和target_include_directories是一个局域作用域的指令，它们的作用域限定为指定的**target**。它们还有一个对应的全局作用域版本，为link_libraries和include_directories。全局作用域版本对于这两条指令之后的所有target都生效，对之后包含的子目录中定义的target也生效。语法就是不用写**target**。
 
-```CMakeLists.txt
+```cmake
 PROJECT (HELLO)
 
 # dependencies
@@ -130,7 +130,7 @@ add_executable(hello2 main2.c)
 放在buid/lib3下也不妥，万一hello下面也有一个子文件夹加lib3呢？
 
 所以这里要求你手动指定：
-```CMakeLists.txt
+```cmake
 add_subdirectory(../lib3 ${PROJECT_BINARY_DIR}/external/lib3)
 
 ```
@@ -142,3 +142,22 @@ add_subdirectory(../lib3 ${PROJECT_BINARY_DIR}/external/lib3)
 上面我们遇到了一个CMake内置变量，其实如果代码写得复杂了，好多CMake内置变量是用得到的。这里只简单介绍常用的，不常用的参考附录。
 
 ### 分支控制
+
+
+### 开关
+
+1. 字符串判断
+```cmake
+SET(CMAKE_BUILD_TYPE Debug)
+IF (CMAKE_BUILD_TYPE STREQUAL Debug)        
+    ADD_DEFINITIONS(-DDEBUG)                 
+ENDIF(CMAKE_BUILD_TYPE STREQUAL Debug)
+```
+
+2. ON/OFF
+```cmake
+SET(ENABLE_DEBUG ON)
+IF(ENABLE_DEBUG)
+    ADD_DEFINITIONS(-DDEBUG)
+ENDIF(ENABLE_DEBUG)
+```

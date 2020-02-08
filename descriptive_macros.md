@@ -12,7 +12,7 @@
     vermagic:       3.2.0-29-generic SMP mod_unload modversions
     parm:           netconsole:
     netconsole=[src-port]@[src-ip]/[dev],[tgt-port]@<tgt-ip>/[tgt-macaddr] (string)
-
+    
     modinfo macvlan.ko
     filename:       macvlan.ko
     alias:          rtnl-link-macvlan
@@ -23,34 +23,48 @@
     depends:
     intree:         Y
     vermagic:       3.2.0-29-generic SMP mod_unload modversions
-
+    
     version:        3.5.24-k2-NAPI
 
 上述显示的内容分别由以下宏定义产生：
 
 author:
 
-    MODULE_AUTHOR("xxxxx")
+```c
+MODULE_AUTHOR("xxxxx")
+```
 description:
 
-    MODULE_DESCRIPTION("yyyyyyyyyyyy");
+```c
+MODULE_DESCRIPTION("yyyyyyyyyyyy");
+```
 license:
 
-    MODULE_LICENSE("GPL");
+```c
+MODULE_LICENSE("GPL");
+```
 alias:
 
-    MODULE_ALIAS("alternate_name");
+```c
+MODULE_ALIAS("alternate_name");
+```
 
 version:
 
-    MODULE_VERSION(version_string)
+```c
+MODULE_VERSION(version_string)
+```
 
 parm:
 
-    static char *string_test = “this is a test”;
-    static num_test = 1000;
-    module_param (num_test,int,S_IRUGO);
-    module_param (string_test,charp,S_ITUGO);
+```c
+static char *string_test = “this is a test”;
+static num_test = 1000;
+module_param (num_test,int,S_IRUGO);
+module_param (string_test,charp,S_ITUGO);
+```
 
 
-    #if LINUX_VERSION_CODE>=KERNULVERSION(2.4.9)
+```c
+#if LINUX_VERSION_CODE>=KERNULVERSION(2.4.9)
+```

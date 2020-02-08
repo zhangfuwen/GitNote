@@ -4,13 +4,15 @@
 ##irq_desc
 Linux用一个irq_desc结构体来描述一个中断向量的相关信息。利用irq_desc[]数组来描述所有的中断向量。在多核或多CPU系统中，每个逻辑CPU都可以各自独立地处理中断向量，因而系统中可以会存在多个irq_desc[]，即irq_desc[]是一个percpu的数组。
 
-    struct irq_desc irq_desc[NR_IRQS] __cacheline_aligned_in_smp = {
-        [0 ... NR_IRQS-1] = {
-            .handle_irq = handle_bad_irq,
-            .depth      = 1,
-            .lock       = __RAW_SPIN_LOCK_UNLOCKED(irq_desc->lock),
-        }
-    };
+```c
+struct irq_desc irq_desc[NR_IRQS] __cacheline_aligned_in_smp = {
+    [0 ... NR_IRQS-1] = {
+        .handle_irq = handle_bad_irq,
+        .depth      = 1,
+        .lock       = __RAW_SPIN_LOCK_UNLOCKED(irq_desc->lock),
+    }
+};
+```
 
 irq_desc描述的信息包括这个中断向量的**通用处理函数**，中断控制器，中断处理函数列表等。
 一个中断被解发后，会运行一个通用中断处理函数handle_irq，但系统中可能用多个硬件会触发同一个中断向量，即这个irq可能是共享的(IRQF_SHARED)，这时系统需要这个通用处理函数遍历中断处理函数列表*action，运上面的每个中断处理函数。*actiong列表上的元素就是驱动开发者调用request_irq时挂上去的。*action本身是一个单向链表结构体，由next指针指向下一个操作，因此action实际上是一个操作链，可以用于共享IRQ线的情况。

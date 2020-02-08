@@ -12,56 +12,58 @@ github上有一个项目使用golang提供了类似的功能，其地址是https
 
 下面的示例代码展示了如何实现第一步，杀死旧的进程：
 
-    package main
+```go
+package main
 
-    import (
-    	"fmt"
-    	"strings"
-	    "time"
+import (
+	"fmt"
+	"strings"
+    "time"
 
-    	"github.com/jamesharr/expect"
-    )
+	"github.com/jamesharr/expect"
+)
 
-    func main() {
-	    // Spawn an expect process
-	    ssh, err := expect.Spawn("ssh", "root@zhangfuwen.com")
-	    if err != nil {
-		    fmt.Println(err)
-		    return
-	    }
-	    ssh.SetTimeout(10 * time.Second)
-	    const PROMPT = `.*#`
+func main() {
+    // Spawn an expect process
+    ssh, err := expect.Spawn("ssh", "root@zhangfuwen.com")
+    if err != nil {
+	    fmt.Println(err)
+	    return
+    }
+    ssh.SetTimeout(10 * time.Second)
+    const PROMPT = `.*#`
 
-	    // Login
-	    ssh.Expect(`[Pp]assword:`)
-	    ssh.SendMasked("876400aa") // SendMasked hides from logging
-	    ssh.Send("\n")
-	    ssh.Expect(PROMPT) // Wait for prompt
+    // Login
+    ssh.Expect(`[Pp]assword:`)
+    ssh.SendMasked("876400aa") // SendMasked hides from logging
+    ssh.Send("\n")
+    ssh.Expect(PROMPT) // Wait for prompt
 
-	    // Run a command
-	    ssh.SendLn("ps -ef | grep ' ./kentu' | awk '{ print $2 }'")
-	    match, err := ssh.Expect(PROMPT) // Wait for prompt
-	    results := strings.Split(match.Before, "\n")
-	    var pid string
-	    if len(results) >= 2 {
-		    fmt.Println("pid is ", results[1])
-		    pid = results[1]
-	    } else {
-		    fmt.Println("cannot find a process of this name")
-		    return
-	    }
-
-	    ssh.SendLn("kill -9 " + pid)
-	    match, err = ssh.Expect(PROMPT)
-	    fmt.Println(match.Before)
-
-	    // Wait for EOF
-	    ssh.SendLn("exit")
-	    ssh.ExpectEOF()
+    // Run a command
+    ssh.SendLn("ps -ef | grep ' ./kentu' | awk '{ print $2 }'")
+    match, err := ssh.Expect(PROMPT) // Wait for prompt
+    results := strings.Split(match.Before, "\n")
+    var pid string
+    if len(results) >= 2 {
+	    fmt.Println("pid is ", results[1])
+	    pid = results[1]
+    } else {
+	    fmt.Println("cannot find a process of this name")
+	    return
     }
 
-以下代码实现第三步，即启动新的子服务进程：
+    ssh.SendLn("kill -9 " + pid)
+    match, err = ssh.Expect(PROMPT)
+    fmt.Println(match.Before)
+
+    // Wait for EOF
+    ssh.SendLn("exit")
+    ssh.ExpectEOF()
+}
 ```
+
+以下代码实现第三步，即启动新的子服务进程：
+```go
 func step3() { // start process
 	// Spawn an expect process
 	ssh, err := expect.Spawn("ssh", "root@zhangfuwen.com")
@@ -87,3 +89,5 @@ func step3() { // start process
 }```
 
 
+
+```
