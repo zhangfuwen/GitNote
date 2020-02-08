@@ -1,20 +1,68 @@
-# 为什么写这本书
-提到Linux驱动程序设计，不得不提经典的LDD3。这本书基本每个学习Linux编程的人都读过，也有很多人买一本放在桌上做为速查手册。
+# Summary
 
-国内也有很多人写Linux驱动方面的书目，其中也不乏好书。多数是针对某一个特殊的硬件平台来写的，比如说流行的ARM处理器等。
+* [Introduction](README.md)
+* [内核模块与驱动程序](kernel_module_versus_device_driver.md)
+   * [打印等级](print_level.md)
+* [字符设备驱动](char_dev.md)
+   * [设备号](dev_no.md)
+   * [file_operations结构体](file_operations.md)
+   * [描述性宏定义](descriptive_macros.md)
+* [控制硬件](control_hardware/README.md)
+* [中断系统](interrupt/README.md)
+   * [使用workqueue](interrupt/workqueue.md)
+   * [MSI中断](msi.md)
+* [go scripting](go_scripting/README.md)
+* [nginx](nginx/README.md)
+   * [serve static files](nginx/serve_static_files.md)
+* [vscode](vscode/README.md)
+* [linux物理内存](linux/README.md)
+   * [repo命令](linux/repo.md)
 
-以上书目写得都很好，完全能满足大家学习使用。那么我又何苦在写这么一本书呢？
+## 技术笔记
 
-我觉得Linux驱动开发者还是有一些痛点存在的。
-1. Linux内核代码量大，常用的函数也很多，开发者在实现某个功能的时候通常没有办法很快的找到自己需要使用的内核提供的函数或宏定义。上述国内外的书目通常是纸质的，篇幅所限，通常做为入门书言尽于此，不能成为一个合格的速查手册。
-2. Linux内核版本迭代快，内核框架，函数定义在不同版本之间很容易有较大的变化，上述书目通常针对某一版本的内核而写，做为纸质书籍，另一个限制就是不能很快的跟随内核变化更新版本。
+* [Android](android/README.md)
+  * [Introduction](android/README.md)
+  * [Android 通过repo下载代码](android/chapter1.md)
+  * [manifest库详解](android/manifest.md)
+  * [常用的repo子命令](android/repo.md)
+  * [Android/Linux Input子系统与uinput用户层事件注入](android/androidlinux-inputuinput.md)
+  * [Gradle及Gradle Wrapper的使用](android/gradlegradle-wrapper.md)
+  * [Butter Knife Android 常用注解库](android/butter-knife-android-chang-yong-zhu-jie-ku.md)
+* [Linux](linux/linux-work-queue.md)
+  * [linux驱动中使 work queue处理中断](linux/linux-work-queue.md)
+* [工具软件](utils/git.md)
+  * [git命令行的使用与配置](utils/git.md)
+  * [用docker提供mysql数据库服务](utils/dockermysql.md)
+* [Golang](golang/golang.md)
+  * [Golang编码规范](golang/golang.md)
+* [Python](python/pythonopencv.md)
+  * [使用python调用opencv](python/pythonopencv.md)
+* [Java](java/README.md)
 
-立足以上两点，我想写一本电子书籍或者称为文档也可：
-1. 要尽量覆盖足够多驱动编程接口，包括函数，宏定义等。
-2. 对不同版本内核的差异做跟踪，不同内核版本上工作的开发者都可以信任这本书所提供的内容。
-3. 提供详细的示例程序，尽量短小，但又能直接编译为一个内核模块直接拿去测试。跟踪内核版本。
+## 知乎专栏文章
 
-我是为了兴趣和金钱学习Linux内核编程的，但写这本书本身的乐趣并不多，多是一些锁碎的资料查阅和代码测试的工作，我希望这本书能给我带来一些收入，无论多寡。这样一来可以弥补我所牺牲的陪伴老婆孩子的时间，二来也可以挡住老婆的嫌弃我“光见干活不见挣钱”的唠叨。
+* [现代计算机](modern-computing/x86qi-dong.md)
+  * [001. x86启动](modern-computing/x86qi-dong.md)
+  * [002. Nandflash芯片简介](modern-computing/nandflash.md)
+  * [003. 闪存的磨损均衡](modern-computing/wear-leveling-of-nand-flash.md)
+  * [004. Cache的组织形式](modern-computing/cache.md)
+  * [005. 细说80286](modern-computing/xi-shuo-80286.md)
+  * [006. 80286的调用门描述符](modern-computing/80286.md)
+  * [007. 80286 任务状态段与任务切换](modern-computing/80286-tss.md)
+  * [008. 80286 中断门和陷阱门](modern-computing/80286-interrupt-gate.md)
+  * [009. x86计算机的架构演进](modern-computing/x86.md)
+  * [010. 80386的页式内存管理](modern-computing/80386.md)
+  * [011. 80386的缓存Cache](modern-computing/80386cache.md)
+  * [012. 80486的轻微改善](modern-computing/80486.md)
+  * [013. 80586-初代奔腾的超标量](modern-computing/80586-.md)
+  * [014. 80686-Pentium Pro](modern-computing/80686-pentium-pro.md)
+  * [015. 7代x86处理器Pentium 4](modern-computing/7dai-x86-chu-li-qi-pentium-4.md)
+  * [016. 8代x86微架构Intel Core](modern-computing/8dai-ma-x86-wei-jia-gou-intel-core.md)
+  * [017. 显卡的发展历史回顾--之一](modern-computing/017-display-card.md)
+  * [018. 显卡的发展历史回顾--之二](modern-computing/018-playing-width-cga.md)
+  * [020. 显卡到AI芯片--之一](modern-computing/020-modern-gpu.md)
+  * [021. 显卡到AI芯片--之二](modern-computing/021-modern-gpu2.md)
+  * [022. 显卡到AI芯片--之三](modern-computing/022-modern-gpu-3.md)
 
-虽然老婆有时会唠叨我一下，偶尔说我两句却从没有真正阻止做我想做的事。她说我是假，背后默默的支持却是真的，我常常会暗暗地感到如此的幸运。借此篇幅感谢我的爱妻。
+![](./images/1.JPG)
 
