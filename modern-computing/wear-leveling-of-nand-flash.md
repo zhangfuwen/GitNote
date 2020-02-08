@@ -36,7 +36,7 @@
 业界研究的磨损均衡方法通常是动态磨损均衡。动态磨损均衡有很多种方法，并且还持续有新的方法提出。
 
 # 3. 参考资料
-[1. Wear-Leveling Techniques in NAND Flash Devices](docs/tn2942_nand_wear_leveling.pdf)
+[1. Wear-Leveling Techniques in NAND Flash Devices](../attachments/tn2942_nand_wear_leveling.pdf)
 
 **长按识别二维码或手机扫描二维码
 打赏我1.5元**

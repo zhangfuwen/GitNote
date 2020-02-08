@@ -1,1 +1,1 @@
-see [Summary]*(SUMMARY.md)
+see [Summary](SUMMARY.md)

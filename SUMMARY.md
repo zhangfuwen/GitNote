@@ -9,7 +9,7 @@
 * [字符设备驱动](linux/driver/char_dev.md)
 * [设备号](linux/driver/dev_no.md)
 * [file_operations结构体](linux/driver/file_operations.md)
-* [linux驱动中使 work queue处理中断](linux/linux-work-queue.md)
+* [linux驱动中使 work queue处理中断](linux/driver/linux-work-queue.md)
 * [MSI中断](linux/driver/msi.md)
 * [控制硬件](control_hardware/README.md)
 * [中断系统](interrupt/README.md)
