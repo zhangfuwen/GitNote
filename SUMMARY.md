@@ -1,22 +1,20 @@
 # Summary
 
+## linux
+
 * [Introduction](README.md)
-* [内核模块与驱动程序](kernel_module_versus_device_driver.md)
-   * [打印等级](print_level.md)
-* [字符设备驱动](char_dev.md)
-   * [设备号](dev_no.md)
-   * [file_operations结构体](file_operations.md)
-   * [描述性宏定义](descriptive_macros.md)
+* [内核模块与驱动程序](linux/driver/kernel_module_versus_device_driver.md)
+* [打印等级](linux/driver/print_level.md)
+* [描述性宏定义](linux/driver/descriptive_macros.md)
+* [字符设备驱动](linux/driver/char_dev.md)
+* [设备号](linux/driver/dev_no.md)
+* [file_operations结构体](linux/driver/file_operations.md)
+* [linux驱动中使 work queue处理中断](linux/linux-work-queue.md)
+* [MSI中断](linux/driver/msi.md)
 * [控制硬件](control_hardware/README.md)
 * [中断系统](interrupt/README.md)
    * [使用workqueue](interrupt/workqueue.md)
-   * [MSI中断](msi.md)
-* [go scripting](go_scripting/README.md)
-* [nginx](nginx/README.md)
-   * [serve static files](nginx/serve_static_files.md)
-* [vscode](vscode/README.md)
 * [linux物理内存](linux/README.md)
-   * [repo命令](linux/repo.md)
 
 ## 技术笔记
 
@@ -28,8 +26,6 @@
   * [Android/Linux Input子系统与uinput用户层事件注入](android/androidlinux-inputuinput.md)
   * [Gradle及Gradle Wrapper的使用](android/gradlegradle-wrapper.md)
   * [Butter Knife Android 常用注解库](android/butter-knife-android-chang-yong-zhu-jie-ku.md)
-* [Linux](linux/linux-work-queue.md)
-  * [linux驱动中使 work queue处理中断](linux/linux-work-queue.md)
 * [工具软件](utils/git.md)
   * [git命令行的使用与配置](utils/git.md)
   * [用docker提供mysql数据库服务](utils/dockermysql.md)
@@ -38,6 +34,11 @@
 * [Python](python/pythonopencv.md)
   * [使用python调用opencv](python/pythonopencv.md)
 * [Java](java/README.md)
+* [repo命令](linux/repo.md)
+* [go scripting](go_scripting/README.md)
+* [nginx](nginx/README.md)
+   * [serve static files](nginx/serve_static_files.md)
+* [vscode](vscode/README.md)
 
 ## 知乎专栏文章
 
@@ -63,6 +64,4 @@
   * [020. 显卡到AI芯片--之一](modern-computing/020-modern-gpu.md)
   * [021. 显卡到AI芯片--之二](modern-computing/021-modern-gpu2.md)
   * [022. 显卡到AI芯片--之三](modern-computing/022-modern-gpu-3.md)
-
-![](./images/1.JPG)
 
