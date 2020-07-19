@@ -41,6 +41,9 @@ see [Summary](SUMMARY.md)
 * [nginx](./nginx/README.md)
    * [serve static files](./nginx/serve_static_files.md)
 * [vscode](./vscode/README.md)
+* [3D]
+   * [3D图形相关术语简述](./3D/坐标系.md)
+   * [ubuntu vulkan开发环境搭建](./3D/ubuntu-vulkan-env.md)
 
 ## 知乎专栏文章
 
