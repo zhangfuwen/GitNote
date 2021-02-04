@@ -4,3 +4,6 @@
 4. tmux
 5. jetbrains
 6. foxit reader
+7. zsh installation
+
+`sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
