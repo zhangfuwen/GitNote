@@ -7,3 +7,16 @@
 7. zsh installation
 
 `sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
+
+或
+
+`sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"`
+
+8. install krb5  `apt install krb5`
+
+
+9. android ubuntu image:
+
+https://github.com/Neo-Oli/termux-ubuntu/blob/master/ubuntu.sh
+
+https://partner-images.canonical.com/core/groovy/current/
