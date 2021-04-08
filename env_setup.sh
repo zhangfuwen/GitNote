@@ -5,6 +5,11 @@ if [ "$EUID" -ne 0 ]; then
 	SUDO=sudo
 fi
 
+if [[ ! $(command -v wget) || ! $(command -v curl) ]];then
+	echo "this script need wget and curl to work correctly, installing"
+	$SUDO apt install wget curl
+fi
+
 function download_and_run()
 {
     local url=$1

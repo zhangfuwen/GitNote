@@ -1,6 +1,7 @@
 #!/bin/bash
 
-function download_nvim_x86
+VIM=vim
+function download_nvim_x86()
 {
     echo "try install neovim"
     mkdir ~/bin/
@@ -9,19 +10,19 @@ function download_nvim_x86
     echo "export PATH=~/bin/nvim-linux64/bin:$PATH" >> ~/.bashrc
     source ~/.bashrc 
     rm nvim-linux64.tar.gz  -C ~/bin/
-    $VIM=nvim
+    VIM=nvim
 }
 
-function download_nvim_arm64
+function download_nvim_arm64()
 {
     echo "try install vim"
     $SUDO apt-get install -y vim || $SUDO yum install -y vim
-    $VIM=vim
+    VIM=vim
 }
 
-if [[ $architecture == "aarch64" ]]; then
+if [[ "$architecture" == "aarch64" ]]; then
     download_nvim_arm64
-elif [[ $architecture == "x86_64" ]]; then
+elif [[ "$architecture" == "x86_64" ]]; then
     download_nvim_x86
 fi
 
