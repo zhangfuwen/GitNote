@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function download_nvim_x86()
+function download_nvim_x86
 {
     echo "try install neovim"
     mkdir ~/bin/
@@ -12,7 +12,7 @@ function download_nvim_x86()
     $VIM=nvim
 }
 
-function download_nvim_arm64()
+function download_nvim_arm64
 {
     echo "try install vim"
     $SUDO apt-get install -y vim || $SUDO yum install -y vim
@@ -21,10 +21,12 @@ function download_nvim_arm64()
 
 if [[ $architecture == "aarch64" ]]; then
     download_nvim_arm64
-else if [[ $architecture == "x86_64" ]]; then
+elif [[ $architecture == "x86_64" ]]; then
     download_nvim_x86
 fi
 
+echo "init nvim config file"
+mkdir -p ~/.config/nvim
 cat > ~/.config/nvim/init.vim << EOF
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath=&runtimepath
@@ -33,10 +35,15 @@ EOF
 
 # $SUDO apt install vim
 
+echo "installing vim-plug"
 curl -fLo ~/.vimrc --create-dirs https://gitee.com/zhangfuwen/GitNote/raw/master/vim/vimrc
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
+echo "install vim pluggins"
 $VIM -E -c PlugInstall -c q
 
+echo "install ctags"
 $SUDO apt-get install -y ripgrep cppman ctags || $SUDO yum install -y ripgrep cppman ctags || $SUDO dnf install -y ripgrep cppman ctags
+
+
