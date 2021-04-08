@@ -1,10 +1,5 @@
 #!/bin/bash
 
-SUDO=""
-if [ "$EUID" -ne 0 ]
-	SUDO=sudo
-fi
-
 $SUDO apt install vim
 curl -fLo ~/.vimrc --create-dirs https://gitee.com/zhangfuwen/GitNote/raw/master/vim/vimrc
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
