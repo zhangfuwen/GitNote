@@ -1,5 +1,5 @@
 " install vim plug: curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 " sudo apt install ripgrep  # install rg for global text searhch in Leaderf rg
 " sudo apt install cppman; cppman -s cppreference.com; cppman -r
 call plug#begin('~/.vim/plugged')
@@ -13,7 +13,6 @@ Plug 'airblade/vim-gitgutter'
 
 Plug 'scrooloose/nerdtree'
 Plug 'majutsushi/tagbar'
-Plug 'Yggdroot/LeaderF',{'do':'./install.sh'}
 
 "Plug 'motemen/git-vim'
 Plug 'tpope/vim-fugitive'
@@ -37,6 +36,7 @@ Plug 'sgur/vim-textobj-parameter'
 Plug 'w0rp/ale'
 
 if(has('python3'))
+    Plug 'Yggdroot/LeaderF',{'do':'./install.sh'}
 	Plug 'Shougo/deoplete.nvim'
 	Plug 'roxma/nvim-yarp'
 	Plug 'roxma/vim-hug-neovim-rpc'
