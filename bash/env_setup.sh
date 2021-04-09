@@ -149,7 +149,7 @@ fi
 function download_and_run()
 {
     local url=$1
-    sh -c "$(wget $url -O -)"
+    bash -c "$(wget $url -O -)"
 }
 
 function install_gh()

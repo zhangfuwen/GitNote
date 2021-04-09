@@ -48,7 +48,7 @@ fi
 # $SUDO apt install vim
 
 echo "installing vim-plug"
-if [[ ! -f ~/.vimrc || $(user_confirm "~/.vimrc exists, do you want us to append new contents to it?") ]]
+if [[ ! -f ~/.vimrc || $(user_confirm "~/.vimrc exists, do you want us to append new contents to it?") ]]; then
     set -x
     curl -fLo ~/.vimrc --create-dirs https://gitee.com/zhangfuwen/GitNote/raw/master/vim/vimrc
     set +x
