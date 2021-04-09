@@ -1,5 +1,127 @@
 #!/bin/bash
 
+#ESC_SEQ='\x1b['
+sec_seq='\033['
+
+normal="0"
+
+reset_bold="21"
+reset_ul="24"
+
+bold="1"
+dim="2"
+italic="3"
+underline="4"
+blink="5"
+inverted="7"
+strikethrough="9"
+
+# Foreground colours
+black="30"
+red="31"
+green="32"
+yellow="33"
+blue="34"
+magenta="35"
+cyan="36"
+white="37"
+# bright
+br_black="90"
+br_red="91"
+br_green="92"
+br_yello="93"
+br_blue="94"
+br_magenta="95"
+br_cyan="96"
+br_white="97"
+
+# Background colours (optional)
+bg_black="40"
+bg_red="41"
+bg_green="42"
+bg_yellow="43"
+bg_blue="44"
+bg_magenta="45"
+bg_cyan="46"
+bg_white="47"
+# light
+bg_br_black="100"
+bg_br_red="101"
+bg_br_green="102"
+bg_br_yello="103"
+bg_br_blue="104"
+bg_br_magenta="105"
+bg_br_cyan="106"
+bg_br_white="107"
+
+function set_style() {
+    if [[ $# == 5 ]]; then
+        printf "\033[${!1};${!2};${!3};${!4};${!5}m"
+    elif [[ $# == 4 ]]; then # fg, bg, font
+        printf "\033${!1};${!2};${!3};${!4}m"
+    elif [[ $# == 3 ]]; then # two functions
+        printf "\033[${!1};${!2};${!3}m"
+    elif [[ $# == 2 ]]; then
+        printf "\033[${!1};${!2}m"
+    elif [[ $# == 1 ]]; then
+        printf "\033[${!1}m" 
+    fi
+}
+
+function style() {
+    if [[ $# == 5 ]]; then
+        printf "\033[${!1};${!2};${!3};${!4}m${5}\033[${normal}m"
+    elif [[ $# == 4 ]]; then # fg, bg, font
+        printf "\033${!1};${!2};${!3}m${4}\033[${normal}m"
+    elif [[ $# == 3 ]]; then # two functions
+        printf "\033[${!1};${!2}m${3}\033[${normal}m"
+    elif [[ $# == 2 ]]; then
+        printf "\033[${!1}m${2}\033[${normal}m"
+    elif [[ $# == 1 ]]; then
+        printf $1
+    fi
+}
+
+
+function println() {
+    if [[ $# == 1 ]];then
+        printf "$@\n"
+    else
+        first=$1
+        shift;
+        rest="$@"
+        printf "$1\n" $rest
+    fi
+}
+
+function log_e() {
+    printf "$(style inverted bold 'error:')"
+    set_style red bold
+    printf "$@"
+    set_style normal
+    printf "\n"
+}
+
+function log_w() {
+    printf "$(style inverted bold 'warning:')"
+    set_style yellow bold
+    printf "$@"
+    set_style normal
+    printf "\n"
+}
+
+function log_i() {
+    println "$@"
+}
+
+function log_d() {
+    printf "$(style inverted bold 'debug:')"
+    set_style dim bold
+    printf "$@"
+    set_style normal
+    printf "\n"
+}
+
 SUDO=""
 if [ "$EUID" -ne 0 ]; then
 	SUDO=sudo
