@@ -22,7 +22,7 @@ function download_nvim_arm64()
 {
     echo "try install vim"
     if [[ ! $(command -v vim) ]]; then
-        $SUDO apt-get install -y vim || $SUDO yum install -y vim
+        $SUDO $pkgman install -y vim
     fi
     echo "vim installed"
     VIM=vim
@@ -37,7 +37,7 @@ fi
 echo "init nvim config file"
 mkdir -p ~/.config/nvim
 if [[ ! -f ~/.config/nvim/init.vim || $(user_confirm "~/.config/nvim/init.vim exists, do you want to update?") ]]; then
-    cat >> ~/.config/nvim/init.vim << EOF
+    cat > ~/.config/nvim/init.vim << EOF
 " updated by GitNote
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath=&runtimepath
@@ -58,9 +58,9 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 echo "install vim pluggins"
-$VIM -E -c PlugInstall -c q
+$VIM +PlugInstall +qall 
 
 echo "install ctags"
-$SUDO apt-get install -y ripgrep cppman ctags || $SUDO yum install -y ripgrep cppman ctags || $SUDO dnf install -y ripgrep cppman ctags
+$SUDO $pkgman install -y ripgrep cppman ctags
 
 

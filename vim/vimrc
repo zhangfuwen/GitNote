@@ -173,7 +173,7 @@ call plug#end()
 "}}}
 
 " 2. MyScripts {{{
-command FindAllHere :call FindAll()
+command! FindAllHere :call FindAll()
 function! FindAll()
     call inputsave()
     let p=input('Enter pattern to search in this file:')
@@ -186,7 +186,7 @@ function! FindAll()
     endtry
 endfunction
 
-command GREP :execute 'vimgrep '.expand('<cword>').' '.expand('%')|:copen|:cc
+command! GREP :execute 'vimgrep '.expand('<cword>').' '.expand('%')|:copen|:cc
 " }}}
 
 " 7. Configurations {{{

@@ -128,8 +128,8 @@ function user_confirm()
     while true; do
         read -p "$msg[Yy/Nn]" yn
         case $yn in
-            [Yy]* ) echo 0; break;;
-            [Nn]* ) echo 1; break;;
+            [Yy]* ) return 0; break;;
+            [Nn]* ) return 1; break;;
             * ) echo "Please answer yes[Yy] or no[Nn].";;
         esac
     done
@@ -137,13 +137,19 @@ function user_confirm()
 
 
 SUDO=""
-if [ "$EUID" -ne 0 ]; then
-	SUDO=sudo
-fi
+
+function get_sudo()
+{
+    if [ "$EUID" -ne 0 ]; then
+        SUDO=sudo
+    fi
+    return $SUDO
+}
+get_sudo
 
 if [[ ! $(command -v wget) || ! $(command -v curl) ]];then
 	echo "this script need wget and curl to work correctly, installing"
-	$SUDO apt install wget curl
+	$SUDO $pkgman install wget curl
 fi
 
 function download_and_run()
@@ -160,7 +166,7 @@ function install_gh()
         $SUDO apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
         $SUDO apt-add-repository https://cli.github.com/packages
         $SUDO apt update
-        $SUDO apt install gh
+        $SUDO $pkgman install gh
     else
         echo "gh already installed"
     fi
@@ -171,7 +177,7 @@ function install_git()
 
     if [[ ! $(command -v git) ]]; then
         echo "git not found, installing"
-        $SUDO apt install git
+        $SUDO pkgman install git
     else
         echo "git already installed"
     fi
@@ -198,7 +204,31 @@ function install_nerdfonts()
 }
 
 # aarch64 x86_64
-architecture=$(lscpu | awk '/Architecture:/{print $2}') 
+architecture=""
+function get_architecture()
+{
+    architecture=$(lscpu | awk '/Architecture:/{print $2}') 
+    return $architecture
+}
+get_architecture
+
+pkgman=""
+function get_pkg_manager()
+{
+    if [[ $(command -v apt-get) ]]; then
+        pkgman=apt-get
+    elif [[ $(command -v apt) ]]; then
+        pkgman=apt
+    elif [[ $(command -v yum) ]]; then
+        pkgman=yum
+    elif [[ $(command -v dnf) ]]; then
+        pkgman=dnf
+    elif [[ $(command -v pkg) ]]; then
+        pkgman=pkg
+    fi
+    return pkgman
+}
+get_pkg_manager
 
 function setup_vim()
 {
