@@ -122,6 +122,20 @@ function log_d() {
     printf "\n"
 }
 
+function user_confirm()
+{
+    local msg=$1
+    while true; do
+        read -p "$msg[Yy/Nn]" yn
+        case $yn in
+            [Yy]* ) echo 0; break;;
+            [Nn]* ) echo 1; break;;
+            * ) echo "Please answer yes[Yy] or no[Nn].";;
+        esac
+    done
+}
+
+
 SUDO=""
 if [ "$EUID" -ne 0 ]; then
 	SUDO=sudo
