@@ -4,19 +4,25 @@ VIM=vim
 function download_nvim_x86()
 {
     echo "try install neovim"
-    mkdir ~/bin/
-    wget -O ~/bin/nvim-nightly.tar.gz https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz 
-    tar xvzf ~/bin/nvim-nightly.tar.gz -C ~/bin/
-    echo "export PATH=~/bin/nvim-linux64/bin:$PATH" >> ~/.bashrc
-    source ~/.bashrc 
-    rm nvim-linux64.tar.gz  -C ~/bin/
+    if [[ ! $(command -v nvim) ]];then
+        mkdir ~/bin/
+        wget -O ~/bin/nvim-nightly.tar.gz https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz 
+        tar xvzf ~/bin/nvim-nightly.tar.gz -C ~/bin/
+        echo "export PATH=~/bin/nvim-linux64/bin:$PATH" >> ~/.bashrc
+        source ~/.bashrc 
+        rm nvim-linux64.tar.gz  -C ~/bin/
+    fi
+    echo "nvim installed"
     VIM=nvim
 }
 
 function download_nvim_arm64()
 {
     echo "try install vim"
-    $SUDO apt-get install -y vim || $SUDO yum install -y vim
+    if [[ ! $(command -v vim) ]]; then
+        $SUDO apt-get install -y vim || $SUDO yum install -y vim
+    fi
+    echo "vim installed"
     VIM=vim
 }
 
@@ -28,16 +34,24 @@ fi
 
 echo "init nvim config file"
 mkdir -p ~/.config/nvim
-cat > ~/.config/nvim/init.vim << EOF
+if [[ ! -f ~/.config/nvim/init.vim || $(user_confirm "~/.config/nvim/init.vim exists, do you want to update?") ]]; then
+    cat >> ~/.config/nvim/init.vim << EOF
+" updated by GitNote
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath=&runtimepath
 source ~/.vimrc
 EOF
+fi
 
 # $SUDO apt install vim
 
 echo "installing vim-plug"
-curl -fLo ~/.vimrc --create-dirs https://gitee.com/zhangfuwen/GitNote/raw/master/vim/vimrc
+if [[ ! -f ~/.vimrc || $(user_confirm "~/.vimrc exists, do you want us to append new contents to it?") ]]
+    set -x
+    curl -fLo ~/.vimrc --create-dirs https://gitee.com/zhangfuwen/GitNote/raw/master/vim/vimrc
+    set +x
+fi
+
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
