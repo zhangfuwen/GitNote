@@ -1,4 +1,6 @@
 #!/bin/bash
+script_dir=$(basename $0)
+source $script_dir/env_setup.sh
 
 VIM=vim
 function download_nvim_x86()

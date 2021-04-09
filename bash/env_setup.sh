@@ -202,5 +202,5 @@ architecture=$(lscpu | awk '/Architecture:/{print $2}')
 
 function setup_vim()
 {
-	download_and_run https://gitee.com/zhangfuwen/GitNote/raw/master/vim/vim_setup.sh
+	download_and_run https://gitee.com/zhangfuwen/GitNote/raw/master/bash/vim_setup.sh
 }
