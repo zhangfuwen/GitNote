@@ -208,7 +208,7 @@ architecture=""
 function get_architecture()
 {
     architecture=$(lscpu | awk '/Architecture:/{print $2}') 
-    return $architecture
+    echo $architecture
 }
 get_architecture
 
@@ -226,7 +226,7 @@ function get_pkg_manager()
     elif [[ $(command -v pkg) ]]; then
         pkgman=pkg
     fi
-    return pkgman
+    echo $pkgman
 }
 get_pkg_manager
 
