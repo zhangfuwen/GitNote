@@ -111,7 +111,11 @@ function log_w() {
 }
 
 function log_i() {
-    println "$@"
+    printf "$(style inverted bold 'info:')"
+    set_style br_blue bold
+    printf "$@"
+    set_style normal
+    printf "\n"
 }
 
 function log_d() {

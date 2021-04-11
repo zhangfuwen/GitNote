@@ -36,7 +36,7 @@ fi
 
 echo "init nvim config file"
 mkdir -p ~/.config/nvim
-if [[ ! -f ~/.config/nvim/init.vim || $(user_confirm "~/.config/nvim/init.vim exists, do you want to update?") ]]; then
+if [[ ! -f ~/.config/nvim/init.vim ]] || $(user_confirm "~/.config/nvim/init.vim exists, do you want to update?"); then
     cat > ~/.config/nvim/init.vim << EOF
 " updated by GitNote
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
@@ -48,7 +48,7 @@ fi
 # $SUDO apt install vim
 
 echo "installing vim-plug"
-if [[ ! -f ~/.vimrc || $(user_confirm "~/.vimrc exists, do you want us to append new contents to it?") ]]; then
+if [[ ! -f ~/.vimrc ]] || $(user_confirm "~/.vimrc exists, do you want us to append new contents to it?") ; then
     set -x
     curl -fLo ~/.vimrc --create-dirs https://gitee.com/zhangfuwen/GitNote/raw/master/vim/vimrc
     set +x
