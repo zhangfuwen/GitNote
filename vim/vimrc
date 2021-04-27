@@ -20,7 +20,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 let laststatus=2 "永远显示状态栏
-let g:airline_powerline_fonts = 0 " 支持 powerline 字体
+let g:airline_powerline_fonts = 1 " 支持 powerline 字体
 let g:airline#extensions#tabline#enabled = 1 "显示窗口tab和buffer
 let g:airline#extensions#tabline#buffer_nr_show = 1
 " let g:airline_theme="badcat"
@@ -300,6 +300,35 @@ call quickui#menu#install('&Find', [
             \ [ "E&xit\tAlt+x", 'echo 6' ],
             \ ])
 
+call quickui#menu#install('&Quickfix', [
+            \ [ "&Open\t copen", 'copen' ],
+            \ [ "&Close\t cclose", 'ccl' ],
+            \ [ "&Next\t cnext", 'cnext' ],
+            \ [ "&Prev\t cprev", 'cprev' ],
+            \ [ "&First\t cfirst", 'cfirst' ],
+            \ [ "&Last\t clast", 'clast' ],
+            \ [ "Olde&r\t colder", 'colder' ],
+            \ [ "Ne&wer\t cnewer", 'cnewer' ],
+            \ ])
+
+call quickui#menu#install('&Locationlist', [
+            \ [ "&Open\t lopen", 'lopen' ],
+            \ [ "&Close\t lclose", 'lcl' ],
+            \ [ "&Next\t lnext", 'lnext' ],
+            \ [ "&Prev\t lprev", 'lprev' ],
+            \ [ "&First\t lfirst", 'lfirst' ],
+            \ [ "&Last\t llast", 'llast' ],
+            \ [ "Olde&r\t lolder", 'lolder' ],
+            \ [ "Ne&wer\t lnewer", 'lnewer' ],
+            \ ])
+
+call quickui#menu#install('&Git', [
+            \ [ "&Status\t G", 'G' ],
+            \ [ "&Llog\t Gllog", 'Gllog' ],
+            \ [ "&Clog\t Gclog", 'Gclog' ],
+            \ ])
+
+
 " list
 call quickui#menu#install('&List', [
             \ [ "&Buffers", "call quickui#tools#list_buffer('e')" ],
@@ -332,6 +361,54 @@ let g:quickui_show_tip = 1
 function! TermExit(code)
     echom "terminal exit code: ". a:code
 endfunc
+
+" define your context menu as a list of (text, command) pairs
+let g:context_menu_k = [
+            \ ["&Help Keyword\t\\ch", 'echo expand("<cword>")' ],
+            \ ["&Signature\t\\cs", 'echo 101'],
+            \ ['-'],
+            \ ["Find in &File\t\\cx", 'exec "/" . expand("<cword>")' ],
+            \ ["Find in &Project\t\\cp", 'exec "vimgrep " . expand("<cword>") . "*"' ],
+            \ ["Find in &Defintion\t\\cd", 'YcmCompleter GotoDefinition' ],
+            \ ["Search &References\t\\cr", 'YcmCompleter GoToReferences'],
+            \ ['-'],
+            \ ["&Documentation\t\\cm", 'exec "PyDoc " . expand("<cword>")'],
+            \ ]
+
+" map 'space to display the context menu
+nnoremap <silent><space> :call quickui#tools#clever_context('k', g:context_menu_k, {})<cr>
+
+let g:context_menu_git = [
+      \ ["&Stage (add)\ts", 'exec "normal s"' ],
+      \ ["&Unstage (reset)\tu", 'exec "normal u"' ],
+      \ ["&Toggle stage/unstage\t-", 'exec "normal -"' ],
+      \ ["Unstage &Everything\tU", 'exec "normal U"' ],
+      \ ["D&iscard change\tX", 'exec "normal X"' ],
+      \ ["--"],
+      \ ["Inline &Diff\t=", 'exec "normal ="' ],
+      \ ["Diff S&plit\tdd", 'exec "normal dd"' ],
+      \ ["Diff &Horizontal\tdh", 'exec "normal dh"' ],
+      \ ["Diff &Vertical\tdv", 'exec "normal dv"' ],
+      \ ["--"],
+      \ ["&Open File\t<CR>", 'exec "normal \<cr>"' ],
+      \ ["Open in New Split\to", 'exec "normal o"' ],
+      \ ["Open in New Vsplit\tgO", 'exec "normal gO"' ],
+      \ ["Open in New Tab\tO", 'exec "normal O"' ],
+      \ ["Open in &Preview\tp", 'exec "normal p"' ],
+      \ ["--"],
+      \ ["&Commit\tcc", 'exec "normal cc"' ],
+      \ ]
+
+function! s:setup_fugitive()
+    nnoremap <silent><buffer><space> :call quickui#tools#clever_context('g', g:context_menu_git, {})<cr>
+endfunc
+
+augroup MenuEvents
+    au!
+    au FileType fugitive call s:setup_fugitive()
+augroup END
+
+
 " }}} ends QuickMenu
 
 " 8. KeyMaps {{{

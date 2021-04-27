@@ -195,15 +195,22 @@ function install_git()
     git config --global alias.unstage 'reset HEAD'
     git config --global alias.last 'log -1'
     git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+    git config --global mergetool.vimdiff.cmd="nvim -d $LOCAL $REMOTE $MERGED -c \'$wincmd w\' -c \'wincmd J\'"
 }
 
 function install_nerdfonts()
 {
     mkdir -p ~/bin/src/nerdfonts
+    mkdir ~/.fonts
+
     wget -O ~/bin/src/nerdfonts/FireCode.zip \
         https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
-    mkdir ~/.fonts
     unzip ~/bin/src/nerdfonts/FireCode.zip -d ~/.fonts/
+    echo "now you can set your terminal fonts to 'FiraCode Nerd Font Mono Regular'"
+
+    wget -O ~/bin/src/nerdfonts/RobotoMono.zip \
+        https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/RobotoMono.zip
+    unzip ~/bin/src/nerdfonts/RobotoMono.zip -d ~/.fonts/
     echo "now you can set your terminal fonts to 'FiraCode Nerd Font Mono Regular'"
 }
 
@@ -237,4 +244,17 @@ get_pkg_manager
 function setup_vim()
 {
 	download_and_run https://gitee.com/zhangfuwen/GitNote/raw/master/bash/vim_setup.sh
+}
+
+function _adb()
+{
+    if [[ $# -ge 2 ]] && [[ $1 == "-s" ]]; then
+        serial=$2
+        state=$(adb -s $serial get-state)
+        if [[ $state != "device" ]]; then
+            adb connect $serial
+        fi
+    else
+        adb "$@"
+    fi
 }

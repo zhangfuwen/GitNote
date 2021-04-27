@@ -64,3 +64,4 @@ echo "install ctags"
 $SUDO $pkgman install -y ripgrep cppman ctags
 
 
+
