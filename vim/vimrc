@@ -1,9 +1,11 @@
 " 0. Language setup {{{
-if(has('python3'))
-    set pyx=3
+if(has('python2'))
+    set pyx=2
     set pyxversion=3
 endif
 "}}}
+"
+
 
 " 1. Plugins {{{
 "
@@ -43,7 +45,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'majutsushi/tagbar'
 
 " echodoc 状态栏显示文档 {{{
-Plug 'Shougo/echodoc.vim'
+"Plug 'Shougo/echodoc.vim'
 set noshowmode
 " Or, you could use vim's popup window feature.
 "let g:echodoc#enable_at_startup = 1
@@ -63,7 +65,7 @@ Plug 'Yggdroot/LeaderF',{'do':'./install.sh'}
 let g:Lf_WindowPosition = 'popup'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'skywind3000/vim-quickui'
-Plug 'skywind3000/vim-cppman'
+"Plug 'skywind3000/vim-cppman'
 Plug 'skywind3000/vim-preview'
 "}}}
 
@@ -161,17 +163,50 @@ Plug 'easymotion/vim-easymotion'
 " 1.11 Snippet {{{
 " Track the engine.
 Plug 'SirVer/ultisnips'
+Plug 'zhangfuwen/vim-snippets'
 " Snippets are separated from the engine. Add this if you want them:
-Plug 'honza/vim-snippets'
 " Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
 " - https://github.com/Valloric/YouCompleteMe
 " - https://github.com/nvim-lua/completion-nvim
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+"let g:UltiSnipsExpandTrigger="c-y"
+"let g:UltiSnipsJumpForwardTrigger="<c-b>"
+"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+Plug 'skywind3000/Leaderf-snippet'
 
 " If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
+"let g:UltiSnipsEditSplit="vertical"
+" }}}
+
+" 1.12 Build/Project {{{
+Plug 'ilyachur/cmake4vim'
+function! Prompt_targets()
+    let target_list=cmake4vim#GetAllTargets()
+    let submenu = []
+    for target in target_list
+        call add(submenu, [target, 'CMakeSelectTarget '. target])
+    endfor
+    call quickui#listbox#open(submenu, {'title':'Select target'})
+endfunction
+function! Prompt_buildType()
+    let build_type_dict=utils#cmake#getCMakeVariants()
+    let submenu = []
+    for target in keys(build_type_dict)
+        call add(submenu, [target, 'CMakeSelectBuildType '. target])
+    endfor
+    call quickui#listbox#open(submenu, {'title':'Select build type'})
+endfunction
+
+function! Run_target()
+    let binaryFile=utils#cmake#getBinaryPath()
+    if binaryFile == ''
+        call Prompt_targets()
+    endif
+    let binaryFile=utils#cmake#getBinaryPath()
+    echo 'path:'. binaryFile
+    "call quickui#terminal#open('/bin/sh -c '. binaryFile . '; read', {})
+    let opts={'title':'Run'}
+    call quickui#terminal#open('bash --init-file <(echo "'. binaryFile .'; echo executed '. binaryFile . '")', opts)
+endfunction
 " }}}
 
 " Disabled {{{
@@ -294,16 +329,13 @@ set wildmenu " vim 自身命令行模式智能补全
 set mouse=a
 " }}} end 7
 
-" 8. QuickMenu {{{ 
+" 8. QuickMenu {{{
 " clear all the menus
 call quickui#menu#reset()
 
 " install a 'File' menu, use [text, command] to represent an item.
+let g:quickui_border_style = 2
 call quickui#menu#install('&Find', [
-            \ [ "Find &File\ttp", 'Leaderf file' ],
-            \ [ "Find &Symbol\tta", 'LeaderfTag' ],
-            \ [ "Find &Text\ttf", 'Leaderf rg' ],
-            \ [ "--", '' ],
             \ [ "Switch &Header/Source\tts", 'FSHere'],
             \ [ "Search &In This File\tt/", 'silent! FindAllHere' ],
             \ [ "--", '' ],
@@ -330,6 +362,45 @@ call quickui#menu#install('&Locationlist', [
             \ [ "&Last\t llast", 'llast' ],
             \ [ "Olde&r\t lolder", 'lolder' ],
             \ [ "Ne&wer\t lnewer", 'lnewer' ],
+            \ ])
+
+call quickui#menu#install('Leader&f', [
+            \ [ "&File\t file", 'Leaderf file' ],
+            \ [ "&Tag\t tag", 'Leaderf tag' ],
+            \ [ "&Snippet\t snippet", 'Leaderf snippet' ],
+            \ [ "&Grep\t search", 'Leaderf rg' ],
+            \ [ "F&unction\t function", 'Leaderf function' ],
+            \ [ "&Buffers", 'Leaderf buffer' ],
+            \ ])
+
+call quickui#menu#install('&Coc', [
+            \ [ "List &diagnostics\t ", 'CocList diagnostics' ],
+            \ [ "List &extentions\t ", 'CocList extentions' ],
+            \ [ "List &commands\t ", 'CocList commands' ],
+            \ [ "List &outline\t ", 'CocList outline' ],
+            \ [ "List &symbols\t ", 'CocList symbols' ],
+            \ [ "List &resume\t ", 'CocListResume' ],
+            \ [ "&Next\t ", 'CocNext' ],
+            \ [ "&Prev\t ", 'CocPrev' ],
+            \ [ "For&mat", "Format" ],
+            \ [ "Fo&ld", "Fold" ],
+            \ [ "Rearra&ge imports ", "OR" ],
+            \ [ "Ren&ame", "<Plug>(coc-rename)" ],
+            \ ])
+
+call quickui#menu#install('&CMake', [
+            \ ['&Generate','CMake'],
+            \ ['&Build','CMakeBuild'],
+            \ ['&Test','CTest'],
+            \ ['&CTest!','CTest!'],
+            \ ['&Info','CMakeInfo'],
+            \ ['&Select Target', 'call Prompt_targets()'],
+            \ ['Select Build T&ype', 'call Prompt_buildType()'],
+            \ ['&Run','call Run_target()'],
+            \ ['R&un!','CMakeRun!'],
+            \ ['C&lean','CMakeClean'],
+            \ ['Res&et','CMakeReset'],
+            \ ['Reset&Relo&ad','CMakeResetAndReload' ], 
             \ ])
 
 call quickui#menu#install('&Preview', [
@@ -431,15 +502,14 @@ augroup END
 
 " 8. KeyMaps {{{
 nmap tt :NERDTreeToggle<CR>
-nmap tb :TagbarToggle<CR>
 nmap tl :TagbarToggle<CR>
-nmap tp :Leaderf file<CR>
-"nmap t@ :Leaderf function<CR>
-nmap ta :LeaderfTag<CR>
-nmap tf :Leaderf rg<CR>
 nmap t/ :silent! FindAllHere<CR>
 nmap ts :FSHere<CR> "头文件切换
 nmap tv :PreviewTag<CR>
+
+" optional: preview
+"let g:Lf_PreviewResult = get(g:, 'Lf_PreviewResult', {})
+"let g:Lf_PreviewResult.snippet = 1
 
 " easy motion {{{
 "nmap te <Plug>(easymotion-prefix)
@@ -504,4 +574,4 @@ nnoremap <F3> :call quickui#tools#preview_tag('')<cr>
 "}}}
 
 "}}}
-source /data1/GitNote/vim/coc.vim
+"source /data1/GitNote/vim/coc.vim
