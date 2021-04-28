@@ -56,72 +56,72 @@ bg_br_white="107"
 
 function set_style() {
     if [[ $# == 5 ]]; then
-        printf "\033[${!1};${!2};${!3};${!4};${!5}m"
+        printf "%s" "\033[${!1};${!2};${!3};${!4};${!5}m"
     elif [[ $# == 4 ]]; then # fg, bg, font
-        printf "\033${!1};${!2};${!3};${!4}m"
+        printf "%s" "\033${!1};${!2};${!3};${!4}m"
     elif [[ $# == 3 ]]; then # two functions
-        printf "\033[${!1};${!2};${!3}m"
+        printf "%s" "\033[${!1};${!2};${!3}m"
     elif [[ $# == 2 ]]; then
-        printf "\033[${!1};${!2}m"
+        printf "%s" "\033[${!1};${!2}m"
     elif [[ $# == 1 ]]; then
-        printf "\033[${!1}m" 
+        printf "%s" "\033[${!1}m"
     fi
 }
 
 function style() {
     if [[ $# == 5 ]]; then
-        printf "\033[${!1};${!2};${!3};${!4}m${5}\033[${normal}m"
+        printf "%s" "\033[${!1};${!2};${!3};${!4}m${5}\033[${normal}m"
     elif [[ $# == 4 ]]; then # fg, bg, font
-        printf "\033${!1};${!2};${!3}m${4}\033[${normal}m"
+        printf "%s" "\033${!1};${!2};${!3}m${4}\033[${normal}m"
     elif [[ $# == 3 ]]; then # two functions
-        printf "\033[${!1};${!2}m${3}\033[${normal}m"
+        printf "%s" "\033[${!1};${!2}m${3}\033[${normal}m"
     elif [[ $# == 2 ]]; then
-        printf "\033[${!1}m${2}\033[${normal}m"
+        printf "%s" "\033[${!1}m${2}\033[${normal}m"
     elif [[ $# == 1 ]]; then
-        printf $1
+        printf "%s" "$1"
     fi
 }
 
 
 function println() {
     if [[ $# == 1 ]];then
-        printf "$@\n"
+        printf "%s\n" "$@"
     else
         first=$1
         shift;
         rest="$@"
-        printf "$1\n" $rest
+        printf "$first\n" $rest
     fi
 }
 
 function log_e() {
-    printf "$(style inverted bold 'error:')"
+    printf "%s" "$(style inverted bold 'error:')"
     set_style red bold
-    printf "$@"
+    printf "%s" "$@"
     set_style normal
     printf "\n"
 }
 
 function log_w() {
-    printf "$(style inverted bold 'warning:')"
+    printf "%s" "$(style inverted bold 'warning:')"
     set_style yellow bold
-    printf "$@"
+    printf "%s" "$@"
     set_style normal
     printf "\n"
 }
 
 function log_i() {
-    printf "$(style inverted bold 'info:')"
+    printf "%s" "$(style inverted bold 'info:')"
     set_style br_blue bold
-    printf "$@"
+    printf "%s" "$@"
     set_style normal
     printf "\n"
 }
 
 function log_d() {
-    printf "$(style inverted bold 'debug:')"
+    printf "%s" "$(style inverted bold 'debug:')"
     set_style dim bold
-    printf "$@"
+    printf "%s" "$@"
     set_style normal
     printf "\n"
 }
@@ -152,8 +152,8 @@ function get_sudo()
 get_sudo
 
 if [[ ! $(command -v wget) || ! $(command -v curl) ]];then
-	echo "this script need wget and curl to work correctly, installing"
-	$SUDO $pkgman install wget curl
+    echo "this script need wget and curl to work correctly, installing"
+    $SUDO $pkgman install wget curl
 fi
 
 function download_and_run()
@@ -205,20 +205,20 @@ function install_nerdfonts()
 
     wget -O ~/bin/src/nerdfonts/FireCode.zip \
         https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
-    unzip ~/bin/src/nerdfonts/FireCode.zip -d ~/.fonts/
-    echo "now you can set your terminal fonts to 'FiraCode Nerd Font Mono Regular'"
+            unzip ~/bin/src/nerdfonts/FireCode.zip -d ~/.fonts/
+            echo "now you can set your terminal fonts to 'FiraCode Nerd Font Mono Regular'"
 
-    wget -O ~/bin/src/nerdfonts/RobotoMono.zip \
-        https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/RobotoMono.zip
-    unzip ~/bin/src/nerdfonts/RobotoMono.zip -d ~/.fonts/
-    echo "now you can set your terminal fonts to 'FiraCode Nerd Font Mono Regular'"
-}
+            wget -O ~/bin/src/nerdfonts/RobotoMono.zip \
+                https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/RobotoMono.zip
+                            unzip ~/bin/src/nerdfonts/RobotoMono.zip -d ~/.fonts/
+                            echo "now you can set your terminal fonts to 'FiraCode Nerd Font Mono Regular'"
+                        }
 
 # aarch64 x86_64
 architecture=""
 function get_architecture()
 {
-    architecture=$(lscpu | awk '/Architecture:/{print $2}') 
+    architecture=$(lscpu | awk '/Architecture:/{print $2}')
     echo $architecture
 }
 get_architecture
@@ -243,7 +243,7 @@ get_pkg_manager
 
 function setup_vim()
 {
-	download_and_run https://gitee.com/zhangfuwen/GitNote/raw/master/bash/vim_setup.sh
+    download_and_run https://gitee.com/zhangfuwen/GitNote/raw/master/bash/vim_setup.sh
 }
 
 function _adb()
