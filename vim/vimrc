@@ -50,7 +50,7 @@ set noshowmode
 "let g:echodoc#type = 'popup'
 " To use a custom highlight for the popup window,
 " change Pmenu to your highlight group
-"highlight link EchoDocPopup Pmenu
+" highlight link EchoDocPopup Pmenu
 " When you accept a completion for a function with <c-y>,
 " echodoc will display the function signature in the command line
 " and highlight the argument position your cursor is in.
@@ -114,27 +114,28 @@ hi! SpellRare gui=undercurl guisp=magenta
 
 " 1.8 Auto completion {{{
 if(has('python3'))
-    Plug 'Shougo/deoplete.nvim'
-    Plug 'roxma/nvim-yarp'
-    Plug 'roxma/vim-hug-neovim-rpc'
-    Plug 'Shougo/denite.nvim'
-    " deoplete configs {{{
-    if(has('python3'))
-        let g:deoplete#enable_at_startup=0
-        "call deoplete#custom#option({
-        "            \'auto_complete_delay':200,
-        "            \'smart_case': v:true,
-        "            \})
+" completion {{{
+    if has('nvim')
+        Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    else
+        Plug 'Shougo/deoplete.nvim'
+        Plug 'roxma/nvim-yarp'
+        Plug 'roxma/vim-hug-neovim-rpc'
     endif
+    let g:deoplete#enable_at_startup = 1
+    Plug 'Shougo/deoplete-clangx'
+    Plug 'deoplete-plugins/deoplete-zsh'
+    Plug 'fszymanski/deoplete-emoji'
     " }}}
-Plug 'scrooloose/nerdcommenter'
-" nerdcommenter{{{
-let g:NERDSpaceDelims = 1
-let g:NERDTrimTrailingWhitespace = 1
-" }}}
-Plug 'vim-scripts/DoxygenToolkit.vim',{'on':'Dox'}
-let g:load_doxygen_syntax=1
-Plug 'Townk/vim-autoclose'
+
+    Plug 'scrooloose/nerdcommenter'
+    " nerdcommenter{{{
+    let g:NERDSpaceDelims = 1
+    let g:NERDTrimTrailingWhitespace = 1
+    " }}}
+    Plug 'vim-scripts/DoxygenToolkit.vim',{'on':'Dox'}
+    let g:load_doxygen_syntax=1
+    Plug 'Townk/vim-autoclose'
 endif
 "}}}
 
@@ -146,6 +147,7 @@ Plug 'ludovicchabant/vim-gutentags'
 " 1.10 Quick access {{{
 " 切换头文件 快捷键ts
 Plug 'derekwyatt/vim-fswitch',{'for':['c','cpp']}
+Plug 'easymotion/vim-easymotion'
 "}}}
 
 " 1.11 Snippet {{{
@@ -322,6 +324,14 @@ call quickui#menu#install('&Locationlist', [
             \ [ "Ne&wer\t lnewer", 'lnewer' ],
             \ ])
 
+call quickui#menu#install('&Preview', [
+            \ [ "&Close\t pc", 'pc' ],
+            \ [ "&Search\t ps", 'ps' ],
+            \ [ "&Edit\t ped", 'ped' ],
+            \ [ "&Jump\t ptjump", 'ptjump' ],
+            \ [ "&Tag\t ptag", 'ptag' ],
+            \ ])
+
 call quickui#menu#install('&Git', [
             \ [ "&Status\t G", 'G' ],
             \ [ "&Llog\t Gllog", 'Gllog' ],
@@ -422,6 +432,25 @@ nmap tf :Leaderf rg<CR>
 nmap t/ :silent! FindAllHere<CR>
 nmap ts :FSHere<CR> "头文件切换
 nmap tv :PreviewTag<CR>
+
+" easy motion {{{
+"nmap te <Plug>(easymotion-prefix)
+" <Leader>f{char} to move to {char}
+map  <Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader>f <Plug>(easymotion-overwin-f)
+
+" s{char}{char} to move to {char}{char}
+nmap s <Plug>(easymotion-overwin-f2)
+
+" Move to line
+map <C-L> <Plug>(easymotion-bd-jk)
+nmap <C-L> <Plug>(easymotion-overwin-line)
+
+" Move to word
+map  <C-L>u <Plug>(easymotion-bd-w)
+nmap <C-L>u <Plug>(easymotion-overwin-w)
+" end easymotion }}}
+
 "nmap <F6> :exec '!'.getline('.')<CR>
 vmap <F6> :w !bash<CR>
 "ctrl / to add comment
