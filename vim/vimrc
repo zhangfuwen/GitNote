@@ -115,18 +115,26 @@ hi! SpellRare gui=undercurl guisp=magenta
 " 1.8 Auto completion {{{
 if(has('python3'))
 " completion {{{
-    if has('nvim')
-        Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-    else
-        Plug 'Shougo/deoplete.nvim'
-        Plug 'roxma/nvim-yarp'
-        Plug 'roxma/vim-hug-neovim-rpc'
-    endif
-    let g:deoplete#enable_at_startup = 1
-    Plug 'Shougo/deoplete-clangx'
-    Plug 'deoplete-plugins/deoplete-zsh'
-    Plug 'fszymanski/deoplete-emoji'
+"    if has('nvim')
+"        Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"    else
+"        Plug 'Shougo/deoplete.nvim'
+"        Plug 'roxma/nvim-yarp'
+"        Plug 'roxma/vim-hug-neovim-rpc'
+"    endif
+"    let g:deoplete#enable_at_startup = 1
+"    Plug 'Shougo/deoplete-clangx'
+"    Plug 'deoplete-plugins/deoplete-zsh'
+"    Plug 'fszymanski/deoplete-emoji'
     " }}}
+
+" coc conquer of completion {{{
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    " to use language server:
+    " :CocInstall coc-clangd
+    " :CocInstall coc-sh
+    " :CocInstall coc-cmake
+" }}}
 
     Plug 'scrooloose/nerdcommenter'
     " nerdcommenter{{{
@@ -496,3 +504,4 @@ nnoremap <F3> :call quickui#tools#preview_tag('')<cr>
 "}}}
 
 "}}}
+source /data1/GitNote/vim/coc.vim
