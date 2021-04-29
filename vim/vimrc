@@ -486,7 +486,9 @@ let g:context_menu_git = [
       \ ["Open in New Tab\tO", 'exec "normal O"' ],
       \ ["Open in &Preview\tp", 'exec "normal p"' ],
       \ ["--"],
-      \ ["&Commit\tcc", 'exec "normal cc"' ],
+      \ ["&Commit", 'Git commit' ],
+      \ ["&Push", 'Git push' ],
+      \ ["&Pull", 'Git pull' ],
       \ ]
 
 function! s:setup_fugitive()
