@@ -476,8 +476,8 @@ let g:context_menu_git = [
       \ ["D&iscard change\tX", 'exec "normal X"' ],
       \ ["--"],
       \ ["Inline &Diff\t=", 'exec "normal ="' ],
-      \ ["Diff S&plit\tdd", 'exec "normal dd"' ],
-      \ ["Diff &Horizontal\tdh", 'exec "normal dh"' ],
+      \ ["Diff Split\tdd", 'exec "normal dd"' ],
+      \ ["Diff Horizontal\tdh", 'exec "normal dh"' ],
       \ ["Diff &Vertical\tdv", 'exec "normal dv"' ],
       \ ["--"],
       \ ["&Open File\t<CR>", 'exec "normal \<cr>"' ],
@@ -486,9 +486,9 @@ let g:context_menu_git = [
       \ ["Open in New Tab\tO", 'exec "normal O"' ],
       \ ["Open in &Preview\tp", 'exec "normal p"' ],
       \ ["--"],
-      \ ["&Commit", 'Git commit' ],
-      \ ["&Push", 'Git push' ],
-      \ ["&Pull", 'Git pull' ],
+      \ ["&0. Commit", 'Git commit' ],
+      \ ["&1. Push", 'Git push' ],
+      \ ["&2. Pull", 'Git pull' ],
       \ ]
 
 function! s:setup_fugitive()
