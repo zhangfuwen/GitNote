@@ -207,6 +207,7 @@ function! Run_target()
     let opts={'title':'Run'}
     call quickui#terminal#open('bash --init-file <(echo "'. binaryFile .'; echo executed '. binaryFile . '")', opts)
 endfunction
+
 " }}}
 
 " Disabled {{{
@@ -574,4 +575,5 @@ nnoremap <F3> :call quickui#tools#preview_tag('')<cr>
 "}}}
 
 "}}}
-"source /data1/GitNote/vim/coc.vim
+source /data1/GitNote/vim/coc.vim
+let g:cmake_ctest_args='-j8 --output-on-failure'
