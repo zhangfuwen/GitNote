@@ -205,14 +205,14 @@ function install_nerdfonts()
 
     wget -O ~/bin/src/nerdfonts/FireCode.zip \
         https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
-            unzip ~/bin/src/nerdfonts/FireCode.zip -d ~/.fonts/
-            echo "now you can set your terminal fonts to 'FiraCode Nerd Font Mono Regular'"
+    unzip ~/bin/src/nerdfonts/FireCode.zip -d ~/.fonts/
+    echo "now you can set your terminal fonts to 'FiraCode Nerd Font Mono Regular'"
 
-            wget -O ~/bin/src/nerdfonts/RobotoMono.zip \
+    wget -O ~/bin/src/nerdfonts/RobotoMono.zip \
                 https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/RobotoMono.zip
-                            unzip ~/bin/src/nerdfonts/RobotoMono.zip -d ~/.fonts/
-                            echo "now you can set your terminal fonts to 'FiraCode Nerd Font Mono Regular'"
-                        }
+    unzip ~/bin/src/nerdfonts/RobotoMono.zip -d ~/.fonts/
+    echo "now you can set your terminal fonts to 'RobotoMono Regular'"
+}
 
 # aarch64 x86_64
 architecture=""
