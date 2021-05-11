@@ -33,7 +33,9 @@ filetype on
 syntax enable
 set backspace=indent,eol,start
 set cursorline
-colo PaperColor
+if !empty(glob("~/.vim/plugged/papercolor-theme/colors/PaperColor.vim"))
+    colo PaperColor
+endif
 
 " 7.1 folding {{{
 set nofoldenable
@@ -121,6 +123,7 @@ set mouse=a
 
 " 8. QuickMenu {{{
 " clear all the menus
+if !empty(glob("~/.vim/plugged/vim-quickui/README.md"))
 call quickui#menu#reset()
 
 " install a 'File' menu, use [text, command] to represent an item.
@@ -190,7 +193,7 @@ call quickui#menu#install('&CMake', [
             \ ['R&un!','CMakeRun!'],
             \ ['C&lean','CMakeClean'],
             \ ['Res&et','CMakeReset'],
-            \ ['Reset&Relo&ad','CMakeResetAndReload' ], 
+            \ ['Reset&Relo&ad','CMakeResetAndReload' ],
             \ ])
 
 call quickui#menu#install('&Preview', [
@@ -289,7 +292,7 @@ augroup MenuEvents
     au FileType fugitive call s:setup_fugitive()
 augroup END
 
-
+endif
 " }}} ends QuickMenu
 
 " 8. KeyMaps {{{
@@ -366,5 +369,8 @@ nnoremap <F3> :call quickui#tools#preview_tag('')<cr>
 "}}}
 
 "}}}
-source ~/.vim/coc.vim
+
+if !empty(glob("~/.vim/plugged/coc.nvim/plugin/coc.vim"))
+    source ~/.vim/coc.vim
+endif
 let g:cmake_ctest_args='-j8 --output-on-failure'
