@@ -51,6 +51,8 @@ echo "installing vim-plug"
 if test ! -f ~/.vimrc || user_confirm "$HOME/.vimrc exists, do you want us to append new contents to it?" &>/dev/null ; then
     set -x
     curl -fLo ~/.vimrc --create-dirs https://gitee.com/zhangfuwen/GitNote/raw/master/vim/vimrc
+    curl -fLo ~/.vim/coc.vim --create-dirs https://gitee.com/zhangfuwen/GitNote/raw/master/vim/coc.vim
+    curl -fLo ~/.vim/plugins.vim --create-dirs https://gitee.com/zhangfuwen/GitNote/raw/master/vim/plugins.vim
     set +x
 fi
 
