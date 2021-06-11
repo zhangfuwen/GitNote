@@ -199,6 +199,12 @@ function! Run_target()
     call quickui#terminal#open('bash --init-file <(echo "'. binaryFile .'; echo executed '. binaryFile . '")', opts)
 endfunction
 
+" 1.13 plantuml {{{
+Plug 'tyru/open-browser.vim'
+Plug 'https://github.com/aklt/plantuml-syntax'
+Plug 'weirongxu/plantuml-previewer.vim'
+" }}}
+
 " }}}
 
 " Disabled {{{

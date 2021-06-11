@@ -105,6 +105,10 @@ if !isdirectory(s:vim_tags)
 endif
 " }}}
 "
+"
+" 7.8 nerdtree {{{
+let  NERDTreeQuitOnOpen = 1
+" }}}
 
 set number
 set autoread
