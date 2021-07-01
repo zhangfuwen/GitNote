@@ -185,6 +185,8 @@ call quickui#menu#install('&Coc', [
             \ [ "Ren&ame", "<Plug>(coc-rename)" ],
             \ ])
 
+let g:cmake_compile_commands=1
+let g:cmake_compile_commands_link='.'
 call quickui#menu#install('&CMake', [
             \ ['&Generate','CMake'],
             \ ['&Build','CMakeBuild'],
@@ -214,6 +216,9 @@ call quickui#menu#install('&Git', [
             \ [ "&Clog\t Gclog", 'Gclog' ],
             \ ])
 
+call quickui#menu#install('P&ython', [
+            \ [ "&Run this file with python3", ":exec '!python3' shellescape(@%, 1)" ],
+            \ ])
 
 " list
 call quickui#menu#install('&List', [
