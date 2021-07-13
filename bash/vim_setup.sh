@@ -1,5 +1,5 @@
 #!/bin/bash
-script_dir=$(basename "$0")
+script_dir=$(dirname "$0")
 source $script_dir/env_setup.sh
 
 VIM=vim
