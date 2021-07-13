@@ -36,7 +36,7 @@ fi
 
 echo "init nvim config file"
 mkdir -p ~/.config/nvim
-if test ! -f ~/.config/nvim/init.vim || user_confirm "$HOME/.config/nvim/init.vim exists, do you want to update?" &>/dev/null ; then
+if test ! -f ~/.config/nvim/init.vim || user_confirm "$HOME/.config/nvim/init.vim exists, do you want to update?" ; then
     cat > ~/.config/nvim/init.vim << EOF
 " updated by GitNote
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
