@@ -176,8 +176,7 @@ editor.renderer.updateFontSize();
 ]
 ```
 使用示例:
-
-{%ace edit=true, lang='c_cpp'%}
+```
 // This is a hello world program for C.
 #include <stdio.h>
 
@@ -186,6 +185,7 @@ int main(){
   return 1;
 }
 {%endace%}
+```
 
 
 ## Sharing-plus
