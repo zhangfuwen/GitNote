@@ -1,13 +1,12 @@
 # Linux 输入法概述
 
-
-# 1. 概述
+# 1\. 概述
 
 Linux 有三个主要的输入法接口：
 
-- XIM ( X Input Method, X 协议提供的输入法接口）
-- GTK IM module
-- QT IM module
+* XIM ( X Input Method, X 协议提供的输入法接口）
+* GTK IM module
+* QT IM module
 
 所认Linux用户在设置输入法时，经常要设置三个环境变量：
 
@@ -23,7 +22,7 @@ export GTK_IM_MODULE=fcitx
 2. 有些应用是使用Qt开发的，它天然使用是QT IM MODULE提供的输入法接口
 3. 有些应用是使用GTK开发的，它就使用GTK IM MODULE提供的输入法接口
 
-# 2. XIM使用示例
+# 2\. XIM使用示例
 
 以下代码引自：
 A Brief Intro to Input Method Framework, Linux IME, and XIM
@@ -43,7 +42,7 @@ tedyin.com/posts/a-brief-intro-to-linux-input-method-framework/
 
 ![](/assets/res/2021-11-03-17-22-57.png)
 
-# 3. 输入法框架
+# 3\. 输入法框架
 
 XIM, GTK IM Module, QT IM Module称为输入法接口（有人也叫框架，这里没有固定说法，我们叫接口吧）。我们常用的输入法ibus, fcitx等称为输入法框架（Framework)。也有人把他们也叫二级框架。为了表述一致，我们还是称为输入法框架。
 
@@ -53,7 +52,7 @@ https://blogs.gnome.org/happyaron/2011/01/15/linux-input-method-brief-summary/
 blogs.gnome.org/happyaron/2011/01/15/linux-input-method-brief-summary/
 现今最常用的是ibus和fcitx。ibus是多数以gnome为默认桌面环境的发行版本默认输入法。fcitx则是中国人最喜欢的输入法框架，因为它一开始是专为中文输入开发的，它的全称是Free Chinese Input Toy for X。ibus的全称是Intelligent Input Bus。
 
-输入法框架本身不提供具体的按键到unicode的映射，它需要输入法引擎来提供具体功能。比如说ibus这个输入法框架下面有如下输入法引擎，或插件：（引自https://en.wikipedia.org/wiki/Intelligent_Input_Bus）
+输入法框架本身不提供具体的按键到unicode的映射，它需要输入法引擎来提供具体功能。比如说ibus这个输入法框架下面有如下输入法引擎，或插件：（引自https://en.wikipedia.org/wiki/Intelligent\_Input\_Bus）
 
 ```
 ibus-anthy: A plugin for Anthy, a Japanese IME.
@@ -94,7 +93,7 @@ ZhengMa: ZhengMa Chinese IM table.
 
 ![](/assets/res/2021-11-03-17-26-03.png)
 
-# 4. 软件栈(ibus)
+# 4\. 软件栈\(ibus\)
 
 引自：https://www.chromium.org/chromium-os/chromiumos-design-docs/text-input
 
@@ -120,7 +119,7 @@ ZhengMa: ZhengMa Chinese IM table.
 2. 检查输入法在其他应用是否能输入
 3. 换一个输入法框架看看能否输入，如ibus换成fcitx
 4. 查看ibus-deamon是否存在
-5. 如果是gtk程序比如说(chromium)，检查程序运行的环境变量中GTK_IM_MODULE 环境变量是否正确设置了。查看进程的环境变量 - wanlifeipeng - 博客园
+5. 如果是gtk程序比如说(chromium)，检查程序运行的环境变量中GTK\_IM\_MODULE 环境变量是否正确设置了。查看进程的环境变量 - wanlifeipeng - 博客园
 6. 查看进程是否加载了im-ibus.so，lsof -p 进程id，这个命令是查看进程打开的文件，进程加载的动态链接库也是进程打开的文件。
 7. gdb调试，看相应的函数有没有被调用, 客户端im-ibus.so的代码：ibus/ibus
 8. DBUS监听，看看应用有没有通过dbus给ibus-daemon发送数据
