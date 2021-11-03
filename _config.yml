@@ -1,8 +1,8 @@
-#remote_theme: carlosperate/jekyll-theme-rtd
+remote_theme: carlosperate/jekyll-theme-rtd
 #remote_theme: rundocs/jekyll-rtd-theme
 #remote_theme: chrisbobbe/jekyll-theme-prologue
 
-theme: jekyll-text-theme
+#theme: jekyll-text-theme
 # Welcome to Jekyll!
 #
 # This config file is meant for settings that affect your whole blog, values
