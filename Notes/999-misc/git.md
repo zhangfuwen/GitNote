@@ -72,3 +72,17 @@ tig使用很简单，但未必浅显，后面我可以搞成专题。
 24.将本地修改强制推送到服务器  git push -f -u origin master
 ```
 
+  <div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'http://xjbcode.com';
+      this.page.identifier = 'http://xjbcode.com';
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://deansinaean.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
