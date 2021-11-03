@@ -1,5 +1,6 @@
 #remote_theme: carlosperate/jekyll-theme-rtd
-remote_theme: rundocs/jekyll-rtd-theme
+#remote_theme: rundocs/jekyll-rtd-theme
+remote_theme: Simpleyyt/jekyll-theme-next
 # Welcome to Jekyll!
 #
 # This config file is meant for settings that affect your whole blog, values
