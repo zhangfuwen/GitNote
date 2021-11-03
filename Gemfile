@@ -36,5 +36,3 @@ gem "wdm", "~> 0.1.0", :platforms => [:mingw, :x64_mingw, :mswin]
 # kramdown v1, comment out this line.
 gem "kramdown-parser-gfm"
 
-gem "jekyll-text-theme"
-
