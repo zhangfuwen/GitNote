@@ -82,8 +82,8 @@ tig使用很简单，但未必浅显，后面我可以搞成专题。
     repo: "{{ site.gittalk.repository }}",
     owner: "{{ site.gittalk.owner }}",
     admin: ["{{ site.gittalk.admin | split: ','  | join: '","'}}"],
-    id: "{{ page.url }}",    // Ensure uniqueness and length less than 50 
-    distractionFreeMode: false,  // Facebook-like distraction free mode
+    id: "{{ page.url }}", 
+    distractionFreeMode: false,
     perPage: 100
 });
 
