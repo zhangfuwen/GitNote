@@ -35,8 +35,3 @@ CPU发出一个访存指令，怎么才能知道目标地址上的数据在Cache
 ![](/assets/Screenshot at 2月 16 20-18-16.png)
 
 **两路组相联缓存（2-way associative 8-entry cache)**
-
-**长按识别二维码或手机扫描二维码  
-打赏我1.5元**  
-![](/assets/mm_facetoface_collect_qrcode_1486597617608.png)
-

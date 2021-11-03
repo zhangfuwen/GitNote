@@ -100,8 +100,3 @@ workqueue,中文称其为工作队列，是一个用于创建内核线程的接�
 ```
 
 
-
-**长按识别二维码或手机扫描二维码
-打赏我1.5元**
-![](/assets/mm_facetoface_collect_qrcode_1486597617608.png)
-

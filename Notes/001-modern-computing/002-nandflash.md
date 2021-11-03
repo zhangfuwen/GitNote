@@ -107,7 +107,3 @@ Exploration and Optimal Solution](https://repository.iiitd.edu.in/jspui/bitstrea
 [5. MODELING THE PHYSICAL CHARACTERISTICS  
 OF NAND FLASH MEMORY](http://itzbhushan.gitlab.io/files/Thesis.pdf)
 
-**长按识别二维码或手机扫描二维码  
-打赏我1.5元**  
-![](/assets/mm_facetoface_collect_qrcode_1486597617608.png)
-
