@@ -25,7 +25,7 @@ import cv2
 
 直接import会出现错误：
 
-```
+```warning
   Traceback (most recent call last):
     File "<stdin>", line 1, in <module>
   ImportError: No module named cv2
