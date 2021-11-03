@@ -1,3 +1,5 @@
+# 7代x86处理器Pentium 4
+
 Pentium Pro之后的Pentium II， Pentium III都是基于P6架构，功能和架构上没有太大的改进，主要是工艺不断进步，主频也不断的提高，到Pentium III主频已经可以达到最大1.4GHz。另外值得一说的是Pentium已经有了MMX指令集，Pentium III增加SSE指令集。这些附加的指令集我们专门一篇文章集细述。
 
 # 7代处理器架构Netburst
@@ -20,7 +22,7 @@ Pentium Pro之后的Pentium II， Pentium III都是基于P6架构，功能和架
 
 NetBurst架构未必真的是史上最长的流水线结构，但教科书上基本都是这么说的。在Pentium Pro时代，大家看到了流水线的好处，于是就大量使用流水线，现在我们有了31级这么长的流水线，结果效果并不是很好，所以后来就又变短了。
 
-![](../assets/20150507111142726.png)
+![](/assets/20150507111142726.png)
 
 关于为什么不是流水线越长，就越好，可以参考这个讨论：  
 [https://www.zhihu.com/question/20180643](https://www.zhihu.com/question/20180643)  
@@ -71,5 +73,5 @@ SpeedStep 技术的升级版本 EIST 全名為Enhanced Intel SpeedStep Technolog
 
 ## NX位
 
-在页表索引中有一个位叫做NX\(No eXecution\)位或叫XD\(eXecution Disable\)位，该位置位时，表明该页的数据是不可以执行的，该位位于页表项的bit 63上。提出它的原因主要是防止有害程序把自己的有害代码写在可写的数据段，然后修改程序指针，让程序指针指向数据段的有害代码来执行有害程序。![](../assets/26296_v5vuwb3fm0ildvw.png)
+在页表索引中有一个位叫做NX\(No eXecution\)位或叫XD\(eXecution Disable\)位，该位置位时，表明该页的数据是不可以执行的，该位位于页表项的bit 63上。提出它的原因主要是防止有害程序把自己的有害代码写在可写的数据段，然后修改程序指针，让程序指针指向数据段的有害代码来执行有害程序。![](/assets/26296_v5vuwb3fm0ildvw.png)
 

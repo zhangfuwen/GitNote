@@ -30,11 +30,11 @@ RCP，即Reality Coprocessor， 是由Silicon Graphics公司为任天堂研发�
 RSP的主要做是几何运算，对应的是T&L中的T和L。
 RDP的主要作用是栅格化和纹理贴图。
 
-![](../assets/f11-01.gif)
+![](/assets/f11-01.gif)
 
 RSP是一颗MIPS CPU，它的固件实现了一个程序，这个程序可以读取一个指令序列，解析指令序列中的指令并执行相应的指令。这些指令称为微码，micro code。程序员将一系列微码组成一个列表，称为display list或是command list。RSP则按照display list去执行。
 
-![](../assets/f11-01-00.gif)
+![](/assets/f11-01-00.gif)
 
 RSP的微码看起来像是C函数调用，但实际上它们可能是一些打包二进制比特流的宏。熟悉opengl的同学可能会觉得它们和opengl的API有点像。
 
@@ -92,7 +92,7 @@ Reality Display Processor。
 
 RDP会按照固定的步骤处理这些片元。在某种模式下的步骤如下：
 
-![](../assets/f12-01.gif)
+![](/assets/f12-01.gif)
 
 在这种模式下，它一个周期只能处理1个像素，在另一些模式下，它可以实现一个周期处理两个像素。
 
@@ -111,7 +111,7 @@ RCP已经很像是一款固定流水线的GPU了，美中不足的是它的RSP�
 
 ## GeForce 256
 
-![](../assets/440px-KL_NVIDIA_Geforce_256.jpg)
+![](/assets/440px-KL_NVIDIA_Geforce_256.jpg)
 
 这个GPU支持Direct3D 7。称为世界上的第一个GPU。
 

@@ -1,4 +1,5 @@
 # 描述性宏定义
+
 内核代码中有一个描述性质的宏定义，它们会有出现在modinfo命令的打印结果里。
 
     modinfo netconsole.ko

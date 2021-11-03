@@ -1,28 +1,30 @@
+# 通过uinput实现输入事件注入
+
 # Linux Input子系统整体架构
 
 首先上两个画得比较好的图。
 
 从图中可以看出，在内核空间，驱动被划分为 三个层次，即Input Device Driver、Input Core和Input Event Driver。驱动作者通常只按照规范，实现Device Driver，就可以正确地接入Input子系统，最终由Input Event Driver生成设备文件，即/dev/input/eventX。
 
-![Linux-Input子系统的架构图](../assets/Linux-Input子系统的架构图.jpg)
+![Linux-Input子系统的架构图](/assets/Linux-Input子系统的架构图.jpg)
 
-![another Linux-Input子系统的架构图](../assets/The-input-subsystem.jpeg)
+![another Linux-Input子系统的架构图](/assets/The-input-subsystem.jpeg)
 
 # Input Core的作用
 
 采用面向对象的语言描述。Input Device Driver实现一个`input_dev`类，将这个类注册给Input Core。Input Event Driver实现一个`input_handler`类，也把这个类注册给Input Core。Input Core分别为`input_dev`和`input_handler`维护一个列表。通过`input_connect`来对两者进行匹配，匹配上就会利用`input_handler`为`input_dev`生成一个设备文件。
 
-![input_dev and input_handler](../assets/input-core-match.png)
+![input_dev and input_handler](/assets/input-core-match.png)
 
 上图中的深色点就是 Input Handle， 左边垂直方向是Input Handler， 而水平方向是Input Dev。 下面是更为详细的一个流程图，感兴趣的同学可以点击大图看看。
 
-![input driver sequence diagram](../assets/input-core-match-sequence-diagram.png)
+![input driver sequence diagram](/assets/input-core-match-sequence-diagram.png)
 
 # 通过uinput虚拟设备驱动
 
 从上一节可以看出，输入设备已经形成了一定的规则，设备类型基本明确。设备驱动基本上也有套路可走。由于在内核层写驱动终究不如用户层方便，因而出现一个uinput组件，它在内核层作一个代理，用户层代码可以通过/dev/uinput这个设备文件与这个内核层代理通信，让它帮你注册一个设备驱动，并且帮你上报输入事件。程序员可以用它实现用户层的设备驱动（可能要配合uio或/dev/mem\)，也可以通过它注入输入事件。
 
-![uinput and virtual input device](../assets/uinput.png)
+![uinput and virtual input device](/assets/uinput.png)
 
 通过uinput注入输入事件大体需要4个步骤：
 
@@ -184,8 +186,3 @@ int destroy(int fd){
 1. [UINPUT 事件注入 ](http://www.septenary.cn/2016/01/16/UINPUT-%E4%BA%8B%E4%BB%B6%E6%B3%A8%E5%85%A5/)
 2. [Android的用户输入处理](http://www.cnblogs.com/samchen2009/p/3368158.html "图解Android - Android GUI 系统 (5) - Android的Event Input System")
 3. [Linux Input子系统分析之eventX设备创建和事件传递](http://blog.pickbox.me/2014/09/04/Linux-Input%E5%AD%90%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%E4%B9%8BeventX%E8%AE%BE%E5%A4%87%E5%88%9B%E5%BB%BA%E5%92%8C%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92/ "Linux Input子系统分析之eventX设备创建和事件传递 ")
-
-**长按识别二维码或手机扫描二维码  
-打赏我1.5元**  
-![](../assets/mm_facetoface_collect_qrcode_1486597617608.png)
-

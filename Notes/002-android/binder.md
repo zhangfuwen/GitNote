@@ -1,3 +1,5 @@
+# binder基础知识
+
 binder_proc 在一个进程open("/dev/binder")时创建，并存储到filp->private_data中。
 binder_proc代码一个打开/dev/binder的进程。
 binder_proc记录了很多信息，包括但不限于：

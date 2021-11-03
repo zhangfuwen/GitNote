@@ -100,14 +100,14 @@ https://segmentfault.com/a/1190000007002140
 
 ## h2-console的登陆方法
 
-![h2-console的登陆方法](../assets/h2-console.png)
+![h2-console的登陆方法](/assets/h2-console.png)
 
 ## JPA 与Hibernate的关系
 
 Hibernate ORM是JPA规范的一个实现。
 
 JPA即Java Persistence API，它定义了一组ORM必须实现的接口。
-![](../assets/77461dbdgbcad8312d1a0690.png)
+![](/assets/77461dbdgbcad8312d1a0690.png)
 
 ## 一些其他的JPA配置
 

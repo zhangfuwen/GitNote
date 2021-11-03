@@ -1,8 +1,10 @@
+# Cache
+
 # Briding the gap
 
 Cache 存在的意义是弥合内存与CPU之间的速度差距，CPU的指令执行是低于ns级的，而内存的访存时延时十几到几十ns级的，一次访存操作，CPU就需要等几十上百个时钟周期，这样会严重降低系统的整体效率。然而内存速度慢仅体现在时延上，从带宽的角度，内存又是能满足CPU的要求的，这时引入一个容易稍小的快速存储介质就可以将这个时延隐藏掉。具体就是在CPU执行某条访存指令之前，先将需要访问的内存数据加载到Cache中，CPU执行到那条指令时，数据已经在Cache，因而可以以同样数量级的时延访问到数据。
 
-![Cache DRAM and Disk hiarachy](../assets/Screenshot at 2月 16 20-02-08.png)
+![Cache DRAM and Disk hiarachy](/assets/Screenshot at 2月 16 20-02-08.png)
 
 # 三种典型组织形式
 
@@ -12,17 +14,17 @@ CPU发出一个访存指令，怎么才能知道目标地址上的数据在Cache
 
 
 
-![full set associative cache](../assets/Screenshot at 2月 16 20-07-34.png)
+![full set associative cache](/assets/Screenshot at 2月 16 20-07-34.png)
 
 **全相联缓存**
 
 最好是能拿到地址，我就知道它可能存储在Cache的哪一行，我再去那一行去看，如果和那一行的tag对得上就命中，对不上就是不命中。一个可行的办法就是拿内存地址对Cache的总大小取模，模的值就是Cache的目标行号，规定每个内存地址上的数据只能存在这个目标行。我们暂时称这种办法是做法2。做法2有一个显著的问题就是某个内存地址上的数据只能存在固定的Cache行上。如果遇到两个取模后相同的地址，做其中一个就没有办法存进去，此时其他Cache行是空也不能用，因而可能造成空间利用率低。做法1由于没有这个限制，只要Cache中还是未存储的空间，就可以不用换出某个Cache行。
 
-![](../assets/Screenshot at 2月 16 20-09-00.png)**直接射缓存**
+![](/assets/Screenshot at 2月 16 20-09-00.png)**直接射缓存**
 
 图示的Cache中有8行，每行的大小为16字节。给定一个内存地址，它的最低4位对于从Cache中取数据来讲是没有用的。真正有用的是高28位。这28位数对Cache行数取模，得到的值恰好是这28位中的低3位。因而图中用低3位做索引，从Cache中选中一行。选出来的一行可能用目标内存的数据，也可能是空的，也可能是其他与类似地址（低三位相同）上的内存数据。因而选出来后，还要拿高25位与tag比对，才知道选出来的数据是否是目标内存块上的数据。
 
-![](../assets/Screenshot at 2月 16 20-16-28.png)
+![](/assets/Screenshot at 2月 16 20-16-28.png)
 
 **直接映射缓存地址含义**
 
@@ -30,11 +32,11 @@ CPU发出一个访存指令，怎么才能知道目标地址上的数据在Cache
 
 针对做法2，考虑到同时访问多个映射到同一个Cache line的内存地址的可能性也不是那么大，提出了一个优化办法，即在做法2的基础上，每个Cache line引入几个影子行。比如说原来的一个Cache line现在变成了4个Cache line，则只要同一段时间使用的映射到这一行的内存地址不多于4，就不会出现换出。这种一个内存地址对应一组几个Cache line的方式称为n路组相联缓存。
 
-![](../assets/Screenshot at 2月 16 20-18-16.png)
+![](/assets/Screenshot at 2月 16 20-18-16.png)
 
 **两路组相联缓存（2-way associative 8-entry cache)**
 
 **长按识别二维码或手机扫描二维码  
 打赏我1.5元**  
-![](../assets/mm_facetoface_collect_qrcode_1486597617608.png)
+![](/assets/mm_facetoface_collect_qrcode_1486597617608.png)
 

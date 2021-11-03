@@ -34,7 +34,7 @@ class ExampleActivity extends Activity {
 Annotation processing是在编译阶段执行的，它的原理就是读入Java源代码，解析注解，然后生成新的Java代码。新生成的Java代码最后被编译成Java字节码，注解解析器（Annotation Processor）不能改变读入的Java 类，比如不能加入或删除Java方法。
 ###3.2 ButterKnife编译流程
 下图是Java 编译代码的整个过程，可以帮助我们很好理解注解解析的过程：
-![](../assets/java_compiler.png)
+![](/assets/java_compiler.png)
 
 对应上一节使用场景中的代码，bufferknife会生成类似如下的代码：
 
@@ -67,7 +67,7 @@ public class ExampleActivity$$ViewBinder<T extends
 ```
 
 用一张图来解释如下：
-![butterknife example](../assets/butterknife_example.png)
+![butterknife example](/assets/butterknife_example.png)
 在上面的过程中可以看到，为什么你用@Bind、@OnClick等注解标注的属性或方法必须是public或protected的，因为ButterKnife是通过ExampleActivity.this.editText来注入View的。
 
 ### 3.3 bind(Object, View) 和 bind(View)

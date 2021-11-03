@@ -1,3 +1,5 @@
+# 8代x86微架构Intel Core
+
 > Core微架构是一个由零设计起的处理器内部架构，但其有类似[Pentium M](https://zh.wikipedia.org/wiki/Pentium_M)的设计。它有14级[流水线](https://zh.wikipedia.org/wiki/流水线)（Pipeline），相比[NetBurst](https://zh.wikipedia.org/wiki/NetBurst)架构[Prescott](https://zh.wikipedia.org/wiki/奔腾4#Prescott)的31级，足足少了超过一半。另外，它的运行核心亦由[P6](https://zh.wikipedia.org/wiki/Intel_P6)、P6-M、及Netburst的一次可处理3个指令，增加至4个。本架构亦是一个双核心的设计，两个核心的L1缓存互相连接，分享的L2缓存。使用以上设计以达到最高性能功耗比（Performance per watt）。
 >
 > 其中一个新的设计为[宏融合](https://zh.wikipedia.org/wiki/宏融合)，将两个x86指令合并成为一个，以达到优化。另外，本架构亦将一个128位的SSE指令的思考时间由两个周期缩短为一个周期，及一个全新的省电设计。所有核心将会以最低速度运行，当有需要时则自动增速，以减低芯片的发热量，及其耗电量。本架构的[前端总线](https://zh.wikipedia.org/wiki/前端总线)（FSB）为Woodcrest核心的1333MHz（MT/s），Merom核心的667MHz（MT/s），及Conroe核心的1066MHz（MT/s，E6X00/Q6X00/QX6X00/X6X00）或1333MHz（MT/s，E6X50/E6X40/QX6X50）。不幸地，外频亦是本架构的弱点，因为其仍使用Pentium 4核心的设计，故仍未能完全控制双通道的DDR2内存，又或者新的[FB-DIMM](https://zh.wikipedia.org/wiki/FB-DIMM)。
@@ -6,7 +8,7 @@
 
 以上来自维基百科
 
-![](../assets/1024px-Intel_Core2_arch.svg.png)
+![](/assets/1024px-Intel_Core2_arch.svg.png)
 
 # 流水线深度
 

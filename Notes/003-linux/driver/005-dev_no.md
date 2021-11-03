@@ -1,4 +1,5 @@
 # 设备号
+
 设备号结构dev_t及其相关的宏定义都在linux/kdev.h中。
 下面这段话出自linux内核linux/kdev.h中，是关于主次设备号操作的一些宏
 

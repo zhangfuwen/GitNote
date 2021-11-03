@@ -1,18 +1,20 @@
+# 80686-Pentium Pro
+
 # SMP对称多处理器
 
 Pentium Pro开始支持SMP，即在一个机器上使用多个CPU。多路CPU的实现方式主要有两种，一种称为SMP，即对称多处理器，另一个为NUMA，即Non-Uniform Memory Acess。在SMP系统中，多个CPU平等一致地访问总线、外设、内存等资源，各 CPU 共享相同的物理内存，每个 CPU 访问内存中的任何地址所需时间是相同的，也称为UMA。
 SMP的设计较为复杂，多个处理器共享总线等资源在CPU个数较少的时候不是什么问题，但在CPU个数较多时，对总线带宽，总线一致性等都提出的较大的挑战，因为在更多的CPU中，通常采用NUMA架构。在NUMA架构中，每个CPU有各自的内存，一个CPU也可以访问其他CPU上的内存，但是访问速度相对较慢。这个特性会被操作系统感知，操作系统在分配内存和计算任务时，尽量将内存和计算任务分配在临近的CPU和内存上。
 
-![](../assets/clip_image001_d7728dc2-e525-4e5b-b84c-6f5a7f4de300.gif)
+![](/assets/clip_image001_d7728dc2-e525-4e5b-b84c-6f5a7f4de300.gif)
  对称多处理器系统架构图
  
-![](../assets/clip_image003_thumb.gif)
+![](/assets/clip_image003_thumb.gif)
 NUMA系统架构图
 
 # Cache的变化
 在80486中，Intel将L1 cache放进了CPU，到了80686（其实没有这个叫法了)也就是pentium Pro，Intel将L2 cache也放进了CPU。并且在L1 Cache中将数据和指令分开，即一个8KB的数据Cache， 一个8KB的指令Cache。
 
-![](../assets/5ab5c9ea15ce36d34eae08793af33a87e850b1d5.jpg.png)
+![](/assets/5ab5c9ea15ce36d34eae08793af33a87e850b1d5.jpg.png)
 
 将数据和指令分别存取的存取结构叫做哈佛结构，区别于混在一起的冯·诺伊曼结构。
 
@@ -32,7 +34,7 @@ NUMA系统架构图
 
 下面的图片中可以看出，DRAM和L2 Cache的采用并列的方式同时对接总线接口单元BIU。
 
-![](../assets/72f082025aafa40fb9910494ab64034f78f01920.jpg.png)
+![](/assets/72f082025aafa40fb9910494ab64034f78f01920.jpg.png)
 
 # ILP=3的指令级并行
 
@@ -58,7 +60,7 @@ DEC1有三个译码器，译码结果是微指令序列，即将CISC的指令转
 
 处理器分页通常都是支持4KB的页，一个页设得如此之小，造成的一个问题就是页表条目变多，页表size大，TLB miss也增多了。现在它也支持4MB的大页。可以从一定程度上缓解上述问题。
 
-![](../assets/738b4710b912c8fcc8a27d84fc039245d6882121.jpg.png)
+![](/assets/738b4710b912c8fcc8a27d84fc039245d6882121.jpg.png)
 
 对应地，TLB增加了个项，专门用来缓存大页的页表项。
 

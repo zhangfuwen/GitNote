@@ -1,4 +1,5 @@
 # Linux的打印等级
+
 Linux有八个打印等级，以KERN_EMERG等级最高，KERN_DEBUG最低。
 
 
