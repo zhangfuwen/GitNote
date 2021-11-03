@@ -53,3 +53,11 @@ defaults:
     values:
       attachment: true
 
+gittalk:
+  # Note: A GitHub Application is needed for authorization, if you don't have one, going to https://github.com/settings/applications/new register a new one.
+  # You must specify the website domain url in the Authorization callback URL field.
+  clientID: 454d90002189d195aeae  # GitHub Application Client ID
+  clientSecret: 434eb13aa18d58a1e14f5acd1dc5eded4f50d223  # GitHub Application Client Secret,
+  repository: zhangfuwen.github.io  # Storage gittalk's repository
+  owner: zhangfuwen  # GitHub repo owner,
+  admin: zhangfuwen  # GitHub repo owner and collaborators, only these guys can initialize github issues eg. 'colynn,daattali'
