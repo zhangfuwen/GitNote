@@ -72,7 +72,3 @@ tig使用很简单，但未必浅显，后面我可以搞成专题。
 24.将本地修改强制推送到服务器  git push -f -u origin master
 ```
 
-**长按识别二维码或手机扫描二维码  
-打赏我1.5元，防止老婆说我光玩电脑不赚钱**  
-![](/assets/mm_facetoface_collect_qrcode_1486597617608.png)
-

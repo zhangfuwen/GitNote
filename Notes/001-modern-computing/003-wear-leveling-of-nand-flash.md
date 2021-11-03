@@ -39,7 +39,3 @@
 
 # 3. 参考资料
 [1. Wear-Leveling Techniques in NAND Flash Devices](../attachments/tn2942_nand_wear_leveling.pdf)
-
-**长按识别二维码或手机扫描二维码
-打赏我1.5元**
-![](/assets/mm_facetoface_collect_qrcode_1486597617608.png)
