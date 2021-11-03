@@ -26,9 +26,11 @@ import cv2
 直接import会出现错误：
 
 ```warning
+
   Traceback (most recent call last):
     File "<stdin>", line 1, in <module>
   ImportError: No module named cv2
+
 ```
 
 这是因为Python并不能找到对应的OpenCV的库。  
