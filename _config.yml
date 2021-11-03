@@ -47,4 +47,4 @@ defaults:
   - scope:
       path: "attachments"
     values:
-      attachments: true
+      attachment: true
