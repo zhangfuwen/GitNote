@@ -1,6 +1,7 @@
 # x86的启动过程
 
 # 1.1 CPU的第一条指令
+
 借用网友的一张图片，上面讲述了x86系统启动到Linux内核的流程。从图中可以看到，CPU上电后从CS:IP=FFFF:0000这地址处获取第一条指令并执行。
 
 ![X86架构下的从开机到Start_kernel启动的总体过程](/assets/20140807152559130.jpeg)
@@ -30,7 +31,8 @@
 然后CPU清空Cache, TLB等缓存类硬件，将CS的初始值设置为0xF000，将IP设置为0xFFF0,所得到的物理地址值即为0xF000 << 4 | 0xFFF0 = 0xFFFF0。
 
 看起来已经很明白了，然而还没完。
-现代CPU中为了加速指令地址的计算，为每个段寄存器增加了两个寄存器：Base和Limit。Base存放基址，Limit存放最大偏移值。Base和Limit寄存器不能通过指令直接读写，他们的值是在写段寄存器时由CPU自动设置的。通常Base等于段寄存器左移四位，如果CS的值为0xF000，CS的Base寄存器则为0xF0000，但CPU初始化时例外。CS的值为0xF000, 但其Base为0xFFFF0000，EIP为0xFFF0,此时对应的指令地址为0xFFFF0000+0xFFF0 = 0xFFFFFFF0。0xFFFFFFF0就是CPU将要执行的第一条指令。这造成这样一个有趣的事实，16位程序眼中的指令地址空间0x0000~0xFFFF（大小为64K）被CPU翻译到物理地址空间(0xFFFF0000~0xFFFFFFFF)。也就是说，从CPU初始化，到段寄存器被重写（通过跨段跳转指令）前，指令空间0x0000~0xFFFF通过段寄存器被映射到物理地址空间0xFFFF0000~0xFFFFFFFF。 
+现代CPU中为了加速指令地址的计算，为每个段寄存器增加了两个寄存器：Base和Limit。Base存放基址，Limit存放最大偏移值。Base和Limit寄存器不能通过指令直接读写，他们的值是在写段寄存器时由CPU自动设置的。通常Base等于段寄存器左移四位，如果CS的值为0xF000，CS的Base寄存器则为0xF0000，但CPU初始化时例外。CS的值为0xF000, 但其Base为0xFFFF0000，EIP为0xFFF0,此时对应的指令地址为0xFFFF0000+0xFFF0 = 0xFFFFFFF0。0xFFFFFFF0就是CPU将要执行的第一条指令。这造成这样一个有趣的事实，16位程序眼中的指令地址空间0x0000~0xFFFF（大小为64K）被CPU翻译到物理地址空间(0xFFFF0000~0xFFFFFFFF)。也就是说，从CPU初始化，到段寄存器被重写（通过跨段跳转指令）前，指令空间0x0000~0xFFFF通过段寄存器被映射到物理地址空间0xFFFF0000~0xFFFFFFFF。
 
 参考资料：
 http://www.cppblog.com/djxzh/archive/2015/07/12/uefi_resetvector.html
+
