@@ -43,3 +43,8 @@ remote_theme: rundocs/jekyll-rtd-theme
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+defaults:
+  - scope:
+      path: "attachments"
+    values:
+      attachments: true
