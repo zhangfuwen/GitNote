@@ -72,19 +72,34 @@ tig使用很简单，但未必浅显，后面我可以搞成专题。
 24.将本地修改强制推送到服务器  git push -f -u origin master
 ```
 
-<div id="gitalk-container"></div>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
-<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
-<script >
-  const gitalk = new Gitalk({
-    clientID: '{{ site.gittalk.clientID }}',
-    clientSecret: "{{ site.gittalk.clientSecret }}",
-    repo: "{{ site.gittalk.repository }}",
-    owner: "{{ site.gittalk.owner }}",
-    admin: ["{{ site.gittalk.admin | split: ','  | join: '","'}}"],
-    id: "{{ page.url }}", 
-    distractionFreeMode: false,
-    perPage: 100
-});
+# 修改upstream对齐
 
-gitalk.render('gitalk-container')
+```bash
+git branch --set-upstream-to=origin/remote_branch  your_branch
+```
+
+比如从gitee切换到github：
+
+```bash
+➜  GitNote git:(master) ✗ git branch -alvv 
+* master               2a8f498 [gitee/master: 领先 61] Update _config.yml
+  remotes/gh/master    2a8f498 Update _config.yml
+  remotes/gitee/master 59a767d xx
+➜  GitNote git:(master) ✗ git branch --set-upstream-to=gh/master master
+分支 'master' 设置为跟踪来自 'gh' 的远程分支 'master'。
+➜  GitNote git:(master) ✗ git branch -alvv                             
+* master               2a8f498 [gh/master] Update _config.yml
+  remotes/gh/master    2a8f498 Update _config.yml
+  remotes/gitee/master 59a767d xx
+```
+
+# git branch 以类 less 的界面显示问题
+
+git branch现在不输到的当然terminal了，而是以类似less的方式显示，一按q就没有了，有时你想对照着git branch的输出敲多个命令现在没法办到了。
+
+解决办法：
+
+```bash
+git config --global pager.branch false
+```
+具体参考：https://www.codenong.com/48341920/
