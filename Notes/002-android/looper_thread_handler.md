@@ -1,7 +1,6 @@
 # Android的Looper, Handler和MessageQueue
 
 ```plantuml!
-@startuml
 namespace MyThread {
 
 class sThreadLocal {
@@ -55,7 +54,6 @@ class Message {
 Message "ref target"..> Handler
 Message "ref callback"..> Runnable
 
-@enduml
 ```
 
 1. Looper会被存储在一个线程的ThreadLocal中
