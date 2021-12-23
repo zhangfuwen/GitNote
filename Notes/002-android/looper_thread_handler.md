@@ -1,6 +1,6 @@
 # Android的Looper, Handler和MessageQueue
 
-```plantuml
+```plantuml!
 @startuml
 namespace MyThread {
 
