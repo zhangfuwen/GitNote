@@ -1,6 +1,7 @@
 # Android的Looper, Handler和MessageQueue
 
-```plantuml!
+```plantuml
+@startuml
 namespace MyThread {
 
 class sThreadLocal {
@@ -53,6 +54,8 @@ class Message {
 
 Message "ref target"..> Handler
 Message "ref callback"..> Runnable
+
+@enduml
 
 ```
 

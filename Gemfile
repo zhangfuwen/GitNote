@@ -39,4 +39,4 @@ gem "kramdown-parser-gfm"
 
 gem "just-the-docs"
 
-gem 'jekyll-spaceship'
+gem 'kramdown-plantuml'
