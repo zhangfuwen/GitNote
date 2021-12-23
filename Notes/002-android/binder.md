@@ -1,5 +1,7 @@
 # binder基础知识
 
+参考：https://github.com/wbo4958/jianshu/tree/master/docs/android-binder
+
 ![](/assets/res/2021-11-04-18-08-13.png)
 
 binder_proc 在一个进程open("/dev/binder")时创建，并存储到filp->private_data中。
