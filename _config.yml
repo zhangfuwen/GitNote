@@ -62,3 +62,19 @@ gittalk:
   repository: GitNote  # Storage gittalk's repository
   owner: zhangfuwen  # GitHub repo owner,
   admin: zhangfuwen  # GitHub repo owner and collaborators, only these guys can initialize github issues eg. 'colynn,daattali'
+
+plugins:
+  - jekyll-spaceship
+
+jekyll-spaceship:
+  processors:
+    - plantuml-processor
+  plantuml-processor:
+    mode: default  # mode value 'pre-fetch' for fetching image at building stage
+    css:
+      class: plantuml
+    syntax:
+      code: 'plantuml!'
+      custom: ['@startuml', '@enduml']
+    src: http://www.plantuml.com/plantuml/svg/
+  
