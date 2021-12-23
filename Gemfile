@@ -38,5 +38,3 @@ gem "kramdown-parser-gfm"
 
 
 gem "just-the-docs"
-
-gem 'kramdown-plantuml'
