@@ -59,7 +59,7 @@ makefile里面的target的生成是由其commands决定了，写下了怎么生�
 以上来自：https://www.kancloud.cn/itfanr/cmake-practice/82983
 
 
-## 基本原理
+## 基本语法
 
 ### 简单示例
 一个基本的CMakeLists.txt是这样的：
@@ -220,3 +220,51 @@ IF(ENABLE_DEBUG)
     ADD_DEFINITIONS(-DDEBUG)
 ENDIF(ENABLE_DEBUG)
 ```
+
+## 基本命令
+
+```cmake
+cmake -S . -B build # 指令源代码路径和build路径并configure
+cmake --build build # 构建
+cmake --build build --target ibus-fun # 构建ibus-fun目标
+cmake --build -t test # 构建test目标, 即执行ctest
+cpack # 打包
+```
+
+其他参数:
+
+
+```cmake
+
+cmake -B cmake_build_debug -DCMAKE_BUILD_TYPE=Debug # configure为debug构建
+cmake --build cmake_build_debug --config Debug # 以Debug的方式构建
+ctest -C Debug # 以debug的方式测试
+```
+
+跨平台：
+
+```cmake
+cmake --build build_unix -G "Unix Makefiles"
+cmake --build build_ninja -G "Ninja"
+cmake --open <dir> # 打开工程
+```
+
+
+    The following generators are available on this platform (* marks default):
+    Green Hills MULTI            = Generates Green Hills MULTI files
+                                    (experimental, work-in-progress).
+    * Unix Makefiles               = Generates standard UNIX makefiles.
+    Ninja                        = Generates build.ninja files.
+    Ninja Multi-Config           = Generates build-<Config>.ninja files.
+    Watcom WMake                 = Generates Watcom WMake makefiles.
+    CodeBlocks - Ninja           = Generates CodeBlocks project files.
+    CodeBlocks - Unix Makefiles  = Generates CodeBlocks project files.
+    CodeLite - Ninja             = Generates CodeLite project files.
+    CodeLite - Unix Makefiles    = Generates CodeLite project files.
+    Eclipse CDT4 - Ninja         = Generates Eclipse CDT 4.0 project files.
+    Eclipse CDT4 - Unix Makefiles= Generates Eclipse CDT 4.0 project files.
+    Kate - Ninja                 = Generates Kate project files.
+    Kate - Unix Makefiles        = Generates Kate project files.
+    Sublime Text 2 - Ninja       = Generates Sublime Text 2 project files.
+    Sublime Text 2 - Unix Makefiles
+                                = Generates Sublime Text 2 project files.
