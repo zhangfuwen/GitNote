@@ -44,7 +44,7 @@ function createIndex()
         title=$(cat $f | head -n 3 | tail -n 1)
         title=$(trimLeading $title)
         echo "" >> ../list.md
-        echo "[$title](${f%.txt}.html)" >> ../list.md
+        echo "[$title](extenstions/${f%.txt}.html)" >> ../list.md
 
 
     done
