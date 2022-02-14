@@ -109,6 +109,7 @@ New Types
 
 New Procedures and Functions
 
+```c
     EGLImageKHR eglCreateImageKHR(
                             EGLDisplay dpy,
                             EGLContext ctx,
@@ -119,6 +120,7 @@ New Procedures and Functions
     EGLBoolean eglDestroyImageKHR(
                             EGLDisplay dpy,
                             EGLImageKHR image)
+```                            
 
 New Tokens
 
