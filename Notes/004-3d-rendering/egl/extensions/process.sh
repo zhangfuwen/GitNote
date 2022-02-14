@@ -38,17 +38,25 @@ function createDirIndex()
 function createIndex()
 {
     echo '# List' > ../list.md
+    echo "" >> ../list.md
 
+    lines=()
     files=$(find . -name "*.txt")
     for f in $files; do
         title=$(cat $f | head -n 3 | tail -n 1)
         title=$(trimLeading $title)
-        echo "" >> ../list.md
-        echo "[$title](extenstions/${f%.txt}.html)" >> ../list.md
-
-
+        lines+=("[$title](extensions/${f%.txt}.html)")
     done
-    echo ""
+
+
+    readarray -t sorted < <(for a in "${lines[@]}"; do echo "$a"; done | sort)
+
+#    for a in ${sorted[@]}; do echo $a; done
+
+    for line in ${sorted[@]}; do
+        echo $line >> ../list.md
+        echo "" >> ../list.md
+    done
 }
 
 createIndex
