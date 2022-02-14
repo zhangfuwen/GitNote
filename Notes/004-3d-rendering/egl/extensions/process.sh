@@ -23,4 +23,8 @@ for file in $(find . -name "*.txt"); do
 
 done
 
+for d in $(find . -type d); do
+    echo "# $d" > $d/index.md
+done
+
 # for file in $(find . -name "*.txt"); do mv -- "$file" "${file%.txt}.md"; done
