@@ -694,36 +694,4 @@ Revision History
         Provisional disclaimer.
     Version 9, 2007/03/26 - add format tokens to "New Tokens"
         section. Correct description of RGBA format tokens.
-    Version 8, 2007/03/26 - add issue 11 noting theoretical possibility
-        of EGL_BUFFER_SIZE not directly corresponding to the mapped
-        pixel size. Add EGL_MATCH_FORMAT_KHR attribute to
-        eglChooseConfig, and 565 / 8888 formats for it.
-    Version 7, 2007/03/25 - note in issue 5 that access to a mapped
-        buffer must continue to work even after a mode change. Add KHR
-        suffix to new functions and tokens. Remove BITMAP_PIXEL_<x>_BITS
-        and BITMAP_PIXEL_SIZE tokens, which duplicate information in the
-        EGLConfig. Add issue 10 asking whether bitmap pixel offset
-        attributes belong to the config, or to the surface.
-    Version 6, 2007/02/26 - allow EGL_CLIENT_APIS string to be empty in
-        implementations supporting only this extension.
-    Version 5, 2007/02/05 - update contributor list. Changed bit offset
-        queries to return LSB offset, rather than MSB offset.
-    Version 4, 2007/02/02 - correct extension name. Change
-        name of FAST_UNLOCK_BIT_KHR to OPTIMAL_FORMAT_BIT_KHR.
-        Replace buffer_mask parameter of eglLockSurfaceKHR with an
-        attribute list. Add the EGL_MAP_PRESERVE_PIXELS_KHR and
-        EGL_LOCK_USAGE_HINT_KHR attributes per request from Gary. Add issues
-        7, 8, and 9 describing these attributes and how to support
-        locking subrects in a layered extension, by extending the
-        attribute list.
-    Version 3, 2007/02/01 - the implementation once again controls the
-        mapped buffer memory. There is no longer a separate bitmap
-        surface type; any type surface may potentially be mapped, using
-        lock/unlock semantics.
-    Version 2, 2006/12/22 - simplify by only supporting drawing from
-        client memory to EGL surface color buffers. Specify use of
-        OpenGL DrawPixels terminology. Change name of the extension to
-        EGL_KHR_draw_pixels, since there is no longer any "bitmap
-        surface" involved.
-    Version 1, 2006/12/14 - write up as formal spec language for
-        external review.
+    Version 8, 2007/03/26 - add issue 11 noting theo
