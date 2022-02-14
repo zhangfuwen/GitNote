@@ -37,23 +37,18 @@ function createDirIndex()
 
 function createIndex()
 {
-    echo '---
-
-has_children: true
-
----
-
-# EGL' > ../index.md
+    echo '# List' > ../list.md
 
     files=$(find . -name "*.txt")
     for f in $files; do
         title=$(cat $f | head -n 3 | tail -n 1)
         title=$(trimLeading $title)
-        echo "[$title](${f%.txt}.html)" >> ../index.md
-        echo "[$title](${f%.txt}.html)"
+        echo "" >> ../list.md
+        echo "[$title](${f%.txt}.html)" >> ../list.md
 
 
     done
+    echo ""
 }
 
 createIndex
