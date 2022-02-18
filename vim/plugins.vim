@@ -207,6 +207,10 @@ Plug 'weirongxu/plantuml-previewer.vim'
 
 " }}}
 
+" 1.14 ctrlsf {{{
+Plug 'dyng/ctrlsf.vim'
+" }}}
+
 " Disabled {{{
 "Plug 'derekwyatt/vim-protodef',{'for':['c','cpp']}
 "Plug 'dbgx/lldb.nvim',{'on':'LLsession','do':':UpdateRemotePlugins'}
