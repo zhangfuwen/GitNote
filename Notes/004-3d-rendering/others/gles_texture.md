@@ -1,6 +1,6 @@
 # GLES Texture
 
-# 概念
+## 概念
 
 GLES的Texture有几个概念：
 
@@ -9,7 +9,7 @@ GLES的Texture有几个概念：
 3. texture object, 与name一一对应的。用glBindTexture获得
 4. texture image, 一个texture object中可以有多个image，一个image 代码2D纹理的一个mipmap level，或是Cube Map纹理中一个面的一个mipmap level。
 
-# texture unit
+## texture unit
 
 texture unit通过glActiveTexture激活，成为当前上下文的默认texture:
 
@@ -41,7 +41,7 @@ struct gl_fixedfunc_texture_unit FixedFuncUnit[MAX_TEXTURE_COORD_UNITS];
 
 一个上下文中有MAX_COMBINED_TEXTURE_IMAGE_UNITS个texture_unit。这是一个显卡常量。
 
-# texture name
+## texture name
 
 入口在_mesa_GenTextures:
 
@@ -69,7 +69,7 @@ struct gl_fixedfunc_texture_unit FixedFuncUnit[MAX_TEXTURE_COORD_UNITS];
 分配一个数字，然后为这个数字分配了一个空的gl_texture_object。这个mesa的实现。
 在swiftshader的实现中，仅分配了一个数字。
 
-# texture object
+## texture object
 
 入口在_mesa_BindTexture:
 
@@ -112,7 +112,7 @@ struct gl_texture_object
 
 ```
 
-# texture image
+## texture image
 
 入口在_mesa_TexImage2D或_mesa_TexStorage2D:
 
@@ -161,7 +161,7 @@ struct gl_texture_image
 
 ```
 
-## mutable image
+### mutable image
 
 _mesa_TexImage2D分配的是mutable image，比较关键的gl_texture_image与gl_texture_object对应的代码在这里:
 
@@ -284,7 +284,7 @@ st_AllocTextureImageBuffer(struct gl_context *ctx,
 }
 ```
 
-### st_texture_image
+#### st_texture_image
 
 st_texture_create返回的是pipe_resource指针，填入了st_texture_image的pt成员里。pipe_resource就是代码buffer或image的backing store。
 
@@ -305,7 +305,7 @@ struct st_texture_image
 };
 ```
 
-### pipe_resource
+#### pipe_resource
 
 st_texture_create函数主要调用screen->resource_create来创建pipe_resource的一个子类, pipe_resource代表一个buffer或image，它只描述，不具体真实的backing store，真实的backing store在子类里：
 
@@ -353,7 +353,7 @@ st_texture_create(struct st_context *st,
 
 ```
 
-### fd resource
+#### fd resource
 
 screen->resource_create在adreno中就是fd_resource_create函数, 这个函数经过一系列调用，最后通过创建了一个pipe_resource的子类对象，fd_resource：
 
@@ -401,7 +401,7 @@ realloc_bo(struct fd_resource *rsc, uint32_t size)
 }
 ```
 
-### fd_bo
+#### fd_bo
 
 ```c
 struct fd_bo {
@@ -465,7 +465,8 @@ static struct fd_bo * bo_from_handle(struct fd_device *dev,
 }
 ```
 
-## immutable image
+
+### immutable image
 
 immutable image的分配是在st_AllocTextureStorage（其他显卡可以重写这个函数），它只分配一个image, 给所有的faces和level用。
 分配到的是pipe_resource，存在st_texture_object的pt指针下面, st_texture_object是gl_texture_object的子类：
@@ -500,7 +501,326 @@ void st_texture_storage()
 
 st_texture_create之后的实现参考上一节，都是一样的。
 
-# 示例代码
+## eglImage vs gl_texture_image
+
+在Android中经常需要渲染到AHardwareBuffer。其中的原理是什么呢？
+
+### 用法
+
+#### 做法一
+
+```c
+
+// Try creating a 32x32 AHardwareBuffer and attaching it to a multiview
+// framebuffer, with various formats and depths.
+AHardwareBuffer_Desc desc = {};
+desc.width = 32;
+desc.height = 32;
+desc.usage = AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE |
+AHARDWAREBUFFER_USAGE_GPU_COLOR_OUTPUT;
+const int layers[] = {2, 4};
+const int formats[] = {
+    AHARDWAREBUFFER_FORMAT_R5G6B5_UNORM,
+    AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
+    // Do not test AHARDWAREBUFFER_FORMAT_BLOB, it isn't color-renderable.
+};
+const int samples[] = {1, 2, 4};
+for (int nsamples : samples) {
+    for (auto nlayers : layers) {
+        for (auto format : formats) {
+            desc.layers = nlayers;
+            desc.format = format;
+            testEglImageArray(env, desc, nsamples);
+        }
+    }
+}
+
+static void testEglImageArray(JNIEnv* env, AHardwareBuffer_Desc desc,
+        int nsamples) {
+ AHardwareBuffer* hwbuffer = nullptr;
+    int error = AHardwareBuffer_allocate(&desc, &hwbuffer);
+
+    // Create EGLClientBuffer from the AHardwareBuffer.
+    EGLClientBuffer native_buffer = eglGetNativeClientBufferANDROID(hwbuffer);
+
+    // Create EGLImage from EGLClientBuffer.
+    EGLint attrs[] = {EGL_NONE};
+    EGLImageKHR image =
+        eglCreateImageKHR(eglGetCurrentDisplay(), EGL_NO_CONTEXT,
+                          EGL_NATIVE_BUFFER_ANDROID, native_buffer, attrs);
+
+    // Create OpenGL texture from the EGLImage.
+    GLuint texid;
+    glGenTextures(1, &texid);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texid);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D_ARRAY, image);
+
+    // Create FBO and add multiview attachment.
+    GLuint fboid;
+    glGenFramebuffers(1, &fboid);
+    glBindFramebuffer(GL_FRAMEBUFFER, fboid);
+    const GLint miplevel = 0;
+    const GLint base_view = 0;
+    const GLint num_views = desc.layers;
+    if (nsamples == 1) {
+        glFramebufferTextureMultiviewOVR(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                         texid, miplevel, base_view, num_views);
+    } else {
+        glFramebufferTextureMultisampleMultiviewOVR(
+            GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texid, miplevel, nsamples,
+            base_view, num_views);
+    }
+
+    glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    //do some render
+  
+    glDeleteTextures(1, &texid);
+    glDeleteFramebuffers(1, &fboid);
+    AHardwareBuffer_release(hwbuffer);
+  
+```
+
+#### 做法二
+
+也可以通过eglCreateNativeClientBufferANDROID获取EGLClientBuffer.
+
+```c
+EGLint attrs[] = {
+	EGL_WIDTH, 10,
+	EGL_HEIGHT,10,
+	EGL_RED_SIZE,8,
+	EGL_GREEN_SIZE,8,
+	EGL_BLUE_SIZE 8,
+	EGL_ALPHA_SIZE,8,
+	EGL_NATIVE_BUFFER_USAGE_ANDROID,EGL_NATIVE_BUFFER_USAGE_TEXTURE_BIT_ANDROID,
+	EGL_NONE };
+  
+EGLClientBuffer native_buffer = eglCreateNativeClientBufferANDROID(attrs);
+```
+
+### 原理
+
+在前面的章节我们知道texture的一个image，在底层的backing store是一个通过drm获取的一个buffer object。
+
+那么eglImage与gl_texture_image是不是一一对应的关系呢？
+
+#### eglCreateImageKHR的实现
+
+```c
+src/egl/drivers/dri2/platform_android.c:1343:   .create_image = droid_create_image_khr,
+
+```
+
+具体到native buffer的实现在`dri2_create_image_android_native_buffer`:
+
+```c
+static _EGLImage *
+dri2_create_image_android_native_buffer(_EGLDisplay *disp,
+                                        _EGLContext *ctx,
+                                        struct ANativeWindowBuffer *buf)
+{
+   if (ctx != NULL) {
+      /* From the EGL_ANDROID_image_native_buffer spec:
+       *
+       *     * If <target> is EGL_NATIVE_BUFFER_ANDROID and <ctx> is not
+       *       EGL_NO_CONTEXT, the error EGL_BAD_CONTEXT is generated.
+       */
+      _eglError(EGL_BAD_CONTEXT, "eglCreateEGLImageKHR: for "
+                "EGL_NATIVE_BUFFER_ANDROID, the context must be "
+                "EGL_NO_CONTEXT");
+      return NULL;
+   }
+
+   if (!buf || buf->common.magic != ANDROID_NATIVE_BUFFER_MAGIC ||
+       buf->common.version != sizeof(*buf)) {
+      _eglError(EGL_BAD_PARAMETER, "eglCreateEGLImageKHR");
+      return NULL;
+   }
+
+   __DRIimage *dri_image =
+      droid_create_image_from_native_buffer(disp, buf, buf);
+
+#ifdef HAVE_DRM_GRALLOC
+   if (dri_image == NULL)
+      dri_image = droid_create_image_from_name(disp, buf, buf);
+#endif
+
+   if (dri_image) {
+#if ANDROID_API_LEVEL >= 26
+      AHardwareBuffer_acquire(ANativeWindowBuffer_getHardwareBuffer(buf));
+#endif
+      return dri2_create_image_from_dri(disp, dri_image);
+   }
+
+   return NULL;
+}
+```
+
+从ahardwarebuffer创建dri_image最终调到了这里：
+
+```c
+static __DRIimage *
+droid_create_image_from_buffer_info(struct dri2_egl_display *dri2_dpy,
+    ¦   ¦   ¦   ¦   ¦   ¦   ¦   ¦   struct buffer_info *buf_info,
+    ¦   ¦   ¦   ¦   ¦   ¦   ¦   ¦   void *priv)
+{
+   unsigned error;
+
+   if (dri2_dpy->image->base.version >= 15 &&
+    ¦  dri2_dpy->image->createImageFromDmaBufs2 != NULL) {
+    ¦ return dri2_dpy->image->createImageFromDmaBufs2(
+    ¦   ¦dri2_dpy->dri_screen, buf_info->width, buf_info->height,
+    ¦   ¦buf_info->drm_fourcc, buf_info->modifier, buf_info->fds,
+    ¦   ¦buf_info->num_planes, buf_info->pitches, buf_info->offsets,
+    ¦   ¦buf_info->yuv_color_space, buf_info->sample_range,
+    ¦   ¦buf_info->horizontal_siting, buf_info->vertical_siting, &error,
+    ¦   ¦priv);
+   }
+
+   return dri2_dpy->image->createImageFromDmaBufs(
+    ¦ dri2_dpy->dri_screen, buf_info->width, buf_info->height,
+    ¦ buf_info->drm_fourcc, buf_info->fds, buf_info->num_planes,
+    ¦ buf_info->pitches, buf_info->offsets, buf_info->yuv_color_space,
+    ¦ buf_info->sample_range, buf_info->horizontal_siting,
+    ¦ buf_info->vertical_siting, &error, priv);                                                                                                 
+}
+
+```
+
+两个函数指针的具体实现分别为:`dri2_from_dma_bufs`和 `dri2_from_dma_bufs2`，这两个函数都是调用`dri2_create_image_from_fd`：
+这个函数从fd创建了一个DRIImage，fd是放在了一个pipe_resource里面(与gl_texture_image同)。DRIImage的数据结构(alias of DRIImageRec)：
+
+```c
+struct __DRIimageRec {
+   struct pipe_resource *texture; // 这里是一个链表，对ahardwarebuffer可能带来的多个fd,用pipe_resource->next串起来。 
+   unsigned level;
+   unsigned layer;
+   uint32_t dri_format;
+   uint32_t dri_fourcc;
+   uint32_t dri_components;
+   unsigned use;
+   unsigned plane;
+
+   void *loader_private;
+
+   boolean imported_dmabuf;
+   /** 
+   ¦* Provided by EGL_EXT_image_dma_buf_import.
+   ¦*/ 
+   enum __DRIYUVColorSpace yuv_color_space;                                                                                                     
+   enum __DRISampleRange sample_range;
+   enum __DRIChromaSiting horizontal_siting;
+   enum __DRIChromaSiting vertical_siting;
+
+   /* DRI loader screen */
+   __DRIscreen *sPriv;
+};
+
+```
+
+DRIImage的texture是通过对每个fd调用tex = pscreen->resource_from_handle并prepend实现的，resource_from_handle针对高通的实现是
+`fd_resource_from_handle`, 实际上创建的是pipe_resource的子类fd_resource。
+
+从这里可以看到eglImage和gl_texture_object或gl_texture_image都不一样，它代表一串，几个pipe_resource。
+
+#### glEGLImageTargetTexture2DOES
+
+它的实现是__mesa_EGLImageTargetTexture2DOES， 该函数主要逻辑：
+
+```c
+texImage = _mesa_get_tex_image(ctx, texObj, target, 0); //最后一个参数是level，就是只用texture的level 0
+   if (!texImage) {
+      _mesa_error(ctx, GL_OUT_OF_MEMORY, "%s", caller);
+   } else {
+      st_FreeTextureImageBuffer(ctx, texImage); // 释放到gl_texture_image的backing store
+
+      texObj->External = GL_TRUE;
+
+      if (tex_storage) {
+         st_egl_image_target_tex_storage(ctx, target, texObj, texImage,
+                                         image); 
+      } else {
+         st_egl_image_target_texture_2d(ctx, target, texObj, texImage,
+                                        image);
+      }
+
+      _mesa_dirty_texobj(ctx, texObj);
+   }
+
+```
+
+上面代码中调用的st_egl_image_target_tex_storage和st_egl_image_target_texture_2d的实现基本是相同的：
+
+```c
+void
+st_egl_image_target_tex_storage(struct gl_context *ctx, GLenum target,
+    ¦   ¦   ¦   ¦   ¦   ¦   ¦   struct gl_texture_object *texObj,
+    ¦   ¦   ¦   ¦   ¦   ¦   ¦   struct gl_texture_image *texImage,
+    ¦   ¦   ¦   ¦   ¦   ¦   ¦   GLeglImageOES image_handle)
+{
+   struct st_egl_image stimg;
+   bool native_supported;
+
+   if (!st_get_egl_image(ctx, image_handle, PIPE_BIND_SAMPLER_VIEW,
+    ¦   ¦   ¦   ¦   ¦   ¦"glEGLImageTargetTexture2D", &stimg,
+    ¦   ¦   ¦   ¦   ¦   ¦&native_supported))
+    ¦ return;
+
+   st_bind_egl_image(ctx, texObj, texImage, &stimg, true, native_supported);                                                                      
+   pipe_resource_reference(&stimg.texture, NULL);
+}
+
+```
+
+函数的逻辑就是取到st_egl_image然后后gl_texture_object绑定，即调用st_bind_egl_iamge。
+st_egl_image不是DRIImage的子类，但它们的pipe_resource *texture指向相同。
+
+st_bind_egl_image主要做的就是把stimg->texture填到texObj->pt和texImage->pt上。
+
+```c
+ pipe_resource_reference(&texObj->pt, stimg->texture); //pipe_resource_reference实际是将第一个参数指向的内容释放，然后再第二个参数指针的内容赋值给第一个参数
+   st_texture_release_all_sampler_views(st, texObj);                                                                                              
+   pipe_resource_reference(&texImage->pt, texObj->pt);
+
+```
+
+经过这一步之后是这样的：
+
+```plantuml
+class gl_texture_object {
+  
+    pipe_resource * pt;
+    gl_texture_image *Image[faces][levels];
+}
+
+class gl_texture_image {
+}
+
+class st_texture_image {
+    pipe_resource * pt;
+}
+st_texture_image "extends"--|> gl_texture_image
+
+gl_texture_object "Image[0][0]" -> gl_texture_image
+
+class st_egl_image {
+    pipe_resource * texture;
+}
+
+object fd_resource_linked_list {
+    pipe_resource * next;
+}
+
+Object texObj<<st_texture_object>> 
+texObj "pt"..>  fd_resource_linked_list
+Object texImg<<st_texture_image>>
+texImg "pt"..>  fd_resource_linked_list
+Object stImg<<st_egl_image>>
+stImg "texture"..>  fd_resource_linked_list
+
+```
+
+## 示例代码
 
 ```c
 glActiveTexture(GL_TEXTURE0); //激活texture unit
