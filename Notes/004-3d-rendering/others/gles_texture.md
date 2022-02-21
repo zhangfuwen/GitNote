@@ -1,6 +1,7 @@
 # GLES Texture
 
 # 概念
+
 GLES的Texture有几个概念：
 
 1. texture unit，应用显卡中的硬件单元，用于对纹理进入采样和写入
@@ -11,7 +12,6 @@ GLES的Texture有几个概念：
 # texture unit
 
 texture unit通过glActiveTexture激活，成为当前上下文的默认texture:
-
 
 ```c
 /**
@@ -164,6 +164,7 @@ struct gl_texture_image
 ## mutable image
 
 _mesa_TexImage2D分配的是mutable image，比较关键的gl_texture_image与gl_texture_object对应的代码在这里:
+
 ```c
 /**
  * Like _mesa_select_tex_image() but if the image doesn't exist, allocate
@@ -307,6 +308,7 @@ struct st_texture_image
 ### pipe_resource
 
 st_texture_create函数主要调用screen->resource_create来创建pipe_resource的一个子类, pipe_resource代表一个buffer或image，它只描述，不具体真实的backing store，真实的backing store在子类里：
+
 ```c
 /**
  * Allocate a new pipe_resource object
@@ -352,6 +354,7 @@ st_texture_create(struct st_context *st,
 ```
 
 ### fd resource
+
 screen->resource_create在adreno中就是fd_resource_create函数, 这个函数经过一系列调用，最后通过创建了一个pipe_resource的子类对象，fd_resource：
 
 ```c
@@ -399,6 +402,7 @@ realloc_bo(struct fd_resource *rsc, uint32_t size)
 ```
 
 ### fd_bo
+
 ```c
 struct fd_bo {
 	struct fd_device *dev;
@@ -523,4 +527,224 @@ glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
+```
+
+# DRM vs GBM
+
+drm提供了一组ioctl来管理buffer的创建、释放、map, 送显等：
+https://gitlab.freedesktop.org/mesa/drm/-/blob/main/include/drm/drm.h
+
+gbm是一个通用的buffer管理接口，api比较易用，它有多种backend,典型的就是drm。
+
+## drm api
+
+https://gitlab.freedesktop.org/mesa/drm/-/blob/main/include/drm/drm.h
+
+## gbm api
+
+```c
+/**
+ * \file gbmint.h
+ * \brief Internal implementation details of gbm
+ */
+
+/**
+ * The device used for the memory allocation.
+ *
+ * The members of this structure should be not accessed directly
+ */
+struct gbm_device {
+   /* Hack to make a gbm_device detectable by its first element. */
+   struct gbm_device *(*dummy)(int);
+
+   int fd;
+   const char *name;
+   unsigned int refcount;
+   struct stat stat;
+
+   void (*destroy)(struct gbm_device *gbm);
+   int (*is_format_supported)(struct gbm_device *gbm,
+                              uint32_t format,
+                              uint32_t usage);
+   int (*get_format_modifier_plane_count)(struct gbm_device *device,
+                                          uint32_t format,
+                                          uint64_t modifier);
+
+   struct gbm_bo *(*bo_create)(struct gbm_device *gbm,
+                               uint32_t width, uint32_t height,
+                               uint32_t format,
+                               uint32_t usage,
+                               const uint64_t *modifiers,
+                               const unsigned int count);
+   struct gbm_bo *(*bo_import)(struct gbm_device *gbm, uint32_t type,
+                               void *buffer, uint32_t usage);
+   void *(*bo_map)(struct gbm_bo *bo,
+                               uint32_t x, uint32_t y,
+                               uint32_t width, uint32_t height,
+                               uint32_t flags, uint32_t *stride,
+                               void **map_data);
+   void (*bo_unmap)(struct gbm_bo *bo, void *map_data);
+   int (*bo_write)(struct gbm_bo *bo, const void *buf, size_t data);
+   int (*bo_get_fd)(struct gbm_bo *bo);
+   int (*bo_get_planes)(struct gbm_bo *bo);
+   union gbm_bo_handle (*bo_get_handle)(struct gbm_bo *bo, int plane);
+   uint32_t (*bo_get_stride)(struct gbm_bo *bo, int plane);
+   uint32_t (*bo_get_offset)(struct gbm_bo *bo, int plane);
+   uint64_t (*bo_get_modifier)(struct gbm_bo *bo);
+   void (*bo_destroy)(struct gbm_bo *bo);
+
+   struct gbm_surface *(*surface_create)(struct gbm_device *gbm,
+                                         uint32_t width, uint32_t height,
+                                         uint32_t format, uint32_t flags,
+                                         const uint64_t *modifiers,
+                                         const unsigned count);
+   struct gbm_bo *(*surface_lock_front_buffer)(struct gbm_surface *surface);
+   void (*surface_release_buffer)(struct gbm_surface *surface,
+                                  struct gbm_bo *bo);
+   int (*surface_has_free_buffers)(struct gbm_surface *surface);
+   void (*surface_destroy)(struct gbm_surface *surface);
+};
+```
+
+## 通过GBM离屏渲染
+
+
+```c
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#include <GLES3/gl31.h>
+#include <assert.h>
+#include <fcntl.h>
+#include <gbm.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+/* a dummy compute shader that does nothing */
+#define COMPUTE_SHADER_SRC "          \
+#version 310 es\n                                                       \
+                                                                        \
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;       \
+                                                                        \
+void main(void) {                                                       \
+   /* awesome compute code here */                                      \
+}                                                                       \
+"
+
+int32_t
+main (int32_t argc, char* argv[])
+{
+   bool res;
+
+   int32_t fd = open ("/dev/dri/renderD128", O_RDWR);
+   assert (fd > 0);
+
+   struct gbm_device *gbm = gbm_create_device (fd);
+   assert (gbm != NULL);
+
+   /* setup EGL from the GBM device */
+   EGLDisplay egl_dpy = eglGetPlatformDisplay (EGL_PLATFORM_GBM_MESA, gbm, NULL);
+   assert (egl_dpy != NULL);
+
+   res = eglInitialize (egl_dpy, NULL, NULL);
+   assert (res);
+
+   const char *egl_extension_st = eglQueryString (egl_dpy, EGL_EXTENSIONS);
+   assert (strstr (egl_extension_st, "EGL_KHR_create_context") != NULL);
+   assert (strstr (egl_extension_st, "EGL_KHR_surfaceless_context") != NULL);
+
+   static const EGLint config_attribs[] = {
+      EGL_RENDERABLE_TYPE, EGL_OPENGL_ES3_BIT_KHR,
+      EGL_NONE
+   };
+   EGLConfig cfg;
+   EGLint count;
+
+   res = eglChooseConfig (egl_dpy, config_attribs, &cfg, 1, &count);
+   assert (res);
+
+   res = eglBindAPI (EGL_OPENGL_ES_API);
+   assert (res);
+
+   static const EGLint attribs[] = {
+      EGL_CONTEXT_CLIENT_VERSION, 3,
+      EGL_NONE
+   };
+   EGLContext core_ctx = eglCreateContext (egl_dpy,
+                                           cfg,
+                                           EGL_NO_CONTEXT,
+                                           attribs);
+   assert (core_ctx != EGL_NO_CONTEXT);
+
+   res = eglMakeCurrent (egl_dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, core_ctx);
+   assert (res);
+
+   /* print some compute limits (not strictly necessary) */
+   GLint work_group_count[3] = {0};
+   for (unsigned i = 0; i < 3; i++)
+      glGetIntegeri_v (GL_MAX_COMPUTE_WORK_GROUP_COUNT,
+                       i,
+                       &work_group_count[i]);
+   printf ("GL_MAX_COMPUTE_WORK_GROUP_COUNT: %d, %d, %d\n",
+           work_group_count[0],
+           work_group_count[1],
+           work_group_count[2]);
+
+   GLint work_group_size[3] = {0};
+   for (unsigned i = 0; i < 3; i++)
+      glGetIntegeri_v (GL_MAX_COMPUTE_WORK_GROUP_SIZE, i, &work_group_size[i]);
+   printf ("GL_MAX_COMPUTE_WORK_GROUP_SIZE: %d, %d, %d\n",
+           work_group_size[0],
+           work_group_size[1],
+           work_group_size[2]);
+
+   GLint max_invocations;
+   glGetIntegerv (GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &max_invocations);
+   printf ("GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS: %d\n", max_invocations);
+
+   GLint mem_size;
+   glGetIntegerv (GL_MAX_COMPUTE_SHARED_MEMORY_SIZE, &mem_size);
+   printf ("GL_MAX_COMPUTE_SHARED_MEMORY_SIZE: %d\n", mem_size);
+
+   /* setup a compute shader */
+   GLuint compute_shader = glCreateShader (GL_COMPUTE_SHADER);
+
+   assert (glGetError () == GL_NO_ERROR);
+   const char *shader_source = COMPUTE_SHADER_SRC;
+
+   glShaderSource (compute_shader, 1, &shader_source, NULL);
+   assert (glGetError () == GL_NO_ERROR);
+
+   glCompileShader (compute_shader);
+   assert (glGetError () == GL_NO_ERROR);
+
+   GLuint shader_program = glCreateProgram ();
+
+   glAttachShader (shader_program, compute_shader);
+   assert (glGetError () == GL_NO_ERROR);
+
+   glLinkProgram (shader_program);
+   assert (glGetError () == GL_NO_ERROR);
+
+   glDeleteShader (compute_shader);
+
+   glUseProgram (shader_program);
+   assert (glGetError () == GL_NO_ERROR);
+
+   /* dispatch computation */
+   glDispatchCompute (1, 1, 1);
+   assert (glGetError () == GL_NO_ERROR);
+
+   printf ("Compute shader dispatched and finished successfully\n");
+
+   /* free stuff */
+   glDeleteProgram (shader_program);
+   eglDestroyContext (egl_dpy, core_ctx);
+   eglTerminate (egl_dpy);
+   gbm_device_destroy (gbm);
+   close (fd);
+
+   return 0;
+}
 ```
