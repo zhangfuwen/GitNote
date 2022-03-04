@@ -11,6 +11,11 @@ $ docker import http://downloads.openwrt.org/attitude_adjustment/12.09/x86/gener
 $ docker images
 REPOSITORY                           TAG                   IMAGE ID            CREATED             VIRTUAL SIZE
 openwrt-x86-generic-rootfs           latest                2cebd16f086c        6 minutes ago       5.283 MB
+
+$ docker run -i openwrt-x86-generic-rootfs -name openwrt /sbin/init
+$ docker exec -it openwrt /bin/ash
+
+
 ```
 
 https://openwrt.org/docs/guide-user/virtualization/docker_openwrt_image
