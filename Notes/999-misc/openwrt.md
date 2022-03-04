@@ -18,8 +18,16 @@ $ docker exec -it openwrt /bin/ash
 
 ```
 
-https://openwrt.org/docs/guide-user/virtualization/docker_openwrt_image
+ref: https://openwrt.org/docs/guide-user/virtualization/docker_openwrt_image
 
+raspberry pi 3B :https://archive.openwrt.org/releases/21.02.2/targets/bcm27xx/bcm2710/openwrt-21.02.2-bcm27xx-bcm2710-rpi-3-ext4-factory.img.gz
+
+### docker install
+
+```
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh ./get-docker.sh
+```
 
 ## 3. openwrt的树莓派镜像可以用rpi-imager安装
 
