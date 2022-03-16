@@ -36,3 +36,4 @@ https://firmware-selector.openwrt.org/?version=21.02.0&target=bcm27xx%2Fbcm2710&
 
 ## 4. rpi-imager在linux下失败可以去windows下试试
 
+Linux下的USB可能有些问题，可能是缓冲区太大了。
