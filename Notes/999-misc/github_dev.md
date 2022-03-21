@@ -1,5 +1,7 @@
 # 使用github.dev写markdown文档
 
+## 图片
+
 在github中，你的repo任意页面上，键盘输入`.`，即可以激活github.dev，这是一个web版的vs code。
 
 在里面写markdown文档有一个问题，就是常用的上传图版的插件用不了。
@@ -17,3 +19,9 @@
 写完直接在SOURCE CONTROL上写commit msg然后点｀对勾`就可以了。代码会自动commit，并push到github上对应分支，非常方便，不用push了。而且这个web版vscode好像优化了流程，也无需stage了，直接写commit msg然后点对勾就行了。
 
 ![commit](./.assets/githhub_dev_commit.png)
+
+## jeykyll variables
+
+https://jekyllrb.com/docs/variables/
+
+
