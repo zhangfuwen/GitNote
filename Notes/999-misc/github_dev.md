@@ -7,3 +7,9 @@
 好在可以通过在文件夹上右键，然后upload上传图片：
 
 ![上传图片](./.assets/github_dev_upload.png)
+
+然后可以手动写一个文件的链接：
+
+![手写链接](./.assets/github_dev_insertlink.png)
+
+好在vscode可以自动补全路径，所以文件名取怪一些也无所谓。
