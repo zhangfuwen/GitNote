@@ -114,6 +114,7 @@ struct gl_texture_object
 
 ## texture image
 
+
 入口在_mesa_TexImage2D或_mesa_TexStorage2D:
 
 前者分配一个image，放在某target的某个mipmap level上。并且可以填充或不填充数据。
