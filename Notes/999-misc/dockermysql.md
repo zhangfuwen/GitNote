@@ -1,3 +1,9 @@
+---
+
+title: 用docker提供mysql数据库服务
+
+---
+
 # 用docker提供mysql数据库服务
 
 最近我的ubuntu一关机，重启后mysqld就无法启动了，现在决定使用docker来管理mysql服务。希望可以稳定下来。
