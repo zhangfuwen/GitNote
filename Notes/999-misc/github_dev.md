@@ -8,17 +8,17 @@
 
 好在可以通过在文件夹上右键，然后upload上传图片：
 
-![上传图片](./.assets/github_dev_upload.png)
+![上传图片](assets/github_dev_upload.png)
 
 然后可以手动写一个文件的链接：
 
-![手写链接](./.assets/github_dev_insertlink.png)
+![手写链接](assets/github_dev_insertlink.png)
 
 好在vscode可以自动补全路径，所以文件名取怪一些也无所谓。
 
 写完直接在SOURCE CONTROL上写commit msg然后点｀对勾`就可以了。代码会自动commit，并push到github上对应分支，非常方便，不用push了。而且这个web版vscode好像优化了流程，也无需stage了，直接写commit msg然后点对勾就行了。
 
-![commit](./.assets/githhub_dev_commit.png)
+![commit](assets/githhub_dev_commit.png)
 
 ## jeykyll variables
 
