@@ -2,7 +2,7 @@
 
 最近我的ubuntu一关机，重启后mysqld就无法启动了，现在决定使用docker来管理mysql服务。希望可以稳定下来。
 
-# 安装docker及mysql
+## 安装docker及mysql
 
 ```bash
 sudo apt-get install docker.io
@@ -10,7 +10,7 @@ service docker start
 sudo docker pull mysql/mysql-server
 ```
 
-# 运行mysql
+## 运行mysql
 
 `docker run --expose 3306 --name my-container-name -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql/mysql-server:tag`
 
@@ -35,7 +35,7 @@ create table zhangfuwen;
 exit
 exit
 ```
-## 把docker的3306端口与主机的3306端口绑定
+### 把docker的3306端口与主机的3306端口绑定
 
 By default Docker containers can make connections to the outside world, but the outside world cannot connect to containers. Each outgoing connection will appear to originate from one of the host machine’s own IP addresses thanks to an iptables masquerading rule on the host machine that the Docker server creates when it starts:
 ```bash
@@ -77,7 +77,7 @@ You can see that Docker has exposed these container ports on 0.0.0.0, the wildca
 
 Or if you always want Docker port forwards to bind to one specific IP address, you can edit your system-wide Docker server settings and add the option --ip=IP_ADDRESS. Remember to restart your Docker server after editing this setting.
 
-## 保存状态
+### 保存状态
 
 
 ```
@@ -100,14 +100,14 @@ dean@dean-Aspire-4740:~$ sudo docker commit 406dfe63d729 mysql/mysql-server:vers
 sha256:0ca5485937accdc4a90037427ea2ab7feb38f22d3898e6a2b823c0b1e6536cc2
 ```
 
-## 关闭docker
+### 关闭docker
 
 
 ```
 dean@dean-Aspire-4740:~$ sudo docker stop mysql_docker
 ```
 
-## 运行修改后的docker
+### 运行修改后的docker
 
 
 ```
@@ -130,7 +130,7 @@ sudo docker port mysql_docker1 3306
 sudo docker inspect mysql_docker1
 ```
 
-## grant access:
+### grant access:
 
 
 ```
@@ -143,14 +143,14 @@ IDENTIFIED BY '123456';
 ```
 
 
-## 登入：
+### 登入：
 
 
 ```bash
  mysql -uroot -p -h127.0.0.1 -P 3306 
 ```
 
-## docker 使用宿主机网络
+### docker 使用宿主机网络
 
 ```bash
 docker run -d --name nginx --network host nginx
@@ -158,7 +158,7 @@ docker run -d --name nginx --network host nginx
 
 上面的命令中，没有必要像前面一样使用`-p 80:80 -p 443:443`来映射端口，是因为本身与宿主机共用了网络，容器中暴露端口等同于宿主机暴露端口。
 
-## docker使用国内源
+### docker使用国内源
 ```bash
 sudo mkdir -p /etc/docker
 sudo tee /etc/docker/daemon.json <<-'EOF'
@@ -196,11 +196,11 @@ EOF
 sudo service docker restart
 ```
 
-## docker 将容器保存为镜像
+### docker 将容器保存为镜像
 
 
 
-### 语法
+#### 语法
 
 ```
 docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
