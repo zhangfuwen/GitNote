@@ -46,4 +46,15 @@ ninja
 
 ![CMakePresets](assets/cmake%20presets.png)
 
-如果所示。
+这个clion也可以识别，如图所示：
+
+![CMakePresets Clion识别](assets/cmake_presets_clion.png)
+
+> 坑：CLion不太能识别你的环境变量。第一个图中用到了ANDROID_NDK_HOME变量。但是这个变量设置在`~/.bashrc`, `~/.zshrc`等文件里不起作用。
+
+不起作用的方法：写在`~/.bashrc`, `~/.zshrc`,  `~/.profile`, `/etc/environment`, `/etc/profile.d/whatever_younameit.sh`里，然后通过图形界面打开clion。
+
+起作用的方法：确保shell中有这个环境变量后，从shell命令行启动。
+起作用的方法：写在`/etc/environment`, `/etc/profile.d/xxx`里，重启电脑（也许注销图形界面再回来也行)。
+起作用的方法：写在Clion的`Appearance & Behavior` -> `Path Variable`里。
+
