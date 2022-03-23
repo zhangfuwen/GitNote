@@ -1,5 +1,9 @@
+---
 
-# CMAKE
+title: CMAKE
+
+---
+
 
 要编译C/C++代码，我们通常使用gcc或g++命令。比如说：
 
@@ -11,7 +15,7 @@ gcc main.c -o a.out
 
 但如果你的项目大一点儿，可能事情就没那么简单的了。整个项目被分为多个组件，每个组件都可以独立编译成静态或动态链接库，然后再一起构建最终的可执行文件。更有甚者，你的项目就是一组给别人使用的动态或静态链接库。这时候，如果还是使用一个脚本来构建的话，维护各个组件的依赖关系就变得比较烦人。到这个时候，你面对的实际上有两个问题，一个是用哪些命令编译或链接代码，另一个，怎么维护这些组件间的依赖关系。
 
-## make
+# make
 
 make是一个不错的工具，它可以帮我们解决组件间的依赖关系。在makefile中，每个组件都对应一个target、一组dependency和一组commands。
 
@@ -29,7 +33,7 @@ make的逻辑足够简单实用，规则也非常灵活，所以它非常强大�
 
 我很喜欢vim，也喜欢命令行敲命令。但是大型软件的开发中，IDE还是比单纯的文本编辑和搜索更有效率（有人可能会argue说vim也可以打造成IDE，但vim打造出来的那个IDE仍然很难或很好的支持makefile)。
 
-## cmake
+# cmake
 
 make十分灵活，它可以用来构建什么东西，不光是C/C++代码，也可以构建其他语言的代码，甚至构建非代码，如文档之类的东西。这也导致了IDE支持它比较难。
 
@@ -52,16 +56,16 @@ makefile里面的target的生成是由其commands决定了，写下了怎么生�
 
 除此之外，如果你不用IDE，cmake至少还有一个优点就是编译过程的打印格式非常的整齐漂亮。
 
-## cmake的故事
+# cmake的故事
 
     cmake 是kitware公司以及一些开源开发者在开发几个工具套件(VTK) 的过程中衍生品，最终形成体系，成为一个独立的开放源代码项目。项目的诞生时间是2001年。其官方网站是www.cmake.org，可以通过访问官方网站获得更多关于cmake 的信息。cmake的流行其实要归功于KDE4的开发(似乎跟当年的svn一样，KDE将代码仓库从CVS迁移到SVN，同时证明了SVN管理大型项目的可用性)，在KDE开发者使用了近10年autotools之后，他们终于决定为KDE4选择一个新的工程构建工具，其根本原因用KDE的话来说就是：只有少数几个编译专家能够掌握KDE现在的构建体系(admin/Makefile.common) ，在经历了unsermake, scons 以及cmake 的选型和尝试之后，KDE4决定使用cmake作为自己的构建系统。在迁移过程中，进展异常的顺利，并获得了cmake开发者的支持。所以，目前的KDE4开发版本已经完全使用cmake来进行构建。像kdesvn,rosegarden等项目也开始使用cmake，这也注定了cmake 必然会成为一个主流的构建体系。
 
 以上来自：https://www.kancloud.cn/itfanr/cmake-practice/82983
 
 
-## 基本语法
+# 基本语法
 
-### 简单示例
+## 简单示例
 一个基本的CMakeLists.txt是这样的：
 
 ```cmake
@@ -80,7 +84,7 @@ add_executable定义了一个**target**，其名字为hello，其类型为execut
 如`add_library(lib1 SHARED lib1.c lib1_module1.c)`
 或`add_library(lib2 STATIC lib2.c lib2_module1.c)`
 
-### 链接库及包含子模块
+## 链接库及包含子模块
 
 假设lib1文件夹下有一个动态链接库， lib2文件夹下有一个静态连接库，我们的hello组件怎么使用他们？
 
@@ -111,7 +115,7 @@ add_library(lib2 STATIC lib2.c lib2_module1.c)
 
 这里lib2换了一种写法，lib1的写法，即先把源代码列表定义为一个变量，然后以${}去引用，这种方式更好一些。但文件较少的话，也可以采用lib2的写法。
 
-### 包含头文件
+## 包含头文件
 
 如果lib1中有一个lib1.h，在main.c中需要包含，我们可以在main.c中写为
 
@@ -145,7 +149,7 @@ target_include_directories(hello lib1)
 
 ```
 
-## 全局和局部作用域
+# 全局和局部作用域
 
 target_link_libraries和target_include_directories两条指令都只作用于hello这个**target**，如果你在当前CMakeLists.txt中还定义了别的**target**，则是不起作用的。
 
@@ -182,7 +186,7 @@ add_executable(hello2 main2.c)
 
 ```
 
-### 包含来自外部文件夹中的组件
+## 包含来自外部文件夹中的组件
 
 如果我们想包含一个组件，它不在hello的子文件夹里，而是在hello以外，比如说是一个hello的兄弟或堂兄弟文件夹，或包含方式需要有一些变化。如果直接写`add_subdirectory(../lib3)`，则编译时会报错提示你同时指定这个组件的二进制文件生成的路径。因为子文件夹可以很符合逻辑地放在build/lib1, build/lib2下面，但lib3的二进制文件怎么放？build/../lib3，这显示打乱了不扰乱目录的初衷。
 
@@ -196,14 +200,14 @@ add_subdirectory(../lib3 ${PROJECT_BINARY_DIR}/external/lib3)
 
 这里PROJECT_BINARY_DIR是一个CMake的内置变量。默认情况下它的值就是build目录的绝对路径。
 
-### CMake内置变量
+## CMake内置变量
 
 上面我们遇到了一个CMake内置变量，其实如果代码写得复杂了，好多CMake内置变量是用得到的。这里只简单介绍常用的，不常用的参考附录。
 
-### 分支控制
+## 分支控制
 
 
-### 开关
+## 开关
 
 1. 字符串判断
 ```cmake
@@ -221,7 +225,7 @@ IF(ENABLE_DEBUG)
 ENDIF(ENABLE_DEBUG)
 ```
 
-## 基本命令
+# 基本命令
 
 ```cmake
 cmake -S . -B build # 指令源代码路径和build路径并configure
