@@ -785,3 +785,99 @@ Revision History
     Revision 1, 2013/1/2
       - Copied from revision 1 of ANGLE_timer_query
       - Added TIMESTAMP_EXT and GPU_DISJOINT_EXT
+
+# 用法与注意事项
+
+## 用法与示例代码
+
+### 获取函数指针
+
+在Android NDK环境下，include相关egl, gles库之前，先定义宏：
+
+`#define GL_GLEXT_PROTOTYPES 1`
+
+即可得用相应的函数声明和宏定义。
+
+但是链接时会出错，所以需要在运行时通过eglGetProcAddress获取函数指针，下述代码没有判断函数指针有效性，需自行判断指针为空：
+
+
+```c++
+    decltype(glGenQueriesEXT) *glGenQueriesEXT1 = (decltype(glGenQueriesEXT)*)eglGetProcAddress("glGenQueriesEXT");
+	decltype(glBeginQueryEXT) *glBeginQueryEXT1 = (decltype(glBeginQueryEXT)*)eglGetProcAddress("glBeginQueryEXT");
+	decltype(glEndQueryEXT) *glEndQueryEXT1 = (decltype(glEndQueryEXT)*)eglGetProcAddress("glEndQueryEXT");
+	decltype(glDeleteQueriesEXT) *glDeleteQueriesEXT1 = (decltype(glDeleteQueriesEXT)*)eglGetProcAddress("glDeleteQueriesEXT");
+	decltype(glGetQueryObjectuivEXT) *glGetQueryObjectuivEXT1 = (decltype(glGetQueryObjectuivEXT)*)eglGetProcAddress("glGetQueryObjectuivEXT");
+	decltype(glGetQueryObjectui64vEXT) *glGetQueryObjectui64vEXT1 = (decltype(glGetQueryObjectui64vEXT)*)eglGetProcAddress("glGetQueryObjectui64vEXT");
+	decltype(glQueryCounterEXT) *glQueryCounterEXT1 = (decltype(glQueryCounterEXT)*)eglGetProcAddress("glQueryCounterEXT");
+
+```
+
+### 查询耗时
+
+```cpp
+
+	GLuint q1;
+	glGetError();
+	glGenQueriesEXT1(1, &q1);
+	glBeginQueryEXT1(GL_TIME_ELAPSED_EXT, q1);
+
+    /**
+     * put you draw call here
+     */
+    
+    glEndQueryEXT1(GL_TIME_ELAPSED_EXT);
+
+    // 这一步不是必须的
+    glGetQueryObjectuivEXT1(q1, GL_QUERY_RESULT_AVAILABLE_EXT, &avail);
+	if(avail != GL_TRUE) {
+		FUN_ERROR("not avail");
+	}
+
+    // 这一步不是必须的，因为这一步会阻塞等结果, 但如果你不想等，可以用让一句去poll，有数据了再读
+	glGetQueryObjectuivEXT1(q1, GL_QUERY_RESULT_EXT, &world_time);
+
+    glDeleteQueriesEXT1(1, &q1);
+```
+
+### 查询时间戳
+
+```cpp
+	GLuint q2[2];
+	GLuint64 ts[2];
+
+	glGetError(); // clear errors
+
+	glGenQueriesEXT1(2, q2);
+
+	glQueryCounterEXT1(GL_TIMESTAMP_EXT, q2[0]);
+    if(auto err = glGetError(); err != GL_NO_ERROR) {
+		FUN_ERROR("tsts: error %d", err); // 高通adreno 645似乎还不支持这个API，所以这里返回1280, invalid enum.
+	}
+
+
+    /**
+     * draw call
+     */
+    
+    GLuint avail;
+	glGetQueryObjectuivEXT1(q2[0], GL_QUERY_RESULT_AVAILABLE_EXT, &avail);
+	if(avail != GL_TRUE) {
+		FUN_ERROR("fps not avail");
+	}
+	glGetQueryObjectuivEXT1(q2[1], GL_QUERY_RESULT_AVAILABLE_EXT, &avail);
+	if(avail != GL_TRUE) {
+		FUN_ERROR("fps not avail");
+	}
+
+	glGetQueryObjectui64vEXT1(q2[0], GL_QUERY_RESULT_EXT, &ts[0]);
+	glGetQueryObjectui64vEXT1(q2[1], GL_QUERY_RESULT_EXT, &ts[1]);
+
+	glDeleteQueriesEXT1(2, q2);
+
+    FUN_INFO("tsts %lu %lu %lu", ts[1], ts[0], ts[1] - ts[0]);
+
+```
+
+## 注意事项
+
+adreno 645在查询GLES extensions的时候能查到GL_EXT_disjoint_timer_query，但是似乎支持的并不完整。查TIME STAMP不work。
