@@ -802,13 +802,14 @@ Revision History
 
 
 ```c++
-    decltype(glGenQueriesEXT) *glGenQueriesEXT1 = (decltype(glGenQueriesEXT)*)eglGetProcAddress("glGenQueriesEXT");
-	decltype(glBeginQueryEXT) *glBeginQueryEXT1 = (decltype(glBeginQueryEXT)*)eglGetProcAddress("glBeginQueryEXT");
-	decltype(glEndQueryEXT) *glEndQueryEXT1 = (decltype(glEndQueryEXT)*)eglGetProcAddress("glEndQueryEXT");
-	decltype(glDeleteQueriesEXT) *glDeleteQueriesEXT1 = (decltype(glDeleteQueriesEXT)*)eglGetProcAddress("glDeleteQueriesEXT");
-	decltype(glGetQueryObjectuivEXT) *glGetQueryObjectuivEXT1 = (decltype(glGetQueryObjectuivEXT)*)eglGetProcAddress("glGetQueryObjectuivEXT");
-	decltype(glGetQueryObjectui64vEXT) *glGetQueryObjectui64vEXT1 = (decltype(glGetQueryObjectui64vEXT)*)eglGetProcAddress("glGetQueryObjectui64vEXT");
-	decltype(glQueryCounterEXT) *glQueryCounterEXT1 = (decltype(glQueryCounterEXT)*)eglGetProcAddress("glQueryCounterEXT");
+
+decltype(glGenQueriesEXT) *glGenQueriesEXT1 = (decltype(glGenQueriesEXT)*)eglGetProcAddress("glGenQueriesEXT");
+decltype(glBeginQueryEXT) *glBeginQueryEXT1 = (decltype(glBeginQueryEXT)*)eglGetProcAddress("glBeginQueryEXT");
+decltype(glEndQueryEXT) *glEndQueryEXT1 = (decltype(glEndQueryEXT)*)eglGetProcAddress("glEndQueryEXT");
+decltype(glDeleteQueriesEXT) *glDeleteQueriesEXT1 = (decltype(glDeleteQueriesEXT)*)eglGetProcAddress("glDeleteQueriesEXT");
+decltype(glGetQueryObjectuivEXT) *glGetQueryObjectuivEXT1 = (decltype(glGetQueryObjectuivEXT)*)eglGetProcAddress("glGetQueryObjectuivEXT");
+decltype(glGetQueryObjectui64vEXT) *glGetQueryObjectui64vEXT1 = (decltype(glGetQueryObjectui64vEXT)*)eglGetProcAddress("glGetQueryObjectui64vEXT");
+decltype(glQueryCounterEXT) *glQueryCounterEXT1 = (decltype(glQueryCounterEXT)*)eglGetProcAddress("glQueryCounterEXT");
 
 ```
 
@@ -816,68 +817,68 @@ Revision History
 
 ```cpp
 
-	GLuint q1;
-	glGetError();
-	glGenQueriesEXT1(1, &q1);
-	glBeginQueryEXT1(GL_TIME_ELAPSED_EXT, q1);
+GLuint q1;
+glGetError();
+glGenQueriesEXT1(1, &q1);
+glBeginQueryEXT1(GL_TIME_ELAPSED_EXT, q1);
 
-    /**
-     * put you draw call here
-     */
-    
-    glEndQueryEXT1(GL_TIME_ELAPSED_EXT);
+/**
+ * put you draw call here
+ */
 
-    // 这一步不是必须的
-    glGetQueryObjectuivEXT1(q1, GL_QUERY_RESULT_AVAILABLE_EXT, &avail);
-	if(avail != GL_TRUE) {
-		FUN_ERROR("not avail");
-	}
+glEndQueryEXT1(GL_TIME_ELAPSED_EXT);
 
-    // 这一步不是必须的，因为这一步会阻塞等结果, 但如果你不想等，可以用让一句去poll，有数据了再读
-	glGetQueryObjectuivEXT1(q1, GL_QUERY_RESULT_EXT, &world_time);
+// 这一步不是必须的
+glGetQueryObjectuivEXT1(q1, GL_QUERY_RESULT_AVAILABLE_EXT, &avail);
+if(avail != GL_TRUE) {
+    FUN_ERROR("not avail");
+}
 
-    glDeleteQueriesEXT1(1, &q1);
+// 这一步不是必须的，因为这一步会阻塞等结果, 但如果你不想等，可以用让一句去poll，有数据了再读
+glGetQueryObjectuivEXT1(q1, GL_QUERY_RESULT_EXT, &world_time);
+
+glDeleteQueriesEXT1(1, &q1);
 ```
 
 ### 查询时间戳
 
 ```cpp
-	GLuint q2[2];
-	GLuint64 ts[2];
+GLuint q2[2];
+GLuint64 ts[2];
 
-	glGetError(); // clear errors
+glGetError(); // clear errors
 
-	glGenQueriesEXT1(2, q2);
+glGenQueriesEXT1(2, q2);
 
-	glQueryCounterEXT1(GL_TIMESTAMP_EXT, q2[0]);
-    if(auto err = glGetError(); err != GL_NO_ERROR) {
-		FUN_ERROR("tsts: error %d", err); // 高通adreno 645似乎还不支持这个API，所以这里返回1280, invalid enum.
-	}
+glQueryCounterEXT1(GL_TIMESTAMP_EXT, q2[0]);
+if(auto err = glGetError(); err != GL_NO_ERROR) {
+    FUN_ERROR("tsts: error %d", err); // 高通adreno 645似乎还不支持这个API，所以这里返回1280, invalid enum.
+}
 
 
-    /**
-     * draw call
-     */
-    
-    GLuint avail;
-	glGetQueryObjectuivEXT1(q2[0], GL_QUERY_RESULT_AVAILABLE_EXT, &avail);
-	if(avail != GL_TRUE) {
-		FUN_ERROR("fps not avail");
-	}
-	glGetQueryObjectuivEXT1(q2[1], GL_QUERY_RESULT_AVAILABLE_EXT, &avail);
-	if(avail != GL_TRUE) {
-		FUN_ERROR("fps not avail");
-	}
+/**
+    * draw call
+    */
 
-	glGetQueryObjectui64vEXT1(q2[0], GL_QUERY_RESULT_EXT, &ts[0]);
-	glGetQueryObjectui64vEXT1(q2[1], GL_QUERY_RESULT_EXT, &ts[1]);
+GLuint avail;
+glGetQueryObjectuivEXT1(q2[0], GL_QUERY_RESULT_AVAILABLE_EXT, &avail);
+if(avail != GL_TRUE) {
+    FUN_ERROR("fps not avail");
+}
+glGetQueryObjectuivEXT1(q2[1], GL_QUERY_RESULT_AVAILABLE_EXT, &avail);
+if(avail != GL_TRUE) {
+    FUN_ERROR("fps not avail");
+}
 
-	glDeleteQueriesEXT1(2, q2);
+glGetQueryObjectui64vEXT1(q2[0], GL_QUERY_RESULT_EXT, &ts[0]);
+glGetQueryObjectui64vEXT1(q2[1], GL_QUERY_RESULT_EXT, &ts[1]);
 
-    FUN_INFO("tsts %lu %lu %lu", ts[1], ts[0], ts[1] - ts[0]);
+glDeleteQueriesEXT1(2, q2);
+
+FUN_INFO("tsts %lu %lu %lu", ts[1], ts[0], ts[1] - ts[0]);
 
 ```
 
 ## 注意事项
 
-adreno 645在查询GLES extensions的时候能查到GL_EXT_disjoint_timer_query，但是似乎支持的并不完整。查TIME STAMP不work。
+>  :warning: `adreno 645`在查询GLES extensions的时候能查到GL_EXT_disjoint_timer_query，但是似乎支持的并不完整。查TIME STAMP不work。
