@@ -39,6 +39,8 @@ make十分灵活，它可以用来构建什么东西，不光是C/C++代码，�
 
 cmake限制了这种灵活性，它只支持C/C++代码（当然，它也有一些边角料的命令可以用来做一些其他事情，但这不是cmake的主要部分）。cmake也限制了shell命令的使用，只能使用一些cmake提供的功能。有限的灵活性、严格的语言逻辑，使得cmake对IDE非常友好。目前市面上最好的C/C++ IDE支持cmake。这里所说的最好的IDE指的是Visual Studio和CLion。前者是所有windows程序员都认同的最好的IDE。后者是我认为最好的C/C++ IDE。
 
+*[cmake]: cross platform make
+
 makefile里面的target的生成是由其commands决定了，写下了怎么生成就必须怎么生成，所以你写一条shell语句，就没有办法在windows下编译。与make相比， cmake是**跨平台**的。在CMakeLists.txt中，你不指定一个target怎么编译，你只为它准备材料，主要是说是这个target需要哪些源代码，依赖哪些库。从这个角度上讲，CMakeLists.txt中，程序员只维护target和dependency，而不必管生成target的commands。
 
 那么commands由谁来写呢？cmake帮你写。当你在build文件夹中执行cmake ..时，cmake为你生成Makefile或Visual Studio Project。然后你再调用make或ms build来执行命令，生成target。
@@ -58,7 +60,8 @@ makefile里面的target的生成是由其commands决定了，写下了怎么生�
 
 # cmake的故事
 
-    cmake 是kitware公司以及一些开源开发者在开发几个工具套件(VTK) 的过程中衍生品，最终形成体系，成为一个独立的开放源代码项目。项目的诞生时间是2001年。其官方网站是www.cmake.org，可以通过访问官方网站获得更多关于cmake 的信息。cmake的流行其实要归功于KDE4的开发(似乎跟当年的svn一样，KDE将代码仓库从CVS迁移到SVN，同时证明了SVN管理大型项目的可用性)，在KDE开发者使用了近10年autotools之后，他们终于决定为KDE4选择一个新的工程构建工具，其根本原因用KDE的话来说就是：只有少数几个编译专家能够掌握KDE现在的构建体系(admin/Makefile.common) ，在经历了unsermake, scons 以及cmake 的选型和尝试之后，KDE4决定使用cmake作为自己的构建系统。在迁移过程中，进展异常的顺利，并获得了cmake开发者的支持。所以，目前的KDE4开发版本已经完全使用cmake来进行构建。像kdesvn,rosegarden等项目也开始使用cmake，这也注定了cmake 必然会成为一个主流的构建体系。
+
+>    cmake 是kitware公司以及一些开源开发者在开发几个工具套件(VTK) 的过程中衍生品，最终形成体系，成为一个独立的开放源代码项目。项目的诞生时间是2001年。其官方网站是www.cmake.org，可以通过访问官方网站获得更多关于cmake 的信息。cmake的流行其实要归功于KDE4的开发(似乎跟当年的svn一样，KDE将代码仓库从CVS迁移到SVN，同时证明了SVN管理大型项目的可用性)，在KDE开发者使用了近10年autotools之后，他们终于决定为KDE4选择一个新的工程构建工具，其根本原因用KDE的话来说就是：只有少数几个编译专家能够掌握KDE现在的构建体系(admin/Makefile.common) ，在经历了unsermake, scons 以及cmake 的选型和尝试之后，KDE4决定使用cmake作为自己的构建系统。在迁移过程中，进展异常的顺利，并获得了cmake开发者的支持。所以，目前的KDE4开发版本已经完全使用cmake来进行构建。像kdesvn,rosegarden等项目也开始使用cmake，这也注定了cmake 必然会成为一个主流的构建体系。
 
 以上来自：https://www.kancloud.cn/itfanr/cmake-practice/82983
 
@@ -69,9 +72,9 @@ makefile里面的target的生成是由其commands决定了，写下了怎么生�
 一个基本的CMakeLists.txt是这样的：
 
 ```cmake
-PROJECT (HELLO)
-SET(SRC_LIST main.c module1.c module2.c)
-ADD_EXECUTABLE(hello ${SRC_LIST})
+project (hello)
+set(SRC_LIST main.c module1.c module2.c)
+add_executable(hello ${SRC_LIST})
 ```
 
 其中第一句project是可以不用写的。另外，project, set, add_executable等关键字是大小写都可以的。
