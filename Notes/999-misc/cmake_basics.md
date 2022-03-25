@@ -61,7 +61,9 @@ makefile里面的target的生成是由其commands决定了，写下了怎么生�
 # cmake的故事
 
 
->    cmake 是kitware公司以及一些开源开发者在开发几个工具套件(VTK) 的过程中衍生品，最终形成体系，成为一个独立的开放源代码项目。项目的诞生时间是2001年。其官方网站是www.cmake.org，可以通过访问官方网站获得更多关于cmake 的信息。cmake的流行其实要归功于KDE4的开发(似乎跟当年的svn一样，KDE将代码仓库从CVS迁移到SVN，同时证明了SVN管理大型项目的可用性)，在KDE开发者使用了近10年autotools之后，他们终于决定为KDE4选择一个新的工程构建工具，其根本原因用KDE的话来说就是：只有少数几个编译专家能够掌握KDE现在的构建体系(admin/Makefile.common) ，在经历了unsermake, scons 以及cmake 的选型和尝试之后，KDE4决定使用cmake作为自己的构建系统。在迁移过程中，进展异常的顺利，并获得了cmake开发者的支持。所以，目前的KDE4开发版本已经完全使用cmake来进行构建。像kdesvn,rosegarden等项目也开始使用cmake，这也注定了cmake 必然会成为一个主流的构建体系。
+>   **:warning:** warning
+
+>  cmake 是kitware公司以及一些开源开发者在开发几个工具套件(VTK) 的过程中衍生品，最终形成体系，成为一个独立的开放源代码项目。项目的诞生时间是2001年。其官方网站是www.cmake.org，可以通过访问官方网站获得更多关于cmake 的信息。cmake的流行其实要归功于KDE4的开发(似乎跟当年的svn一样，KDE将代码仓库从CVS迁移到SVN，同时证明了SVN管理大型项目的可用性)，在KDE开发者使用了近10年autotools之后，他们终于决定为KDE4选择一个新的工程构建工具，其根本原因用KDE的话来说就是：只有少数几个编译专家能够掌握KDE现在的构建体系(admin/Makefile.common) ，在经历了unsermake, scons 以及cmake 的选型和尝试之后，KDE4决定使用cmake作为自己的构建系统。在迁移过程中，进展异常的顺利，并获得了cmake开发者的支持。所以，目前的KDE4开发版本已经完全使用cmake来进行构建。像kdesvn,rosegarden等项目也开始使用cmake，这也注定了cmake 必然会成为一个主流的构建体系。
 
 以上来自：https://www.kancloud.cn/itfanr/cmake-practice/82983
 
