@@ -264,3 +264,168 @@ cso -> pipe: draw_vbo(fd6_draw_vbo)
 pipe -> fd_draw: draw_emit
 @enduml
 ```
+
+
+### kernel code
+
+#### 流程
+```plantuml
+@startuml
+
+actor platform
+participant adreno_device
+participant dispatcher
+participant ringbuffer
+participant trace
+participant profile
+
+platform -> dispatcher++ : adreno_dispatcher_queue_cmds(drawobjs[])
+loop foreach drawobj
+dispatcher ->  dispatcher++ : _queue_xxxobj
+dispatcher -> dispatcher++ : _queue_drawobj(drawobj)
+dispatcher -> dispatcher : ctxt->drawqueue[tail] = drawobj
+dispatcher -> trace : trace_adreno_cmdbatch_queued()
+dispatcher--
+dispatcher--
+dispatcher--
+
+end loop
+
+
+== kthread_worker ==
+
+loop kthread_worker
+
+platform -> dispatcher++ : adreno_dispatcher_work()
+
+== retire ==
+
+loop foreach rb : device.ringbuffers
+
+dispatcher  -> dispatcher++ :  adreno_dispatch_process_drawqueue(rb->dispatch_q)
+dispatcher  -> dispatcher++ :  adreno_dispatch_retire_drawqueue(rb->dispatch_q)
+
+loop foreach drawobj : dispatch_q->cmd_q
+dispatcher -> dispatcher++ : retire_obj(drawobj)
+dispatcher -> profile : cmdobj_profile_ticks()
+dispatcher -> trace : trace_adreno_cmdbatch_retired()
+dispatcher--
+end loop
+dispatcher--
+
+== submit ==
+dispatcher -> dispatcher++ :  _adreno_dispatcher_issue_cmds(dev)
+
+loop foreach context
+dispatcher -> dispatcher++ : dispatcher_context_sendcmds(drawctx)
+loop foreach drawobj : ctxt->drawqueue[]
+dispatcher -> dispatcher: _retire_markerobj
+dispatcher -> dispatcher: _retire_syncobj
+dispatcher -> dispatcher++: sendcmd(drawobj as cmdobj)
+dispatcher -> ringbuffer++: adreno_ringbuffer_submitcmd
+ringbuffer -> profile: kernel started 
+ringbuffer -> profile: user submitted 
+loop foreach ib in cmdobj
+ringbuffer -> ringbuffer: copy to cmd
+end loop
+ringbuffer -> ringbuffer++: adreno_drawctxt_switch(rb, drawctxt);
+ringbuffer -> profile: kernel retired 
+ringbuffer -> profile: user retired 
+ringbuffer -> ringbuffer++: adreno_ringbuffer_addcmds(cmd)
+ringbuffer -> profile : adreno_profile_pre_ib_processing //prepend记录perfcounter指令
+ringbuffer -> profile : adreno_profile_post_ib_processing //记录perfcounter
+ringbuffer -> ringbuffer : adreno_ringbufferr_submit,修改write ptr
+ringbuffer--
+
+ringbuffer -> trace: trace_kgsl_issueibcmds(timestamps, numibs)
+ringbuffer--
+
+dispatcher -> trace: trace_adreno_cmdbatch_submitted
+dispatcher -> dispatcher : dispatch_q->cmd_q[tail] = cmdobj
+
+
+end loop
+
+dispatcher--
+end loop
+dispatcher--
+
+end loop
+
+@enduml
+
+
+
+```
+
+#### 类图
+
+```plantuml
+
+@startuml
+class kgsl_drawobj {
+	struct kgsl_device *device;
+	struct kgsl_context *context;
+	uint32_t type;
+	uint32_t timestamp;
+	unsigned long flags;
+	struct kref refcount;
+}
+
+class kgsl_drawobj_cmd {
+	struct kgsl_drawobj base;
+	unsigned long priv;
+	unsigned int global_ts;
+	unsigned long fault_policy;
+	unsigned long fault_recovery;
+	struct list_head cmdlist;
+	struct list_head memlist;
+	unsigned int marker_timestamp;
+	struct kgsl_mem_entry *profiling_buf_entry;
+	uint64_t profiling_buffer_gpuaddr;
+	unsigned int profile_index;
+	uint64_t submit_ticks;
+}
+
+kgsl_drawobj <|-down- kgsl_drawobj_cmd
+
+class adreno_dispatcher_drawqueue {
+	struct kgsl_drawobj_cmd *cmd_q[ADRENO_DISPATCH_DRAWQUEUE_SIZE];
+	unsigned int inflight;
+	unsigned int head;
+	unsigned int tail;
+	int active_context_count;
+	unsigned long expires;
+}
+
+adreno_dispatcher_drawqueue "has many" -> kgsl_drawobj_cmd
+
+
+class adreno_ringbuffer {
+    struct adreno_dispatcher_drawqueue dispatch_q
+}
+
+adreno_ringbuffer *-down->  adreno_dispatcher_drawqueue : dispatch_q
+
+class adreno_device {
+	struct kgsl_device dev;  
+	unsigned long priv;
+	unsigned int *gpmu_cmds;
+	struct adreno_ringbuffer ringbuffers[KGSL_PRIORITY_MAX_RB_LEVELS];
+}
+
+adreno_device *-down-> adreno_ringbuffer : has 4
+
+class adreno_context {
+	struct kgsl_context base;
+
+	struct kgsl_drawobj *drawqueue[ADRENO_CONTEXT_DRAWQUEUE_SIZE];
+	unsigned int drawqueue_head;
+	unsigned int drawqueue_tail;
+}
+
+adreno_context -left-> kgsl_drawobj : drawqueue
+@enduml
+
+```
+
