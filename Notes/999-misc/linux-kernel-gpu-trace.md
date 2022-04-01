@@ -429,3 +429,11 @@ adreno_context -left-> kgsl_drawobj : drawqueue
 
 ```
 
+### mesa adreno code
+
+```plantuml
+
+st -> fd_context: fd6_emit_title_init
+fd_context -> fd6_gmem: emit_binning_pass 
+
+```
