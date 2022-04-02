@@ -33,7 +33,33 @@ sudo sh ./get-docker.sh
 
 https://firmware-selector.openwrt.org/?version=21.02.0&target=bcm27xx%2Fbcm2710&id=rpi-3
 
-
 ## 4. rpi-imager在linux下失败可以去windows下试试
 
 Linux下的USB可能有些问题，可能是缓冲区太大了。
+
+# 组网
+
+```plantuml
+@startuml
+!include <office/Servers/application_server>
+!include <office/Servers/database_server>
+nwdiag {
+  network chinamobile {
+
+      router [address = "210.x.x.1", description="<&wifi*4>"];
+      other_routers [address = "x"];
+  }
+  network internal {
+      address = "192.168.1.0/24";
+
+      router [address = "192.168.1.1"];
+      rpi [address = "192.168.1.10"， description="<&wifi*4>\n rpi"];
+      phone1 [description="<&phone*4>\n phone\n gw=192.168.1.10"];
+      phone2 [description="<&tablet*4>\n tablet\n gateway=192.168.1.10"];
+      pc [description="<$database_server>\n pc"];
+      macbook [description="<&laptop*4>\n laptop"];
+  }
+}
+@enduml
+
+```
