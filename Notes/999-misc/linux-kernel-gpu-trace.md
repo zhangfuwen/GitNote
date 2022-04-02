@@ -385,7 +385,7 @@ class fd_ringbuffer {
 
 上一节讲到fd_batch及其draw, binning, gmem三个ringbuffer是在flush的时候创建的。其实说的不太对。它是在调用drawcall之前就要创建的。兴许这个flush在eglMakeCurrent的时候也会调用，所以可以保证draw call的时候有batch及ringbuffer存在。
 
-ringbuffer录制的大部分工作发生在drawcall里，主要是`fd6_draw_vbo`函数。`fd6_draw_vbo`会创建一个emit结构体，这个结构体基本是由ctx中绑定的各种当前对象（当前program及其vs,fs,gs，顶点缓冲区等）初始化的。然后｀fd6_draw_vbo`调用`fd6_emit_state`函数，把这些状态写入到ringbuffer里。 所有fd6_emit_开头的函数都是往ringbuffer写入数据用的，它的第一个参数一般是一个ringbuffer。`fd6_emit_state`里各种DIRTY_XXX判断，是为了减少不必要的状态切换，如果某些状态没有变化，就不通过指令去更新它。
+ringbuffer录制的大部分工作发生在drawcall里，主要是`fd6_draw_vbo`函数。`fd6_draw_vbo`会创建一个emit结构体，这个结构体基本是由ctx中绑定的各种当前对象（当前program及其vs,fs,gs，顶点缓冲区等）初始化的。然后`fd6_draw_vbo`调用`fd6_emit_state`函数，把这些状态写入到ringbuffer里。 所有fd6_emit_开头的函数都是往ringbuffer写入数据用的，它的第一个参数一般是一个ringbuffer。`fd6_emit_state`里各种DIRTY_XXX判断，是为了减少不必要的状态切换，如果某些状态没有变化，就不通过指令去更新它。
 
 ```c
 static bool
@@ -588,8 +588,6 @@ fd6_draw_vbo(struct fd_context *ctx, const struct pipe_draw_info *info,
 
 	return true;
 }
-
-
 ```
 
 另一个函数`fd6_emit_state`:
@@ -879,11 +877,9 @@ fd6_emit_state(struct fd_ringbuffer *ring, struct fd6_emit *emit)
 }
 ```
 
-
-
 # kernel code
 
-## 流程
+## UMD、KMD、显卡数据交互流程
 
 ```plantuml
 @startuml
@@ -895,6 +891,7 @@ participant ringbuffer
 participant trace
 participant profile
 
+== UMD 向 KMD 发送命令 ==
 platform -> dispatcher++ : adreno_dispatcher_queue_cmds(drawobjs[])
 loop foreach drawobj
 dispatcher ->  dispatcher++ : _queue_xxxobj
@@ -908,7 +905,7 @@ dispatcher--
 end loop
 
 
-== kthread_worker ==
+== [kthread_worker] KMD 与显卡通信 ==
 
 loop kthread_worker
 
@@ -971,7 +968,11 @@ end loop
 @enduml
 ```
 
-## 类图
+## 数据交互中重要的类图
+
+UMD提交给KMD context的drawqueue的是`kgsl_drawobj`对象。
+
+dispatcher从drawqueue中获取drawobj，转换并提交cmd给显卡，然后将drawobj放入了dispatch_q的cmd_q队列里的是`kgsl_drawobj_cmd`。实际这两个对象是继承关系。
 
 ```plantuml
 @startuml
@@ -1040,11 +1041,12 @@ adreno_context -left-> kgsl_drawobj : drawqueue
 @enduml
 ```
 
-## drawobj如何retire
+## drawobj是如何retire的
 
-rb.dispatch_q->cmd_q[i].上的每个drawobj，
+device为每个context存了一个devmemstore结构，gpu会把endofpipe timestamp写进去。
+如果endofpipe timestamp大于drawobj->timestamp，说明已经处理完了。
 
-```c
+```cpp
 struct kgsl_devmemstore {
        volatile unsigned int soptimestamp;
        unsigned int sbz;
@@ -1057,28 +1059,30 @@ struct kgsl_devmemstore {
        unsigned int current_context;
        unsigned int sbz5;
 };
-// device为每个context存了一个devmemstore结构，gpu会把endofpipe timestamp写进去。
-// 如果endofpipe timestamp大于drawobj->timestamp，说明已经处理完了。
+```
 
-// 向endofpipe timestamp写入值的微码是在`adreno_ringbuffer_addcmds`函数中追加的：
+向endofpipe timestamp写入值的微码是在`adreno_ringbuffer_addcmds`函数中追加的：
 
+```cpp
 *ringcmds++ = cp_mem_packet(adreno_dev, CP_EVENT_WRITE, 3, 1);
 if (drawctxt || is_internal_cmds(flags))
-       *ringcmds++ = CACHE_FLUSH_TS | (1 << 31);
+*ringcmds++ = CACHE_FLUSH_TS | (1 << 31);
 else
-       *ringcmds++ = CACHE_FLUSH_TS;
+*ringcmds++ = CACHE_FLUSH_TS;
 
 if (drawctxt && !is_internal_cmds(flags)) {
-       ringcmds += cp_gpuaddr(adreno_dev, ringcmds,
-              MEMSTORE_ID_GPU_ADDR(device, context_id, eoptimestamp));
-       *ringcmds++ = timestamp;
+ringcmds += cp_gpuaddr(adreno_dev, ringcmds,
+MEMSTORE_ID_GPU_ADDR(device, context_id, eoptimestamp));
+*ringcmds++ = timestamp;
 
-       /* Write the end of pipeline timestamp to the ringbuffer too */
-       *ringcmds++ = cp_mem_packet(adreno_dev, CP_EVENT_WRITE, 3, 1);
-       *ringcmds++ = CACHE_FLUSH_TS;
-       ringcmds += cp_gpuaddr(adreno_dev, ringcmds,
-              MEMSTORE_RB_GPU_ADDR(device, rb, eoptimestamp));
-       *ringcmds++ = rb->timestamp;
+/* Write the end of pipeline timestamp to the ringbuffer too */
+*ringcmds++ = cp_mem_packet(adreno_dev, CP_EVENT_WRITE, 3, 1);
+*ringcmds++ = CACHE_FLUSH_TS;
+ringcmds += cp_gpuaddr(adreno_dev, ringcmds,
+MEMSTORE_RB_GPU_ADDR(device, rb, eoptimestamp));
+*ringcmds++ = rb->timestamp;
 } else {
 ```
+
+
 
