@@ -1,9 +1,6 @@
 ---
-
 title: Linux下判断当前运行环境是不是一个interactive shell
-
 ---
-
 我在写一个命令行小程序，我想在interactive shell中，按top的样式刷新屏幕，而如果输出被重定向到文件，则去掉各类颜色、清屏、\r之类的输出。
 所以我搜了一下怎么判断当前是不是处于一个interactive shell中的方法，在stackoverflow中有好多方法，这里记录一下.
 
@@ -41,17 +38,15 @@ esac
 
 根据[这个链接](https://stackoverflow.com/questions/42757236/what-does-mean-in-bash):
 
-    $- prints The current set of options in your current shell.
+$- prints The current set of options in your current shell.
 
-    himBH means following options are enabled:
+himBH means following options are enabled:
 
-    H - histexpand
-    m - monitor
-    h - hashall
-    B - braceexpand
-    i - interactive
-
-
+H - histexpand
+m - monitor
+h - hashall
+B - braceexpand
+i - interactive
 # 如何在C/C++代码里判断？
 
 ## C语言中获取环境变量的办法
@@ -69,25 +64,23 @@ int main(void)
 }
 
 ```
-
 然而`$-`不是一个环境变量。你可以用SHELL这个环境变量。
 
 ## istty
 
-    NAME         top
-        isatty - test whether a file descriptor refers to a terminal
-    SYNOPSIS         top
-        #include <unistd.h>
+NAME         top
+    isatty - test whether a file descriptor refers to a terminal
+SYNOPSIS         top
+    #include <unistd.h>
 
-        int isatty(int fd);
-    DESCRIPTION         top
-        The isatty() function tests whether fd is an open file descriptor
-        referring to a terminal.
-    RETURN VALUE         top
-        isatty() returns 1 if fd is an open file descriptor referring to
-        a terminal; otherwise 0 is returned, and errno is set to indicate
-        the error.
-
+    int isatty(int fd);
+DESCRIPTION         top
+    The isatty() function tests whether fd is an open file descriptor
+    referring to a terminal.
+RETURN VALUE         top
+    isatty() returns 1 if fd is an open file descriptor referring to
+    a terminal; otherwise 0 is returned, and errno is set to indicate
+    the error.
 ```c
 #include <unistd.h>
 int is_redirected(){

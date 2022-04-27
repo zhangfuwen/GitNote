@@ -1,7 +1,6 @@
 ---
 title: adreno 显卡驱动分析分析(mesa and kmd)
 ---
-
 # 代码
 
 https://github.com/facebookincubator/oculus-linux-kernel
@@ -10,6 +9,7 @@ https://github.com/facebookincubator/oculus-linux-kernel
 
 ```plantuml
 @startuml
+
 
 package ringbuffer <<Rectangle>> {
     class msm_ringbuffer
@@ -253,6 +253,7 @@ fd_batch .left.> fd_ringbuffer
 
 ```plantuml
 @startuml
+!theme bluegray
 app -> _mesa_: _mesa_DrawElements
 _mesa_ -> st: Driver->st_draw_vbo
 st -> cso: cso_draw_vbo
@@ -1083,6 +1084,3 @@ MEMSTORE_RB_GPU_ADDR(device, rb, eoptimestamp));
 *ringcmds++ = rb->timestamp;
 } else {
 ```
-
-
-
