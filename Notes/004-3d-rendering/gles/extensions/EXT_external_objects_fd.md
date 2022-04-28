@@ -1,5 +1,127 @@
 # EXT_external_objects_fd
 
+## 简述
+
+从fd导入texture特别有用。 fd导入后就不能再操作了，这个函数有ownership转移意味。
+
+顺序是：fd -> memory object -> texture
+
+方法：
+
+```cpp
+
+void importFdAsTexture(int fd, int size, GLuint tex, int w, int h) {
+    GLuint tex;
+    glGenTextures(1, &tex);
+    // create memObj and import fd as memObj
+    GLuint memObj = 0;
+    glCreateMemoryObjectsEXT(1, &memObj);
+    GLint param = GL_TRUE;
+    glMemoryObjectParameterivEXT(memObj, GL_DEDICATED_MEMORY_OBJECT_EXT, &param);
+    glImportMemoryFdEXT(memObj, size, GL_HANDLE_TYPE_OPAQUE_FD_EXT, fd);
+
+    // make memOjb texture's storage
+    glTextureStorageMem2DEXT(tex, 1, (GLuint)GL_RGBA8, w, h, memObj, 0);
+
+    return tex;
+}
+
+```
+
+上述代码中，fd和size是要导入的fd和它内容的大小，w, h是要导入为的texture的name和宽高。
+
+## 用到的几个函数的介绍
+
+### glCreateMemoryObjectsEXT
+
+所属扩展：[EXT_external_objects](http://www.xjbcode.fun/Notes/004-3d-rendering/gles/extensions/EXT_external_objects.html)
+
+原型：
+
+```cpp
+void glCreateMemoryObjectsEXT(sizei n,
+                                uint *memoryObjects);
+```     
+
+语法跟glGenTextures类似.
+
+### glMemoryObjectParameterivEXT
+
+所属扩展：[EXT_external_objects](http://www.xjbcode.fun/Notes/004-3d-rendering/gles/extensions/EXT_external_objects.html)
+
+原型：
+
+```cpp
+   void glMemoryObjectParameterivEXT(uint memoryObject,
+                                    enum pname,
+                                    const int *params);
+
+```                                 
+
+语法跟glTexParameteri类似。
+
+pname可取的值为：
+
+`DEDICATED_MEMORY_OBJECT_EXT                0x9581`
+
+[[ The following are available when GL_EXT_protected_textures is
+       available ]]
+
+`PROTECTED_MEMORY_OBJECT_EXT                0x959B`
+
+可取的值：
+
+    | Name                        | Legal Values |
+    +-----------------------------+--------------+
+    | DEDICATED_MEMORY_OBJECT_EXT | FALSE, TRUE  |
+    | PROTECTED_MEMORY_OBJECT_EXT | FALSE, TRUE  |
+    +-----------------------------+--------------+
+
+
+### glImportMemoryFdEXT
+
+所属扩展：[EXT_external_objects_fd](http://www.xjbcode.fun/Notes/004-3d-rendering/gles/extensions/EXT_external_objects_fd.html)
+
+原型：
+
+```cpp
+void ImportMemoryFdEXT(uint memory,
+                       uint64 size,
+                       enum handleType,
+                       int fd);
+
+```
+
+其为memory为memObj的name，即`glCreateMemoryObjectsEXT`的出参。
+
+`handleType`目前可取值只有`HANDLE_TYPE_OPAQUE_FD_EXT`。
+
+`size`的单位是字节,byte。
+
+### glTextureStorageMem2DEXT
+
+所属扩展:[EXT_external_objects](http://www.xjbcode.fun/Notes/004-3d-rendering/gles/extensions/EXT_external_objects.html)
+
+原型：
+
+```cpp
+  void TextureStorageMem2DEXT(uint texture,
+                                sizei levels,
+                                enum internalFormat,
+                                sizei width,
+                                sizei height,
+                                uint memory,
+                                uint64 offset);
+
+```
+
+texture和memory分别为texture和memobj的name。
+levels是说导入的纹理有几个mipmap level。
+offset是说在memobj中的偏移，正常为0。
+internalFormat为纹理的内部格式。
+
+# 正文
+
 Name
 
     EXT_external_objects_fd
@@ -48,9 +170,9 @@ Dependencies
 Overview
 
     Building upon the OpenGL memory object and semaphore framework
-    defined in EXT_external_objects, this extension enables an OpenGL
+    defined in EXT_external_objects, **this extension enables an OpenGL
     application to import a memory object or semaphore from POSIX file
-    descriptor external handles.
+    descriptor external handles**.
 
 New Procedures and Functions
 
