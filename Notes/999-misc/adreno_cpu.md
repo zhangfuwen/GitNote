@@ -8,7 +8,7 @@ https://www.cnblogs.com/lingjiajun/p/11913376.html
 Connect USB and execute below commands one by one , some times all commands in batch may not work due to adb file system issues
 Verify Buffer size is reflected as the one that is set
 
-<details>
+
 <summary>Click to show adb commands</summary>
 
 ```bash
@@ -24,12 +24,12 @@ adb shell cat /sys/kernel/debug/tracing/trace
 adb shell sync
 ```
 
-</details>
+
 
 
 ## Step 2 Enable below trace events
 
-<details>
+
 <summary>Enable below trace events</summary>
 
 ```bash
@@ -96,7 +96,7 @@ adb shell "echo 1 > /d/tracing/events/msm_bus/bus_update_request/enable"
 adb shell "echo 1 > /d/tracing/events/msm_bus/bus_agg_bw/enable"
 ```
 
-</details>
+
 
 ## Step 3 Verify the trace events and also remove any previous trace file
 
@@ -257,7 +257,7 @@ texture: 6.9s
 
 修改为3744x3744和3712x3712，得到的数据基本一致，所以可以说与alighment/stride无关。
 
-<details>
+
 <summary> log </summary>
 
 ```bash
@@ -418,8 +418,6 @@ on texture
 50 round: time: 140937 us
 total us: 6946556
 ```
-
-</details>
 
 
 2. 有办法通过代码解决吗？
