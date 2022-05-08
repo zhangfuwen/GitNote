@@ -137,7 +137,7 @@ gpu_busy                gpu_freq_table  gpu_max_clock  gpu_model
 
 ```bash
 
-cat /sys/kernel//debug/kgsl/proc/1392/mem
+cat /sys/kernel/debug/kgsl/proc/1392/mem
 ```
 
 
