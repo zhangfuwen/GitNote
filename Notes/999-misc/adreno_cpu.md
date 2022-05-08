@@ -2,13 +2,16 @@
 
 https://www.cnblogs.com/lingjiajun/p/11913376.html
 
-```bash
 
-Step 1
+## Step 1 set buffer size
 
 Connect USB and execute below commands one by one , some times all commands in batch may not work due to adb file system issues
 Verify Buffer size is reflected as the one that is set
 
+<details>
+<summary>Click to show adb commands</summary>
+
+```bash
 adb shell "echo 0 > /sys/kernel/debug/tracing/tracing_on"
 adb shell "cat /sys/kernel/debug/tracing/tracing_on"
 adb shell "echo 150000 > /sys/kernel/debug/tracing/buffer_size_kb"
@@ -19,12 +22,17 @@ adb shell cat /sys/kernel/debug/tracing/set_event
 adb shell "echo  > /sys/kernel/debug/tracing/trace"
 adb shell cat /sys/kernel/debug/tracing/trace
 adb shell sync
+```
+
+</details>
 
 
-Step 2
+## Step 2 Enable below trace events
 
-Enable below trace events
+<details>
+<summary>Enable below trace events</summary>
 
+```bash
 adb shell "echo 1 > /sys/kernel/debug/tracing/events/power/cpu_idle/enable"
 adb shell "echo 1 > /sys/kernel/debug/tracing/events/power/cpu_frequency/enable"
 adb shell "echo 1 > /sys/kernel/debug/tracing/events/power/cpu_frequency_switch_start/enable"
@@ -86,23 +94,34 @@ adb shell "echo 1 > /sys/kernel/debug/tracing/events/kgsl/kgsl_context_destroy/e
 adb shell "echo 1 > /sys/kernel/debug/tracing/events/kgsl/kgsl_context_detach/enable"
 adb shell "echo 1 > /d/tracing/events/msm_bus/bus_update_request/enable"
 adb shell "echo 1 > /d/tracing/events/msm_bus/bus_agg_bw/enable"
+```
 
-Step 3 Verify the trace events and also remove any previous trace file
+</details>
+
+## Step 3 Verify the trace events and also remove any previous trace file
+
+```bash
 adb shell cat /sys/kernel/debug/tracing/set_event
 adb shell rm /data/local/trace.txt
+```
 
 
-Step 4:  Start Usecase, Execute below commands with usb and disconnect usb within 5 seconds
+## Step 4:  Start Usecase, Execute below commands with usb and disconnect usb within 5 seconds
 
+```bash
 adb shell
 cd /d/tracing
 sleep 10 && echo 0 > tracing_on && echo "" > trace && echo 1 > tracing_on && sleep 10 && echo 0 > tracing_on && cat trace > /data/local/trace.txt &
+```
 
-Step 5 : After 20 seconds, re-connect usb and pull the trace file
+## Step 5 : After 20 seconds, re-connect usb and pull the trace file
 
+```bash
 adb pull /data/local/trace.txt
 
 ```
+
+# 其它sysfs文件的使用
 
 ## 设置gpu 频率
 
@@ -124,9 +143,9 @@ cat /sys/kernel//debug/kgsl/proc/1392/mem
 ```
 
 
-## ahardware buffer慢的问题
+# ahardware buffer慢的问题分析
 
-1. 是普遍的吗？
+## 1. 是普遍的吗？
 
 是的，红米上也是。但是红米上pbuffer surface不慢。adreno上pbuffer surface也比texture慢。
 
@@ -220,7 +239,7 @@ total us: 825683
 
 
 
-2. 跟size有关吗？
+## 2. 跟size有关吗？
 
 下一项测试用的size是：
 
@@ -237,6 +256,9 @@ texture: 6.9s
 相差至少30%。
 
 修改为3744x3744和3712x3712，得到的数据基本一致，所以可以说与alighment/stride无关。
+
+<details>
+<summary> log </summary>
 
 ```bash
 on offscreen
@@ -396,6 +418,8 @@ on texture
 50 round: time: 140937 us
 total us: 6946556
 ```
+
+</details>
 
 
 2. 有办法通过代码解决吗？
