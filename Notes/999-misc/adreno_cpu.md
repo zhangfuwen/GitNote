@@ -9,8 +9,6 @@ Connect USB and execute below commands one by one , some times all commands in b
 Verify Buffer size is reflected as the one that is set
 
 
-<summary>Click to show adb commands</summary>
-
 ```bash
 adb shell "echo 0 > /sys/kernel/debug/tracing/tracing_on"
 adb shell "cat /sys/kernel/debug/tracing/tracing_on"
