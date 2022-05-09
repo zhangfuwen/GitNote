@@ -52,3 +52,4 @@ CLIPBOARD `selection`或PRIMARY `selection`中粘贴内容。`y`命令同理。�
 
 在gtk中，可以通过`gtk_selection_data_set` 和 `gtk_selection_data_set_text`函数设置普通数据和文本到`selection`。
 具体参考： http://irtfweb.ifa.hawaii.edu/SoftwareDocs/gtk20/gtk/gtk-selections.html
+
