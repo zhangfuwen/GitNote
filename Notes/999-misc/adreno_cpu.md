@@ -20,6 +20,7 @@ adb shell cat /sys/kernel/debug/tracing/set_event
 adb shell "echo  > /sys/kernel/debug/tracing/trace"
 adb shell cat /sys/kernel/debug/tracing/trace
 adb shell sync
+
 ```
 
 
