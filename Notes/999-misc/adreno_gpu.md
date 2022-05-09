@@ -1303,3 +1303,4 @@ GL_QCOM_validate_shader_binary
 ```
 
 还有一个路子是vulkan memobj -> ahardwarebuffer -> mutable texture
+http://b2b.yimixiangchou.com/b4tb/ahardwarebuffer-example.html
