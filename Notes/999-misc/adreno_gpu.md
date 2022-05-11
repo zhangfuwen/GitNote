@@ -1304,3 +1304,124 @@ GL_QCOM_validate_shader_binary
 
 还有一个路子是vulkan memobj -> ahardwarebuffer -> mutable texture
 http://b2b.yimixiangchou.com/b4tb/ahardwarebuffer-example.html
+
+
+# vulkan
+
+## supported extensions
+
+### agi supported
+
+https://developer.android.com/agi/vulkan-extensions
+
+### query code
+
+```c
+std::set<std::string> get_supported_instance_extensions() {
+    uint31_t count;
+    vkEnumerateInstanceExtensionProperties(nullptr, &count, nullptr); //get number of extensions
+    std::vector<VkExtensionProperties> extensions(count);
+    vkEnumerateInstanceExtensionProperties(nullptr, &count, extensions.data()); //populate buffer
+    std::set<std::string> results;
+    for (auto & extension : extensions) {
+        results.insert(extension.extensionName);
+    }
+    return results;
+}
+
+std::set<std::string> get_supported_device_extensions(VkPhysicalDevice dev) {
+    uint31_t count;
+    vkEnumerateDeviceExtensionProperties(dev, nullptr, &count , nullptr);
+    std::vector<VkExtensionProperties> extensions(count);
+    vkEnumerateDeviceExtensionProperties(dev, nullptr, &count, extensions.data()); //populate buffer
+    std::set<std::string> results;
+    for (auto & extension : extensions) {
+        results.insert(extension.extensionName);
+    }
+    return results;
+}
+```
+
+### instance extensions
+```c
+VK_EXT_debug_report
+VK_EXT_swapchain_colorspace
+VK_KHR_android_surface
+VK_KHR_device_group_creation
+VK_KHR_external_fence_capabilities
+VK_KHR_external_memory_capabilities
+VK_KHR_external_semaphore_capabilities
+VK_KHR_get_physical_device_properties2
+VK_KHR_get_surface_capabilities2
+VK_KHR_surface
+```
+
+
+### device extensions
+```c
+VK_ANDROID_external_memory_android_hardware_buffer
+VK_EXT_astc_decode_mode
+VK_EXT_device_memory_report
+VK_EXT_filter_cubic
+VK_EXT_fragment_density_map
+VK_EXT_global_priority
+VK_EXT_hdr_metadata
+VK_EXT_host_query_reset
+VK_EXT_index_type_uint8
+VK_EXT_line_rasterization
+VK_EXT_pipeline_creation_cache_control
+VK_EXT_pipeline_creation_feedback
+VK_EXT_queue_family_foreign
+VK_EXT_sample_locations
+VK_EXT_sampler_filter_minmax
+VK_EXT_scalar_block_layout
+VK_EXT_separate_stencil_usage
+VK_EXT_subgroup_size_control
+VK_EXT_texture_compression_astc_hdr
+VK_EXT_transform_feedback
+VK_EXT_vertex_attribute_divisor
+VK_GOOGLE_display_timing
+VK_IMG_filter_cubic
+VK_KHR_16bit_storage
+VK_KHR_bind_memory2
+VK_KHR_buffer_device_address
+VK_KHR_create_renderpass2
+VK_KHR_dedicated_allocation
+VK_KHR_depth_stencil_resolve
+VK_KHR_descriptor_update_template
+VK_KHR_device_group
+VK_KHR_draw_indirect_count
+VK_KHR_driver_properties
+VK_KHR_external_fence
+VK_KHR_external_fence_fd
+VK_KHR_external_memory
+VK_KHR_external_memory_fd
+VK_KHR_external_semaphore
+VK_KHR_external_semaphore_fd
+VK_KHR_get_memory_requirements2
+VK_KHR_image_format_list
+VK_KHR_incremental_present
+VK_KHR_maintenance1
+VK_KHR_maintenance2
+VK_KHR_maintenance3
+VK_KHR_multiview
+VK_KHR_push_descriptor
+VK_KHR_relaxed_block_layout
+VK_KHR_sampler_mirror_clamp_to_edge
+VK_KHR_sampler_ycbcr_conversion
+VK_KHR_separate_depth_stencil_layouts
+VK_KHR_shader_draw_parameters
+VK_KHR_shader_float16_int8
+VK_KHR_shader_float_controls
+VK_KHR_shader_subgroup_extended_types
+VK_KHR_shared_presentable_image
+VK_KHR_spirv_1_4
+VK_KHR_storage_buffer_storage_class
+VK_KHR_swapchain
+VK_KHR_uniform_buffer_standard_layout
+VK_KHR_variable_pointers
+VK_KHR_vulkan_memory_model
+VK_QCOM_render_pass_shader_resolve
+VK_QCOM_render_pass_store_ops
+VK_QCOM_render_pass_transform
+```

@@ -67,3 +67,4 @@ theme: jekyll-theme-slate
 
 gems:
   - jemoji
+  - jekyll-asciidoc
