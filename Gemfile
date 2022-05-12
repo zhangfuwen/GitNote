@@ -39,3 +39,4 @@ gem "kramdown-parser-gfm" # github flavored markdown
 
 
 gem "just-the-docs"
+gem 'jekyll-asciidoc'
