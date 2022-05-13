@@ -1,5 +1,5 @@
 ---
-permalink:/Notes/004-3d-rendering/vulkan/guide.html
+permalink: /Notes/004-3d-rendering/vulkan/guide.html
 layout: default
 ---
 
