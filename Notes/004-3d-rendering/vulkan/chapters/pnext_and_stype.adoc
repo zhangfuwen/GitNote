@@ -1,3 +1,8 @@
+---
+permalink:/Notes/004-3d-rendering/vulkan/chapters/pnext_and_stype.html
+layout: default
+---
+
 // Copyright 2019-2022 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 

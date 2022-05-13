@@ -1,3 +1,8 @@
+---
+permalink:/Notes/004-3d-rendering/vulkan/chapters/extensions/VK_KHR_image_format_list.html
+layout: default
+---
+
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 

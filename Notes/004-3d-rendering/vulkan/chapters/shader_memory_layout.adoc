@@ -1,3 +1,8 @@
+---
+permalink:/Notes/004-3d-rendering/vulkan/chapters/shader_memory_layout.html
+layout: default
+---
+
 // Copyright 2022 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 

@@ -1,3 +1,8 @@
+---
+permalink:/Notes/004-3d-rendering/vulkan/chapters/hlsl.html
+layout: default
+---
+
 // Copyright 2021 The Khronos Group, Inc.
 // Copyright 2021 Sascha Willems
 // SPDX-License-Identifier: CC-BY-4.0
