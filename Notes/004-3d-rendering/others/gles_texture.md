@@ -114,7 +114,6 @@ struct gl_texture_object
 
 ## texture image
 
-
 入口在_mesa_TexImage2D或_mesa_TexStorage2D:
 
 前者分配一个image，放在某target的某个mipmap level上。并且可以填充或不填充数据。
@@ -466,7 +465,6 @@ static struct fd_bo * bo_from_handle(struct fd_device *dev,
 }
 ```
 
-
 ### immutable image
 
 immutable image的分配是在st_AllocTextureStorage（其他显卡可以重写这个函数），它只分配一个image, 给所有的faces和level用。
@@ -683,7 +681,7 @@ droid_create_image_from_buffer_info(struct dri2_egl_display *dri2_dpy,
     ¦ buf_info->drm_fourcc, buf_info->fds, buf_info->num_planes,
     ¦ buf_info->pitches, buf_info->offsets, buf_info->yuv_color_space,
     ¦ buf_info->sample_range, buf_info->horizontal_siting,
-    ¦ buf_info->vertical_siting, &error, priv);                                                                                                 
+    ¦ buf_info->vertical_siting, &error, priv);                                                                                               
 }
 
 ```
@@ -708,7 +706,7 @@ struct __DRIimageRec {
    /** 
    ¦* Provided by EGL_EXT_image_dma_buf_import.
    ¦*/ 
-   enum __DRIYUVColorSpace yuv_color_space;                                                                                                     
+   enum __DRIYUVColorSpace yuv_color_space;                                                                                                   
    enum __DRISampleRange sample_range;
    enum __DRIChromaSiting horizontal_siting;
    enum __DRIChromaSiting vertical_siting;
@@ -767,7 +765,7 @@ st_egl_image_target_tex_storage(struct gl_context *ctx, GLenum target,
     ¦   ¦   ¦   ¦   ¦   ¦&native_supported))
     ¦ return;
 
-   st_bind_egl_image(ctx, texObj, texImage, &stimg, true, native_supported);                                                                      
+   st_bind_egl_image(ctx, texObj, texImage, &stimg, true, native_supported);                                                                    
    pipe_resource_reference(&stimg.texture, NULL);
 }
 
@@ -780,7 +778,7 @@ st_bind_egl_image主要做的就是把stimg->texture填到texObj->pt和texImage-
 
 ```c
  pipe_resource_reference(&texObj->pt, stimg->texture); //pipe_resource_reference实际是将第一个参数指向的内容释放，然后再第二个参数指针的内容赋值给第一个参数
-   st_texture_release_all_sampler_views(st, texObj);                                                                                              
+   st_texture_release_all_sampler_views(st, texObj);                                                                                            
    pipe_resource_reference(&texImage->pt, texObj->pt);
 
 ```
@@ -928,7 +926,6 @@ struct gbm_device {
 ```
 
 ## 通过GBM离屏渲染
-
 
 ```c
 #include <EGL/egl.h>
