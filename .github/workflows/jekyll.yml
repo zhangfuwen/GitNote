@@ -24,9 +24,9 @@ jobs:
         sudo apt-get install asciidoctor tree \
         && cd Notes/004-3d-rendering/vulkan/ \
         && asciidoctor  -a toc=left -n -d book  -R ./ -D ../vulkan_html/ $(find . -name "*.adoc") \
-        &&  cp -r images ../vulkan_html/ \
         &&  cp -r chapters/images ../vulkan_html/chapters/ \
         &&  cp -r chapters/extensions/images ../vulkan_html/chapters/extensions/ \
+        &&  cp -r images ../vulkan_html/ \
         && tree 
         rm -rf ${{ github.workspace }}/.git
 
