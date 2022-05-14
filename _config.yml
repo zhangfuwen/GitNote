@@ -65,6 +65,6 @@ gittalk:
 
 theme: jekyll-theme-slate
 
-gems:
+plugins:
   - jemoji
   - jekyll-asciidoc
