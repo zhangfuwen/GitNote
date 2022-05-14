@@ -24,12 +24,12 @@ jobs:
         sudo apt-get install asciidoctor tree&& cd Notes/004-3d-rendering/vulkan/ && asciidoctor -R ./ -D ../vulkan_html/ $(find . -name "*.adoc") &&  cp -r chapters/images ../vulkan_html/chapters && tree
 
     - name: GitHub Pages
+      env:
+        GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
       uses: crazy-max/ghaction-github-pages@v2.6.0
       with:
         domain: www.xjbcode.fun
         build_dir: _site
-      env:
-        GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
 
 
 
