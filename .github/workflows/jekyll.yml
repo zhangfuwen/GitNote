@@ -28,6 +28,8 @@ jobs:
       with:
         domain: www.xjbcode.fun
         build_dir: _site
+      env:
+        $GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
 
 
