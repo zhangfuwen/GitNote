@@ -21,7 +21,13 @@ jobs:
         
     - name: fix
       run: |
-        sudo apt-get install asciidoctor tree&& cd Notes/004-3d-rendering/vulkan/ && asciidoctor -R ./ -D ../vulkan_html/ $(find . -name "*.adoc") &&  cp -r chapters/images ../vulkan_html/chapters && tree
+        sudo apt-get install asciidoctor tree \
+        && cd Notes/004-3d-rendering/vulkan/ \
+        && asciidoctor  -a toc=left -n -d book  -R ./ -D ../vulkan_html/ $(find . -name "*.adoc") \
+        &&  cp -r images ../vulkan_html/ \
+        &&  cp -r chapters/images ../vulkan_html/chapters/ \
+        &&  cp -r chapters/extensions/images ../vulkan_html/chapters/extensions/ \
+        && tree 
         rm -rf ${{ github.workspace }}/.git
 
     - name: GitHub Pages

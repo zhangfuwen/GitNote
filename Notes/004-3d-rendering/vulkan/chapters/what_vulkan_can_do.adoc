@@ -1,6 +1,5 @@
 ---
-permalink:/Notes/004-3d-rendering/vulkan/chapters/what_vulkan_can_do.html
-layout: default
+permalink: /Notes/004-3d-rendering/vulkan/chapters/what_vulkan_can_do.html
 ---
 
 // Copyright 2019-2022 The Khronos Group, Inc.
