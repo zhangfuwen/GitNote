@@ -60,6 +60,7 @@ makefile里面的target的生成是由其commands决定了，写下了怎么生�
 
 # cmake的故事
 
+:warning:
 
 >   **:warning:** warning
 

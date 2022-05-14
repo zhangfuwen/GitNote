@@ -19,15 +19,11 @@
 
 deb包下载地址：https://github.com/zhangfuwen/IBusFunIM/releases
 
-
 # Intruction
 
 一个Linux下的基于IBus的,支持五笔拼音混输, 支持单纯拼音输入,支持五笔输入,还支持语音输入的输入法.
 
-
-Code under pinyin folder and dictionary file res/dict_pinyin.dat come from [Google pinyin IME](https://android.googlesource.com/platform/packages/inputmethods/PinyinIME).
-
-
+Code under pinyin folder and dictionary file res/dict\_pinyin.dat come from [Google pinyin IME](https://android.googlesource.com/platform/packages/inputmethods/PinyinIME).
 
 # Build and Install
 
