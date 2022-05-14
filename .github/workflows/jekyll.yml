@@ -28,7 +28,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
       uses: crazy-max/ghaction-github-pages@v2.6.0
       with:
-        domain: www.xjbcode.fun
+        domain: github.com 
         build_dir: _site
 
 
