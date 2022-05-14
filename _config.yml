@@ -63,7 +63,6 @@ gittalk:
   owner: zhangfuwen  # GitHub repo owner,
   admin: zhangfuwen  # GitHub repo owner and collaborators, only these guys can initialize github issues eg. 'colynn,daattali'
 
-theme: jekyll-theme-slate
 
 plugins:
   - jemoji

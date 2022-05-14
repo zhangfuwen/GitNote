@@ -88,6 +88,10 @@ Mad scientist at work!
 
 {% endraw %}
 
+```danger
+Mad scientist at work!
+```
+
 {% raw %}
 {% include list.liquid %}
 {% endraw %}

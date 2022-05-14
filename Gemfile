@@ -35,8 +35,7 @@ gem "wdm", "~> 0.1.0", :platforms => [:mingw, :x64_mingw, :mswin]
 
 # kramdown v2 ships without the gfm parser by default. If you're using
 # kramdown v1, comment out this line.
-gem "kramdown-parser-gfm" # github flavored markdown
-
-
 gem "just-the-docs"
+gem 'asciidoctor', '~> 2.0', '>= 2.0.17'
+gem "kramdown-parser-gfm" # github flavored markdown
 gem 'jekyll-asciidoc'
