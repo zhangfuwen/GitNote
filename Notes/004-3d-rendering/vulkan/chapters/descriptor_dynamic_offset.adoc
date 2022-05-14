@@ -1,6 +1,5 @@
 ---
-permalink:/Notes/004-3d-rendering/vulkan/chapters/descriptor_dynamic_offset.html
-layout: default
+permalink: /Notes/004-3d-rendering/vulkan/chapters/descriptor_dynamic_offset.html
 ---
 
 // Copyright 2022 The Khronos Group, Inc.

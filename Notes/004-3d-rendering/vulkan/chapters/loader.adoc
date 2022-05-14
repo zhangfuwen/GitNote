@@ -1,6 +1,5 @@
 ---
-permalink:/Notes/004-3d-rendering/vulkan/chapters/loader.html
-layout: default
+permalink: /Notes/004-3d-rendering/vulkan/chapters/loader.html
 ---
 
 // Copyright 2019-2021 The Khronos Group, Inc.

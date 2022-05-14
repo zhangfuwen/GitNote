@@ -1,5 +1,5 @@
 ---
-permalink:/Notes/004-3d-rendering/vulkan/chapters/dynamic_state.html
+permalink: /Notes/004-3d-rendering/vulkan/chapters/dynamic_state.html
 layout: default
 ---
 

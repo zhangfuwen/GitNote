@@ -1,5 +1,5 @@
 ---
-permalink:/Notes/004-3d-rendering/vulkan/chapters/what_is_spirv.html
+permalink: /Notes/004-3d-rendering/vulkan/chapters/what_is_spirv.html
 layout: default
 ---
 

@@ -1,6 +1,5 @@
 ---
-permalink:/Notes/004-3d-rendering/vulkan/chapters/hlsl.html
-layout: default
+permalink: /Notes/004-3d-rendering/vulkan/chapters/hlsl.html
 ---
 
 // Copyright 2021 The Khronos Group, Inc.
