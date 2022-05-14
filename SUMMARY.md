@@ -49,3 +49,42 @@ see [Summary](SUMMARY.md)
     * [020\. 显卡到AI芯片\-\-之一](Notes/001-modern-computing/020-modern-gpu.md)
     * [021\. 显卡到AI芯片\-\-之二](Notes/001-modern-computing/021-modern-gpu2.md)
     * [022\. 显卡到AI芯片\-\-之三](Notes/001-modern-computing/022-modern-gpu-3.md)
+
+{% raw %}
+```note
+### This is a note
+
+Markdown is supported, Text can be **bold**, _italic_, or ~~strikethrough~~. [Links](https://github.com) should be blue with no underlines
+
+`inline code`
+
+[`inline code inside link`](#)
+```
+{% endraw %}
+
+
+{% raw %}
+```tip
+It’s bigger than a bread box.
+```
+{% endraw %}
+
+{% raw %}
+```warning
+Strong prose may provoke extreme mental exertion. Reader discretion is strongly advised.
+```
+{% endraw %}
+
+{% raw %}
+```danger
+Mad scientist at work!
+```
+{% endraw %}
+
+{% raw %}
+{% include list.liquid %}
+{% endraw %}
+
+{% raw %}
+{% include list.liquid all=true %}
+{% endraw %}
