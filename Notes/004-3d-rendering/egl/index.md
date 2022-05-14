@@ -5,7 +5,9 @@ has_children: true
 ---
 
 # EGL
+
 [ANGLE_sync_control_rate](./ANGLE/EGL_ANGLE_sync_control_rate.html)
+
 [ANGLE_device_d3d](./ANGLE/EGL_ANGLE_device_d3d.html)
 [ANGLE_query_surface_pointer](./ANGLE/EGL_ANGLE_query_surface_pointer.html)
 [ANGLE_surface_d3d_texture_2d_share_handle](./ANGLE/EGL_ANGLE_surface_d3d_texture_2d_share_handle.html)
