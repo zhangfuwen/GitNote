@@ -21,7 +21,7 @@ jobs:
         
     - name: fix
       run: |
-        sudo apt-get install asciidoctor && cd Notes/004-3d-rendering/vulkan/ && asciidoctor -R ./ -D ../vulkan_html/ $(find . -name "*.adoc") &&  cp -r chapters/images ../vulkan_html/chapters
+        sudo apt-get install asciidoctor tree&& cd Notes/004-3d-rendering/vulkan/ && asciidoctor -R ./ -D ../vulkan_html/ $(find . -name "*.adoc") &&  cp -r chapters/images ../vulkan_html/chapters && tree
 
     - name: GitHub Pages
       uses: crazy-max/ghaction-github-pages@v2.6.0
