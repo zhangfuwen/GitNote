@@ -22,7 +22,7 @@ jobs:
     - name: fix
       run: |
         sudo apt-get install asciidoctor tree&& cd Notes/004-3d-rendering/vulkan/ && asciidoctor -R ./ -D ../vulkan_html/ $(find . -name "*.adoc") &&  cp -r chapters/images ../vulkan_html/chapters && tree
-        cp -r Notes _site/
+        rm -rf ${{ github.workspace }}/.git
 
     - name: GitHub Pages
       env:
@@ -31,7 +31,7 @@ jobs:
       with:
         domain: github.com 
         target_branch: ghp1
-        build_dir: _site
+        build_dir: .
 
 
 
