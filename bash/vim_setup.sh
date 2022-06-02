@@ -63,7 +63,7 @@ echo "install vim pluggins"
 $VIM +PlugInstall +qall 
 
 echo "install ctags"
-$SUDO $pkgman install -y ripgrep cppman ctags
+$SUDO $pkgman install -y ripgrep cppman universal-ctags
 
 
 
