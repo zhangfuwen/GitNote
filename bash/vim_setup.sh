@@ -10,8 +10,8 @@ function download_nvim_x86()
         mkdir ~/bin/
         wget -O ~/bin/nvim-nightly.tar.gz https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz 
         tar xvzf ~/bin/nvim-nightly.tar.gz -C ~/bin/
-        echo "export PATH=~/bin/nvim-linux64/bin:$PATH" >> ~/.bashrc
-        source ~/.bashrc 
+        [[ -f ~/.bashrc ]] && echo "export PATH=~/bin/nvim-linux64/bin:$PATH" >> ~/.bashrc && source ~/.bashrc
+        [[ -f ~/.zshrc ]] && echo "export PATH=~/bin/nvim-linux64/bin:$PATH" >> ~/.zshrc && source ~/.zshrc
         rm nvim-linux64.tar.gz  -C ~/bin/
     fi
     echo "nvim installed"
@@ -33,6 +33,11 @@ if [[ "$architecture" == "aarch64" ]]; then
 elif [[ "$architecture" == "x86_64" ]]; then
     download_nvim_x86
 fi
+
+echo "install vim python provider"
+$SUDO apt install python3 python3-pip
+pip install neovim
+
 
 echo "init nvim config file"
 mkdir -p ~/.config/nvim
