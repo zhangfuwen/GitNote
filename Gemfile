@@ -40,3 +40,4 @@ gem 'asciidoctor', '~> 2.0', '>= 2.0.17'
 gem "kramdown-parser-gfm" # github flavored markdown
 gem 'jekyll-asciidoc'
 gem 'jemoji'
+gem 'kramdown-math-katex'
