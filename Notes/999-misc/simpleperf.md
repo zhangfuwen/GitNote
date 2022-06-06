@@ -1427,3 +1427,22 @@ simpleperf stat  -p 2054 -e cache-references,cache-references:u,cache-references
 Total test time: 4.293461 seconds.
 
 ```
+
+# 重要的事件类型
+
+## 内存访问
+
+
+  msm_bus:bus_agg_bw
+  msm_bus:bus_avail_bw
+  raw-mem-access
+  raw-mem-access-rd
+  raw-mem-access-wr
+  raw-bus-access
+  raw-bus-access-rd
+  raw-bus-access-wr
+  raw-bus-access-periph
+  raw-bus-access-shared
+  raw-bus-cycles
+  armv8_pmuv3/mem_access
+  arm_dsu_0/bus_access
