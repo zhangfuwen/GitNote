@@ -29,7 +29,7 @@ $$\vec{\mathbf{c}} = \begin{pmatrix} a_y*b_z - a_z*b_y\\ a_z*b_x - a_x*b_z\\ a_x
 $$[\vec{e_1}, \vec{e_2}, \vec{e_3}] \begin{pmatrix} a_1 \\ a_2 \\ a_3 \end{pmatrix} = [\vec{e_1}', \vec{e_2}', \vec{e_3}'] \begin{pmatrix} a_1' \\ a_2' \\ a_3' \end{pmatrix}$$
 则：
 
-$\begin{pmatrix} a_1 \\ a_2 \\ a_3 \end{pmatrix}  = \begin{pmatrix} e_1^T e_1' & e_1^Te_2' & e_1^T e_3' \\ e_2^T e_1' & e_2^Te_2' & e_2^T e_3' \\ e_3^T e_1' & e_3^Te_2' & e_3^T e_3' \end{pmatrix}  \begin{pmatrix} a_1' \\ a_2' \\ a_3' \end{pmatrix}  = \vec{R}\vec{a}'$
+$$\begin{pmatrix} a_1 \\ a_2 \\ a_3 \end{pmatrix}  = \begin{pmatrix} e_1^T e_1' & e_1^Te_2' & e_1^T e_3' \\ e_2^T e_1' & e_2^Te_2' & e_2^T e_3' \\ e_3^T e_1' & e_3^Te_2' & e_3^T e_3' \end{pmatrix}  \begin{pmatrix} a_1' \\ a_2' \\ a_3' \end{pmatrix}  = \vec{R}\vec{a}'$$
 
 SO(3)特殊正交群，(Special Othogonal Group), 正交矩阵（行列式为1)：
 
