@@ -14,7 +14,7 @@ title: 线性代数
 
 **2. cross product:** 有向面积, 右手定则
 
-  $\vec{\mathbf{a}} \times \vec{\mathbf{b}} = |a|*|b|*sin\theta*\hat{\mathbf{n}}$
+  $$ \vec{\mathbf{a}} \times \vec{\mathbf{b}} = |a|*|b|*sin\theta*\hat{\mathbf{n}} $$
 
 
 若$\vec{\mathbf{a}} \times \vec{\mathbf{b}} = \vec{\mathbf{c}}, \vec{\mathbf{a}} = (a_x, a_y, a_z)^T, \vec{\mathbf{b}}  = (b_x, b_y, b_z)^T $, 则:
