@@ -18,15 +18,15 @@ title: 线性代数
 
 
 若$$\vec{\mathbf{a}} \times \vec{\mathbf{b}} = \vec{\mathbf{c}}, \vec{\mathbf{a}} = (a_x, a_y, a_z)^T, \vec{\mathbf{b}}  = (b_x, b_y, b_z)^T $$, 则:
-$$\vec{\mathbf{c}} = \begin{pmatrix} a_y*b_z - a_z*b_y\\ a_z*b_x - a_x*b_z\\ a_x*b_y - a_y*b_z \end{pmatrix}$$ 
+$$\vec{\mathbf{c}} = \begin{pmatrix} a_y*b_z - a_z*b_y\\\\ a_z*b_x - a_x*b_z\\\\ a_x*b_y - a_y*b_z \end{pmatrix}$$ 
 
 **3. 旋转矩阵** 
 
 `基`$[\vec{e_1}, \vec{e_2}, \vec{e_3}]$定义一个坐标系，该`基`旋转变为$[\vec{e_1}', \vec{e_2}', \vec{e_3}']$。
-则向量$\vec{a} = \begin{pmatrix}a_1\\ a_2\\ a_3 \end{pmatrix}$, 在新坐标系内的表示变为$\vec{a}' = \begin{pmatrix}a_1' \\ a_2' \\ a_3' \end{pmatrix}$ （注意$\vec{a}'$并没有经这坐标变换), 
+则向量$\vec{a} = \begin{pmatrix}a_1\\ a_2\\\\ a_3 \end{pmatrix}$, 在新坐标系内的表示变为$\vec{a}' = \begin{pmatrix}a_1' \\\\ a_2' \\\\ a_3' \end{pmatrix}$ （注意$\vec{a}'$并没有经这坐标变换), 
 则：
 
-$$[\vec{e_1}, \vec{e_2}, \vec{e_3}] \begin{pmatrix} a_1 \\ a_2 \\ a_3 \end{pmatrix} = [\vec{e_1}', \vec{e_2}', \vec{e_3}'] \begin{pmatrix} a_1' \\ a_2' \\ a_3' \end{pmatrix}$$
+$$[\vec{e_1}, \vec{e_2}, \vec{e_3}] \begin{pmatrix} a_1 \\\\ a_2 \\\\ a_3 \end{pmatrix} = [\vec{e_1}', \vec{e_2}', \vec{e_3}'] \begin{pmatrix} a_1' \\\\ a_2' \\\\ a_3' \end{pmatrix}$$
 则：
 
 $$\begin{pmatrix} a_1 \\ a_2 \\ a_3 \end{pmatrix}  = \begin{pmatrix} e_1^T e_1' & e_1^Te_2' & e_1^T e_3' \\ e_2^T e_1' & e_2^Te_2' & e_2^T e_3' \\ e_3^T e_1' & e_3^Te_2' & e_3^T e_3' \end{pmatrix}  \begin{pmatrix} a_1' \\ a_2' \\ a_3' \end{pmatrix}  = \vec{R}\vec{a}'$$
@@ -85,7 +85,7 @@ SE(3) = $$\{ \vec{T} = \begin{pmatrix} \vec{R} & \vec{t} \\\\ \vec{0}^T & 1\end{
 | 符号(Notation) | 名字(Name) | 特性 | 表示 |
 |----------------| ----------| -----| --- | 
 | $\vec{T}(t)$      | 平移矩阵 | Affine | $\begin{pmatrix} I^3 & \vec{t} \\\\ 0^t & 1 \end{pmatrix}$
-| $\vec{R_x}(\rho)$ | 旋转矩阵 | 线x轴旋转$\rho$弧度。Orthogonal & Affine| $\vec{R}_x(\phi) = \begin{pmatrix} 1 & 0 & 0 & 0 \\\\ 0 & cos\phi & -sin\phi  & 0 \\ 0 & sin\phi & cos\phi & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}$ <br> $\vec{R}_y(\phi) = \begin{pmatrix} cos\phi & 0 & sin\phi & 0 \\\\ 0 & 1 & 0  & 0 \\\\ -sin\phi &  0 & cos\phi & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}$ <br> $\vec{R}_z(\phi) = \begin{pmatrix} cos\phi & -sin\phi & 0 & 0 \\\\ sin\phi & cos\phi & 0 & 0 \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}$
+| $\vec{R_x}(\rho)$ | 旋转矩阵 | 线x轴旋转$\rho$弧度。Orthogonal & Affine| $\vec{R}_x(\phi) = \begin{pmatrix} 1 & 0 & 0 & 0 \\\\ 0 & cos\phi & -sin\phi  & 0 \\\\ 0 & sin\phi & cos\phi & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}$ <br> $\vec{R}_y(\phi) = \begin{pmatrix} cos\phi & 0 & sin\phi & 0 \\\\ 0 & 1 & 0  & 0 \\\\ -sin\phi &  0 & cos\phi & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}$ <br> $\vec{R}_z(\phi) = \begin{pmatrix} cos\phi & -sin\phi & 0 & 0 \\\\ sin\phi & cos\phi & 0 & 0 \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}$
 | $\vec{R}$         | 旋转矩阵 | Orthogonal & Affine |
 | $\vec{S}(s)$      | 缩放矩阵 | x, y, z同时均匀缩放s。Affine | $\vec{S}(\vec{s}) = \begin{pmatrix} s_x & 0 & 0 & 0 \\\\ 0 & s_y & 0 & 0 \\\\ 0 & 0 & s_z & 0 \\\\ 0 & 0 & 0 & 1\end{pmatrix}$
 | $\vec{H}_{ij}(s)$ | 错切矩阵(shear matrix) | 使用系统s来相对于分量j错切（推移）分量i, $i,j \in \{ x, y, x\}$ | $\vec{H}_{xz}(s) = \begin{pmatrix} 1 & 0 & s & 0 \\\\  0 & 1 & 0 & 0 \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}$
