@@ -1,4 +1,10 @@
-# gtk 
+---
+
+title: Gtk 工具
+
+---
+
+# gio
 
 ## gsettings
 
@@ -171,3 +177,71 @@ test_basic (void)
 [by including <giomm/settings.h> and use class Settings](https://developer-old.gnome.org/glibmm/unstable/classGio_1_1Settings.html)
 
 
+## desktop apps
+
+如果要开发一个launcher, 需要获取系统所有的应用程序列表。你可以手动去/usr/share/applications文件夹下搜.desktop文件，但gio提供了现成的接手，而且可能比你自己搜索更加全面。
+
+[Gio::AppInfo](https://developer-old.gnome.org/glibmm/unstable/classGio_1_1AppInfo.html)
+
+```c
+static std::vector< Glib::RefPtr< AppInfo > > 	get_all () // 	Gets a list of all of the applications currently registered on this system.
+tatic Glib::RefPtr< AppInfo > 	create_from_commandline (const std::string& commandline, const std::string& application_name, CreateFlags flags)
+bool Gio::AppInfo::launch	(	const Glib::RefPtr< Gio::File >& 	file	)	
+Glib::RefPtr<Icon> Gio::AppInfo::get_icon	()
+std::string Gio::AppInfo::get_executable	()	const
+std::string Gio::AppInfo::get_display_name	()	const
+
+
+```
+
+## unix domain socket
+
+GIO提供了一个Unix Domain socket的封装，可以用来发送普通消息和fd。
+
+[UnixConnection](https://developer-old.gnome.org/glibmm/unstable/classGio_1_1UnixConnection.html)
+
+```c
+bool 	send_fd (int fd, const Glib::RefPtr< Cancellable >& cancellable)
+// 	Passes a file descriptor to the receiving side of the connection.
+
+int 	receive_fd ()
+// 	A receive_fd() convenience overload.
+Glib::RefPtr< InputStream > 	get_input_stream () //父类方法，用于发送接收普通数据
+Glib::RefPtr< OutputStream > 	get_output_stream ()
+```
+
+# Glib
+
+## Misc Utils
+
+[Utils 文档](https://developer-old.gnome.org/glibmm/unstable/group__MiscUtils.html)
+
+```c
+//xdg base dirs
+std::string 	Glib::get_current_dir ()
+std::string 	Glib::get_user_config_dir ()
+
+// environment variables
+Glib::ustring 	Glib::get_host_name ()
+std::string 	Glib::getenv (StdStringView variable)
+bool 	Glib::setenv (StdStringView variable, StdStringView value, bool overwrite=true)
+
+// path utils
+std::string 	Glib::path_get_basename (StdStringView filename)
+std::string 	Glib::path_get_dirname (StdStringView filename)
+```
+
+## File Utils
+
+[File Utils](https://developer-old.gnome.org/glibmm/unstable/group__FileUtils.html)
+
+```c
+class  	Glib::DirIterator
+class  	Glib::Dir
+bool 	Glib::file_test (const std::string& filename, FileTest test)
+int 	Glib::mkstemp (std::string& filename_template)
+int 	Glib::file_open_tmp (std::string& name_used, const std::string& prefix)
+std::string 	Glib::file_get_contents (const std::string& filename)
+
+        
+```
