@@ -17,8 +17,8 @@ title: 线性代数
   $$ \vec{\mathbf{a}} \times \vec{\mathbf{b}} = |a|*|b|*sin\theta*\hat{\mathbf{n}} $$
 
 
-若$\vec{\mathbf{a}} \times \vec{\mathbf{b}} = \vec{\mathbf{c}}, \vec{\mathbf{a}} = (a_x, a_y, a_z)^T, \vec{\mathbf{b}}  = (b_x, b_y, b_z)^T $, 则:
-$\vec{\mathbf{c}} = \begin{pmatrix} a_y*b_z - a_z*b_y\\ a_z*b_x - a_x*b_z\\ a_x*b_y - a_y*b_z \end{pmatrix}$ 
+若$$\vec{\mathbf{a}} \times \vec{\mathbf{b}} = \vec{\mathbf{c}}, \vec{\mathbf{a}} = (a_x, a_y, a_z)^T, \vec{\mathbf{b}}  = (b_x, b_y, b_z)^T $$, 则:
+$$\vec{\mathbf{c}} = \begin{pmatrix} a_y*b_z - a_z*b_y\\ a_z*b_x - a_x*b_z\\ a_x*b_y - a_y*b_z \end{pmatrix}$$ 
 
 **3. 旋转矩阵** 
 
@@ -26,7 +26,7 @@ $\vec{\mathbf{c}} = \begin{pmatrix} a_y*b_z - a_z*b_y\\ a_z*b_x - a_x*b_z\\ a_x*
 则向量$\vec{a} = \begin{pmatrix}a_1\\ a_2\\ a_3 \end{pmatrix}$, 在新坐标系内的表示变为$\vec{a}' = \begin{pmatrix}a_1' \\ a_2' \\ a_3' \end{pmatrix}$ （注意$\vec{a}'$并没有经这坐标变换), 
 则：
 
-$[\vec{e_1}, \vec{e_2}, \vec{e_3}] \begin{pmatrix} a_1 \\ a_2 \\ a_3 \end{pmatrix} = [\vec{e_1}', \vec{e_2}', \vec{e_3}'] \begin{pmatrix} a_1' \\ a_2' \\ a_3' \end{pmatrix}$
+$$[\vec{e_1}, \vec{e_2}, \vec{e_3}] \begin{pmatrix} a_1 \\ a_2 \\ a_3 \end{pmatrix} = [\vec{e_1}', \vec{e_2}', \vec{e_3}'] \begin{pmatrix} a_1' \\ a_2' \\ a_3' \end{pmatrix}$$
 则：
 
 $\begin{pmatrix} a_1 \\ a_2 \\ a_3 \end{pmatrix}  = \begin{pmatrix} e_1^T e_1' & e_1^Te_2' & e_1^T e_3' \\ e_2^T e_1' & e_2^Te_2' & e_2^T e_3' \\ e_3^T e_1' & e_3^Te_2' & e_3^T e_3' \end{pmatrix}  \begin{pmatrix} a_1' \\ a_2' \\ a_3' \end{pmatrix}  = \vec{R}\vec{a}'$
