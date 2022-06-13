@@ -33,7 +33,7 @@ $$\begin{pmatrix} a_1 \\ a_2 \\ a_3 \end{pmatrix}  = \begin{pmatrix} e_1^T e_1' 
 
 SO(3)特殊正交群，(Special Othogonal Group), 正交矩阵（行列式为1)：
 
-SO(n) = $\{\vec{R} \in R^{n \times n} | \vec{R}\vec{R}^T= \vec{I}, det(\vec{R}) = 1 \}$
+SO(n) = $$\{\vec{R} \in R^{n \times n} | \vec{R}\vec{R}^T= \vec{I}, det(\vec{R}) = 1 \}$$
 
 **4. 欧氏变换**
 
@@ -42,17 +42,18 @@ $\vec{a}' = \vec{R} \vec{a} + \vec{t}$
 
 **5. 齐次坐标**
 
-$\begin{pmatrix} \vec{a}' \\ 1 \end{pmatrix} = 
- \begin{pmatrix} \vec{R} & \vec{t} \\ \vec{0}^T & 1\end{pmatrix}
- \begin{pmatrix} \vec{a} \\ 1\end{pmatrix} =
+$$\begin{pmatrix} \vec{a}' \\ 1 \end{pmatrix} = 
+ \begin{pmatrix} \vec{R} & \vec{t} \\\\ 
+ \vec{0}^T & 1\end{pmatrix}
+ \begin{pmatrix} \vec{a} \\\\ 1\end{pmatrix} =
  \vec{T}
- \begin{pmatrix} \vec{a} \\ 1\end{pmatrix} 
-$
+ \begin{pmatrix} \vec{a} \\\\ 1\end{pmatrix} 
+$$
 
 T属于特殊欧氏群(Special Euclidean Group), SE(n)
 
-SE(3) = $\{ \vec{T} = \begin{pmatrix} \vec{R} & \vec{t} \\ \vec{0}^T & 1\end{pmatrix} \in R^{4 \times 4} | \vec{R} \in SO(3), t \in R^3
-\}$
+SE(3) = $$\{ \vec{T} = \begin{pmatrix} \vec{R} & \vec{t} \\\\ \vec{0}^T & 1\end{pmatrix} \in R^{4 \times 4} | \vec{R} \in SO(3), t \in R^3
+\}$$
 
 
 **6. 表**
@@ -83,11 +84,11 @@ SE(3) = $\{ \vec{T} = \begin{pmatrix} \vec{R} & \vec{t} \\ \vec{0}^T & 1\end{pma
 
 | 符号(Notation) | 名字(Name) | 特性 | 表示 |
 |----------------| ----------| -----| --- | 
-| $\vec{T}(t)$      | 平移矩阵 | Affine | $\begin{pmatrix} I^3 & \vec{t} \\ 0^t & 1 \end{pmatrix}$
-| $\vec{R_x}(\rho)$ | 旋转矩阵 | 线x轴旋转$\rho$弧度。Orthogonal & Affine| $\vec{R}_x(\phi) = \begin{pmatrix} 1 & 0 & 0 & 0 \\ 0 & cos\phi & -sin\phi  & 0 \\ 0 & sin\phi & cos\phi & 0 \\ 0 & 0 & 0 & 1 \end{pmatrix}$ <br> $\vec{R}_y(\phi) = \begin{pmatrix} cos\phi & 0 & sin\phi & 0 \\ 0 & 1 & 0  & 0 \\ -sin\phi &  0 & cos\phi & 0 \\ 0 & 0 & 0 & 1 \end{pmatrix}$ <br> $\vec{R}_z(\phi) = \begin{pmatrix} cos\phi & -sin\phi & 0 & 0 \\ sin\phi & cos\phi & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{pmatrix}$
+| $\vec{T}(t)$      | 平移矩阵 | Affine | $\begin{pmatrix} I^3 & \vec{t} \\\\ 0^t & 1 \end{pmatrix}$
+| $\vec{R_x}(\rho)$ | 旋转矩阵 | 线x轴旋转$\rho$弧度。Orthogonal & Affine| $\vec{R}_x(\phi) = \begin{pmatrix} 1 & 0 & 0 & 0 \\\\ 0 & cos\phi & -sin\phi  & 0 \\ 0 & sin\phi & cos\phi & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}$ <br> $\vec{R}_y(\phi) = \begin{pmatrix} cos\phi & 0 & sin\phi & 0 \\\\ 0 & 1 & 0  & 0 \\\\ -sin\phi &  0 & cos\phi & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}$ <br> $\vec{R}_z(\phi) = \begin{pmatrix} cos\phi & -sin\phi & 0 & 0 \\\\ sin\phi & cos\phi & 0 & 0 \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}$
 | $\vec{R}$         | 旋转矩阵 | Orthogonal & Affine |
-| $\vec{S}(s)$      | 缩放矩阵 | x, y, z同时均匀缩放s。Affine | $\vec{S}(\vec{s}) = \begin{pmatrix} s_x & 0 & 0 & 0 \\ 0 & s_y & 0 & 0 \\ 0 & 0 & s_z & 0 \\ 0 & 0 & 0 & 1\end{pmatrix}$
-| $\vec{H}_{ij}(s)$ | 错切矩阵(shear matrix) | 使用系统s来相对于分量j错切（推移）分量i, $i,j \in \{ x, y, x\}$ | $\vec{H}_{xz}(s) = \begin{pmatrix} 1 & 0 & s & 0 \\  0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{pmatrix}$
+| $\vec{S}(s)$      | 缩放矩阵 | x, y, z同时均匀缩放s。Affine | $\vec{S}(\vec{s}) = \begin{pmatrix} s_x & 0 & 0 & 0 \\\\ 0 & s_y & 0 & 0 \\\\ 0 & 0 & s_z & 0 \\\\ 0 & 0 & 0 & 1\end{pmatrix}$
+| $\vec{H}_{ij}(s)$ | 错切矩阵(shear matrix) | 使用系统s来相对于分量j错切（推移）分量i, $i,j \in \{ x, y, x\}$ | $\vec{H}_{xz}(s) = \begin{pmatrix} 1 & 0 & s & 0 \\\\  0 & 1 & 0 & 0 \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}$
 | $\vec{E}(h,p,r)$  | 欧拉变换(Euler Transform) | yaw, pitch, roll  Orthogonal & affine | 
 | $\vec{P}_o(s)$    | 正交投影(orthogonal projection)  | Affine |
 | $\vec{P}_p(s)$    | 透视投影(perspection projection)  | .. |
