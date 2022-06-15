@@ -32,7 +32,7 @@ $\vec{\mathbf{c}} = \begin{pmatrix} a_y * b_z - a_z * b_y \\\\ a_z * b_x - a_x *
 **3. 旋转矩阵**
 
 `基`$[\vec{e_1}, \vec{e_2}, \vec{e_3}]$定义一个坐标系，该`基`旋转变为$[\vec{e_1}', \vec{e_2}', \vec{e_3}']$。
-则向量$\vec{a} = \begin{pmatrix}a_1\\ a_2\\\\ a_3 \end{pmatrix}$, 在新坐标系内的表示变为$\vec{a}' = \begin{pmatrix}a_1' \\\\ a_2' \\\\
+则向量$\vec{a} = \begin{pmatrix}a_1\\ a_2\\\\ a_3 \end{pmatrix}$, 在新坐标系内的表示变为$\vec{a} '$ = $\begin{pmatrix}a_1' \\\\ a_2' \\\\
 a_3' \end{pmatrix}$ （注意$\vec{a}'$并没有经这坐标变换),
 则：
 
@@ -69,7 +69,6 @@ $\vec{T} \begin{pmatrix} \vec{a} \\\\ 1 \end{pmatrix}$
 T属于特殊欧氏群(Special Euclidean Group), SE(n)
 
 SE(3) =
-
 $ \{ \vec{T} = \begin{pmatrix} \vec{R} & \vec{t} \\\\ \vec{0}^T & 1\end{pmatrix} \in R^{4 \times 4} | \vec{R} \in SO(3), t \in R^3 \} $
 
 **6. 表**
