@@ -101,6 +101,9 @@ Mad scientist at work!
 {% endraw %}
 
 
+
+[math](https://www.tutorialspoint.com/tex_commands/brace.htm)
+
 # math symbools
 
 ## Greek letters
