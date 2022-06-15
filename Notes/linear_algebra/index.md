@@ -47,7 +47,7 @@ SO(3)特殊正交群，(Special Othogonal Group), 正交矩阵（行列式为1)�
 SO(n) =
 
 $
-\{\vec{R} \in R^{n \times n} | \vec{R}\vec{R}^T= \vec{I}, det(\vec{R}) = 1 \}
+\{ \vec{R} \in R^{n \times n} | \vec{R} \vec{R}^T= \vec{I}, det( \vec{R} ) = 1 \}
 $
 
 **4. 欧氏变换**
@@ -61,12 +61,9 @@ $\vec{a}' = \vec{R} \vec{a} + \vec{t}$
 $$
 
 \begin{pmatrix} \vec{a}' \\\\ 1 \end{pmatrix} =
-\begin{pmatrix} \vec{R} & \vec{t} \\\\
-\vec{0}^T & 1 
-\end{pmatrix}
+\begin{pmatrix} \vec{R} & \vec{t} \\\\ \vec{0}^T & 1 \end{pmatrix}
 \begin{pmatrix} \vec{a} \\\\ 1 \end{pmatrix} =
-\vec{T}
-\begin{pmatrix} \vec{a} \\\\ 1 \end{pmatrix}
+\vec{T} \begin{pmatrix} \vec{a} \\\\ 1 \end{pmatrix}
 
 $$
 
