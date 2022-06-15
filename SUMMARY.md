@@ -104,6 +104,14 @@ Mad scientist at work!
 
 [math](https://www.tutorialspoint.com/tex_commands/brace.htm)
 
+{% raw %}
+```info
+
+`|`要写作`\|`
+
+```
+{% endraw %}
+
 # math symbools
 
 ## Greek letters
