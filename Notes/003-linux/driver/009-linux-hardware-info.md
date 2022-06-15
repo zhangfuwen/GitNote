@@ -162,3 +162,35 @@ The sysstat package contains the following system performance tools:
  ```bash
  sudo apt install sysstat
  ```
+
+### 使用问题
+
+#### 服务未开启
+
+ ```bash
+ ➜  ~ sudo sar -d
+无法打开 /var/log/sysstat/sa16: 没有那个文件或目录
+请检查是否允许数据收集
+```
+
+**解决办法:**
+
+
+编辑/etc/default/sysstat, 将 ENABLED="false"改为ENABLED="true", 然后`sudo /etc/init.d/sysstat restart`
+
+
+### sar
+
+每1秒打印一次各网络接口的数据收发情况，打印1000次：`sudo sar -n DEV 1 1000`
+
+每1秒打印一次块设备的数据收发情况，打印1000次: `sudo sar -d 1 1000`
+
+每1秒打印一次中断次，打印1000次: `sudo sar -I SUM 1 1000`
+
+
+
+## 联想X1 Extreme Gen3安装debian后没有wifi驱动
+
+```bash
+sudo apt install firmware-iwlwifi
+```

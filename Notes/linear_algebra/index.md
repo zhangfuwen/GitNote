@@ -9,14 +9,14 @@ title: 线性代数
 **1. dot product:** 投影长度
 
 $$
-\vec{\mathbf{a}} * \vec{\mathbf{b}} = |a| * |b| * \cos\theta = \sum\limits_{i=1}^n a_i*b_i = \vec{\mathbf{a}}^T
+\vec{\mathbf{a}} * \vec{\mathbf{b}} = \|a\| * \|b\| * \cos\theta = \sum\limits_{i=1}^n a_i*b_i = \vec{\mathbf{a}}^T
 \vec{\mathbf{b}}
 $$
 
 **2. cross product:** 有向面积, 右手定则
 
 
-$\vec{\mathbf{a}} \times \vec{\mathbf{b}}$ = |a|*|b|* $sin\theta*\hat{\mathbf{n}}$
+$\vec{\mathbf{a}} \times \vec{\mathbf{b}}$ = \|a\|*\|b\|* $sin\theta*\hat{\mathbf{n}}$
 
 若
 
