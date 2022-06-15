@@ -58,14 +58,13 @@ $\vec{a}' = \vec{R} \vec{a} + \vec{t}$
 
 **5. 齐次坐标**
 
-$$
 
-\begin{pmatrix} \vec{a} ' \\\\ 1 \end{pmatrix} =
-\begin{pmatrix} \vec{R} & \vec{t} \\\\ \vec{0}^T & 1 \end{pmatrix}
-\begin{pmatrix} \vec{a} \\\\ 1 \end{pmatrix} =
-\vec{T} \begin{pmatrix} \vec{a} \\\\ 1 \end{pmatrix}
+$\begin{pmatrix} \vec{a} ' \\\\ 1 \end{pmatrix}$ =
+$\begin{pmatrix} \vec{R} & \vec{t} \\\\ \vec{0}^T & 1 \end{pmatrix}$
+$\begin{pmatrix} \vec{a} \\\\ 1 \end{pmatrix}$ =
+$\vec{T} \begin{pmatrix} \vec{a} \\\\ 1 \end{pmatrix}$
 
-$$
+
 
 T属于特殊欧氏群(Special Euclidean Group), SE(n)
 
