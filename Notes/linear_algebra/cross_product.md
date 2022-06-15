@@ -1,5 +1,10 @@
+---
 
-## cross product 叉积
+title: 叉积和点积
+
+---
+
+# cross product 叉积
 
 这个[网页](https://www.mathsisfun.com/algebra/vectors-cross-product.html)上讲得非常好。
 
@@ -33,7 +38,7 @@ constexpr vector cross_product(vector a, vector b)
 
 ```
 
-## sin
+# sin
 ![assets/img_4.png](assets/img_5.png)
 
 
