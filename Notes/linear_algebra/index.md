@@ -39,7 +39,7 @@ $\vec{a} = \begin{pmatrix}a_1 \\\\ a_2 \\\\ a_3 \end{pmatrix}$,
 
 $$
 \vec{a'}
-= 
+\= 
 \begin{pmatrix}a_1' \\\\ a_2' \\\\ a_3' \end{pmatrix}
 $$
 
@@ -59,7 +59,7 @@ SO(n) =
 \{ $\vec{R} \in R^{n \times n}$ \|
 
 $ \vec{R} \vec{R}^T $
-= 
+\= 
 $\vec{I}, det( \vec{R} )$ = 1 \}
 
 
