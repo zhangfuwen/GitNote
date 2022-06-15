@@ -25,7 +25,7 @@ $ \vec{\mathbf{a}} \times \vec{\mathbf{b}} = \vec{\mathbf{c}}, \vec{\mathbf{a}} 
 , 则:
 
 
-$\vec{\mathbf{c}}$ = $\begin{pmatrix} a_y*b_z - a_z*b_y \\\\ a_z*b_x - a_x*b_z \\\\ a_x*b_y - a_y*b_z \end{pmatrix}$
+$\vec{\mathbf{c}}$ = $$\begin{pmatrix} a_y * b_z - a_z * b_y \\\\ a_z * b_x - a_x * b_z \\\\ a_x * b_y - a_y * b_z \end{pmatrix}$$
 
 
 
