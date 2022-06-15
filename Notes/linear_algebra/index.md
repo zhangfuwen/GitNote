@@ -16,7 +16,7 @@ $$
 **2. cross product:** 有向面积, 右手定则
 
 $$
-\vec{\mathbf{a}} \times \vec{\mathbf{b}} = |a|*|b|*sin\theta*\hat{\mathbf{n}}
+\vec{\mathbf{a}} * \vec{\mathbf{b}} = |a|*|b|*sin\theta*\hat{\mathbf{n}}
 $$
 
 若
