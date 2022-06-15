@@ -8,8 +8,10 @@ title: 线性代数
 
 **1. dot product:** 投影长度
 
-$\vec{\mathbf{a}}$ * $\vec{\mathbf{b}}$ = $|a| * |b| * \cos\theta = \sum\limits_{i=1}^n a_i*b_i = \vec{\mathbf{a}}^T
-\vec{\mathbf{b}}$
+$$
+\vec{\mathbf{a}} * \vec{\mathbf{b}} = |a| * |b| * \cos\theta = \sum\limits_{i=1}^n a_i*b_i = \vec{\mathbf{a}}^T
+\vec{\mathbf{b}}
+$$
 
 **2. cross product:** 有向面积, 右手定则
 
