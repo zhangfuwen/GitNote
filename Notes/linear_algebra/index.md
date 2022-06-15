@@ -37,9 +37,11 @@ $\vec{\mathbf{c}} = \begin{pmatrix} a_y * b_z - a_z * b_y \\\\ a_z * b_x - a_x *
 $\vec{a} = \begin{pmatrix}a_1 \\\\ a_2 \\\\ a_3 \end{pmatrix}$, 
 在新坐标系内的表示变为
 
-$\vec{a'}$
+$$
+\vec{a'}
 = 
-$\begin{pmatrix}a_1' \\\\ a_2' \\\\ a_3' \end{pmatrix}$
+\begin{pmatrix}a_1' \\\\ a_2' \\\\ a_3' \end{pmatrix}
+$$
 
 (注意$\vec{a'}$并没有经这坐标变换),
 
