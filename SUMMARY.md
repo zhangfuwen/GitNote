@@ -115,9 +115,11 @@ Mad scientist at work!
 # math symbools
 
 ## Greek letters
+
+
 | 符号 | math | 符号 | math |
 | -    | -    | --  |  --  |
- |$ \alpha A$ |	\alpha A	|$ \nu N$|	\nu N
+|$ \alpha A$ |	\alpha A	|$ \nu N$|	\nu N
 |$ \beta B$|	\beta B	|$ \xi \Xi $|	\xi \Xi
 |$ \gamma \Gamma $|	\gamma \Gamma	|$ oO\;$|	o O
 |$ \delta \Delta $|	\delta \Delta	|$ \pi \Pi $|	\pi \Pi
@@ -190,4 +192,4 @@ Mad scientist at work!
 |$ \sqrt{a*b} $|	\sqrt{a*b}	|$ \oint_{i=2}^ni*3 $|	\oint_{i=2}^ni*3 
 |$ b\pmod{asdf} $|	\sqrt{a*b}	|$ \sum_{i=2}^ni*3 $|	\sum_{i=2}^ni*3 
 |$ \lim_{x\to\infty} f(x) $|	\lim_{x\to\infty} f(x) |$ \prod_{i=2}^ni*3 $|	\prod_{i=2}^ni*3 
-|\[ \lim_{x\to\infty} f(x) \]|	\\[ \lim_{x\to\infty} f(x) \\] |$ \prod_{i=2}^ni*3 $|	\prod_{i=2}^ni*3 
+|$$ \lim_{x\to\infty} f(x) $$|	\$\$ \lim_{x\to\infty} f(x) \$\$ |$ \prod_{i=2}^ni*3 $|	\prod_{i=2}^ni*3 
