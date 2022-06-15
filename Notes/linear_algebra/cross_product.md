@@ -4,11 +4,11 @@
 这个[网页](https://www.mathsisfun.com/algebra/vectors-cross-product.html)上讲得非常好。
 
 这里摘图出来：
-![img.png](img.png)
-![img_1.png](img_1.png)
-![img_2.png](img_2.png)
+![assets/img.png](assets/img.png)
+![assets/img_1.png](assets/img_1.png)
+![assets/img_2.png](assets/img_2.png)
 
-![img_3.png](img_3.png)
+![assets/img_3.png](assets/img_3.png)
 
 1. 叉积有两个计算方法。
 2. 二维空间是没办法计算叉积的，因为叉积的结果在另一维上。
@@ -34,6 +34,6 @@ constexpr vector cross_product(vector a, vector b)
 ```
 
 ## sin
-![img_4.png](img_5.png)
+![assets/img_4.png](assets/img_5.png)
 
 

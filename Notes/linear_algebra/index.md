@@ -13,22 +13,15 @@ $\vec{\mathbf{a}}$ * $\vec{\mathbf{b}}$ = $|a| * |b| * \cos\theta = \sum\limits_
 
 **2. cross product:** 有向面积, 右手定则
 
-$$
-\vec{\mathbf{a}} \times \vec{\mathbf{b}} = |a|*|b|*sin\theta*\hat{\mathbf{n}}
-$$
+$ \vec{\mathbf{a}} \times \vec{\mathbf{b}} = |a|*|b|*sin\theta*\hat{\mathbf{n}} $
 
 若
 
-$$
-\vec{\mathbf{a}} \times \vec{\mathbf{b}} = \vec{\mathbf{c}}, \vec{\mathbf{a}} = (a_x, a_y, a_z)^T, \vec{\mathbf{b}} = (
-b_x, b_y, b_z)^T
-$$
+$ \vec{\mathbf{a}} \times \vec{\mathbf{b}} = \vec{\mathbf{c}}, \vec{\mathbf{a}} = (a_x, a_y, a_z)^T, \vec{\mathbf{b}} = ( b_x, b_y, b_z)^T $
 
 , 则:
 
-$$
-\vec{\mathbf{c}} = \begin{pmatrix} a_y*b_z - a_z*b_y \\\\ a_z*b_x - a_x*b_z \\\\ a_x*b_y - a_y*b_z \end{pmatrix}
-$$
+$ \vec{\mathbf{c}} = \begin{pmatrix} a_y*b_z - a_z*b_y \\\\ a_z*b_x - a_x*b_z \\\\ a_x*b_y - a_y*b_z \end{pmatrix} $
 
 **3. 旋转矩阵**
 
@@ -37,25 +30,19 @@ $$
 a_3' \end{pmatrix}$ （注意$\vec{a}'$并没有经这坐标变换),
 则：
 
-$$[\vec{e_1}, \vec{e_2}, \vec{e_3}] \begin{pmatrix} a_1 \\\\ a_2 \\\\ a_3 \end{pmatrix}
-= [\vec{e_1}', \vec{e_2}', \vec{e_3}'] \begin{pmatrix} a_1' \\\\ a_2' \\\\ a_3' \end{pmatrix}
-$$
+$[\vec{e_1}, \vec{e_2}, \vec{e_3}] \begin{pmatrix} a_1 \\\\ a_2 \\\\ a_3 \end{pmatrix} = [\vec{e_1}', \vec{e_2}', \vec{e_3}'] \begin{pmatrix} a_1' \\\\ a_2' \\\\ a_3' \end{pmatrix} $
 
 则：
 
-$$
-\begin{pmatrix} a_1 \\ a_2 \\ a_3 \end{pmatrix} = \begin{pmatrix} e_1^T e_1' & e_1^Te_2' & e_1^T e_3' \\\\ e_2^T e_1' &
-e_2^Te_2' & e_2^T e_3' \\\\ e_3^T e_1' & e_3^Te_2' & e_3^T e_3' \end{pmatrix} \begin{pmatrix} a_1' \\\\ a_2' \\\\ a_3'
-\end{pmatrix} = \vec{R}\vec{a}'
-$$
+$ \begin{pmatrix} a_1 \\ a_2 \\ a_3 \end{pmatrix} = \begin{pmatrix} e_1^T e_1' & e_1^Te_2' & e_1^T e_3' \\\\ e_2^T e_1' & e_2^Te_2' & e_2^T e_3' \\\\ e_3^T e_1' & e_3^Te_2' & e_3^T e_3' \end{pmatrix} \begin{pmatrix} a_1' \\\\ a_2' \\\\ a_3' \end{pmatrix} = \vec{R}\vec{a}' $
 
 SO(3)特殊正交群，(Special Othogonal Group), 正交矩阵（行列式为1)：
 
 SO(n) =
 
-$$
+$
 \{\vec{R} \in R^{n \times n} | \vec{R}\vec{R}^T= \vec{I}, det(\vec{R}) = 1 \}
-$$
+$
 
 **4. 欧氏变换**
 
@@ -64,24 +51,20 @@ $\vec{a}' = \vec{R} \vec{a} + \vec{t}$
 
 **5. 齐次坐标**
 
-$$
+\[
 \begin{pmatrix} \vec{a}' \\\\ 1 \end{pmatrix} =
 \begin{pmatrix} \vec{R} & \vec{t} \\\\
 \vec{0}^T & 1\end{pmatrix}
 \begin{pmatrix} \vec{a} \\\\ 1\end{pmatrix} =
 \vec{T}
 \begin{pmatrix} \vec{a} \\\\ 1\end{pmatrix}
-$$
+\]
 
 T属于特殊欧氏群(Special Euclidean Group), SE(n)
 
 SE(3) =
 
-$$
-\{ \vec{T} = \begin{pmatrix} \vec{R} & \vec{t} \\\\ \vec{0}^T & 1\end{pmatrix} \in R^{4 \times 4} | \vec{R} \in SO(3), t
-\in R^3
-\}
-$$
+$ \{ \vec{T} = \begin{pmatrix} \vec{R} & \vec{t} \\\\ \vec{0}^T & 1\end{pmatrix} \in R^{4 \times 4} | \vec{R} \in SO(3), t \in R^3 \} $
 
 **6. 表**
 
