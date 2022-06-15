@@ -13,7 +13,7 @@ $\vec{\mathbf{a}}$ * $\vec{\mathbf{b}}$ = $|a| * |b| * \cos\theta = \sum\limits_
 
 **2. cross product:** 有向面积, 右手定则
 
-$ \vec{\mathbf{a}} \times \vec{\mathbf{b}} = |a|*|b|*sin\theta*\hat{\mathbf{n}} $
+$\vec{\mathbf{a}} \times \vec{\mathbf{b}}$ = $|a|*|b|*sin\theta*\hat{\mathbf{n}} $
 
 若
 
@@ -21,7 +21,7 @@ $ \vec{\mathbf{a}} \times \vec{\mathbf{b}} = \vec{\mathbf{c}}, \vec{\mathbf{a}} 
 
 , 则:
 
-$ \vec{\mathbf{c}} = \begin{pmatrix} a_y*b_z - a_z*b_y \\\\ a_z*b_x - a_x*b_z \\\\ a_x*b_y - a_y*b_z \end{pmatrix} $
+$\vec{\mathbf{c}} = \begin{pmatrix} a_y*b_z - a_z*b_y \\\\ a_z*b_x - a_x*b_z \\\\ a_x*b_y - a_y*b_z \end{pmatrix}$
 
 **3. 旋转矩阵**
 
@@ -47,18 +47,19 @@ $
 **4. 欧氏变换**
 
 欧氏变换 = 旋转 + 平移
+
 $\vec{a}' = \vec{R} \vec{a} + \vec{t}$
 
 **5. 齐次坐标**
 
-\[
+\\[
 \begin{pmatrix} \vec{a}' \\\\ 1 \end{pmatrix} =
 \begin{pmatrix} \vec{R} & \vec{t} \\\\
 \vec{0}^T & 1\end{pmatrix}
 \begin{pmatrix} \vec{a} \\\\ 1\end{pmatrix} =
 \vec{T}
 \begin{pmatrix} \vec{a} \\\\ 1\end{pmatrix}
-\]
+\\]
 
 T属于特殊欧氏群(Special Euclidean Group), SE(n)
 
