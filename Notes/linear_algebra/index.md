@@ -60,7 +60,7 @@ $\vec{a}' = \vec{R} \vec{a} + \vec{t}$
 
 $$
 
-\begin{pmatrix} \vec{a}' \\\\ 1 \end{pmatrix} =
+\begin{pmatrix} \vec{a} ' \\\\ 1 \end{pmatrix} =
 \begin{pmatrix} \vec{R} & \vec{t} \\\\ \vec{0}^T & 1 \end{pmatrix}
 \begin{pmatrix} \vec{a} \\\\ 1 \end{pmatrix} =
 \vec{T} \begin{pmatrix} \vec{a} \\\\ 1 \end{pmatrix}
