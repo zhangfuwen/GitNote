@@ -105,7 +105,7 @@ Mad scientist at work!
 [math](https://www.tutorialspoint.com/tex_commands/brace.htm)
 
 {% raw %}
-```info
+```information
 
 `|`要写作`\|`
 
