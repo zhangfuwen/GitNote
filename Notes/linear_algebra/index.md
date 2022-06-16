@@ -52,6 +52,9 @@ $ \vec{R} \vec{R}^T $
 \= 
 $\vec{I}, det( \vec{R} )$ = 1 \}
 
+$$
+\{\vec{R} \in R^{n \times n} | \vec{R}\vec{R}^T= \vec{I}, det(\vec{R}) = 1 \}
+$$
 
 **4. 欧氏变换**
 
