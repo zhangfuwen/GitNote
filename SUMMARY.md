@@ -92,13 +92,6 @@ Mad scientist at work!
 Mad scientist at work!
 ```
 
-{% raw %}
-{% include list.liquid %}
-{% endraw %}
-
-{% raw %}
-{% include list.liquid all=true %}
-{% endraw %}
 
 
 
