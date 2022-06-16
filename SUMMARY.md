@@ -192,4 +192,4 @@ Mad scientist at work!
 |$ \sqrt{a*b} $|	\sqrt{a*b}	|$ \oint_{i=2}^ni*3 $|	\oint_{i=2}^ni*3 
 |$ b\pmod{asdf} $|	\sqrt{a*b}	|$ \sum_{i=2}^ni*3 $|	\sum_{i=2}^ni*3 
 |$ \lim_{x\to\infty} f(x) $|	\lim_{x\to\infty} f(x) |$ \prod_{i=2}^ni*3 $|	\prod_{i=2}^ni*3 
-|$$ \lim_{x\to\infty} f(x) $$|	\$\$ \lim_{x\to\infty} f(x) \$\$ |$ \prod_{i=2}^ni*3 $|	\prod_{i=2}^ni*3 
+|\$\$ \lim_{x\to\infty} f(x) \$\$|	`$$ \lim_{x\to\infty} f(x) $$` |$ \prod_{i=2}^ni*3 $|	\prod_{i=2}^ni*3 
