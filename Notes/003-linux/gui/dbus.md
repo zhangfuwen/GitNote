@@ -48,12 +48,20 @@ object通常代表一个具体的应有，即每个应用有一个object。为�
 
 某Interface下的一个方法，就是正常的函数。
 
+### 编址
+
+｜A...	is identified by a(n)...	which looks like...	and is chosen by...
+Bus	address	unix:path=/var/run/dbus/system_bus_socket	system configuration
+Connection	bus name	:34-907 (unique) or com.mycompany.TextEditor (well-known)	D-Bus (unique) or the owning program (well-known)
+Object	path	/com/mycompany/TextFileManager	the owning program
+Interface	interface name	org.freedesktop.Hal.Manager	the owning program
+Member	member name	ListNames	the owning program
+
 ## dbus工具
 
 qdbusviewer, gui工具，用于查看系统中的所有object, path, inteface, method
 
 dbus-monitor, commandline工具，用于实时显示bus上的request/reply。
-
 
 
 

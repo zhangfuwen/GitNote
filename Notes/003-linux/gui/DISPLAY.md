@@ -30,6 +30,15 @@ xxx是shmlink的情况下，走的是Shared Memory Transport(SMT)。
 
 xxx是local或省略的情况，用库自动选择当前机器上最高效的协议，如果有SMT就走SMT，如果没有使能SMT就走UDS，实在不行走TCP。
 
+```
+➜  ~ netstat -l | grep X11
+unix  2      [ ACC ]     STREAM     LISTENING     26848    @/tmp/.X11-unix/X0
+unix  2      [ ACC ]     STREAM     LISTENING     26850    @/tmp/.X11-unix/X1
+unix  2      [ ACC ]     STREAM     LISTENING     26851    /tmp/.X11-unix/X1
+unix  2      [ ACC ]     STREAM     LISTENING     26849    /tmp/.X11-unix/X0
+
+```
+
 2. display
 
 一个机器可能有多个display，这个是逻辑上的概念，通常是一个物理的，多个虚拟的。
@@ -41,6 +50,10 @@ xxx是local或省略的情况，用库自动选择当前机器上最高效的协
 
 # wayland
 
+```
+➜  ~ netstat -l | grep wayland
+unix  2      [ ACC ]     STREAM     LISTENING     26852    /run/user/32001/wayland-0
+```
 
 
 
