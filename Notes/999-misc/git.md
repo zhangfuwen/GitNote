@@ -104,3 +104,11 @@ git config --global pager.branch false
 ```
 
 具体参考：https://www.codenong.com/48341920/
+
+# commands
+
+## default editor
+
+```bash
+git config --global core.editor "vim"
+```
