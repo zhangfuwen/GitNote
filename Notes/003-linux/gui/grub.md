@@ -105,6 +105,8 @@ function mount_img_part() {
     mount-o loop,offset=$start_byte $img_file $dir
 }
 
+mount ./oceanosxxxx.img /tmp/ocean_mount
+
  ```
 
 
