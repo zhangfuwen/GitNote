@@ -1,8 +1,9 @@
 ---
 
-title:grub
+title: grub
 
 ---
+
 
 # change resolution
 
