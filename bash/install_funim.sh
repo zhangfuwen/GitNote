@@ -33,4 +33,9 @@ function setup_funim() {
     echo "current engine: $(ibus engine)"
 }
 
+function install_chinese_lang() {
+    sudo apt install locales
+    sudo dpkg-reconfigure locales
+}
+
 
