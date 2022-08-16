@@ -43,5 +43,17 @@ dpkg -s qtcreator
 apt --installed list
 ```
 
+# 查找哪些包里安装了这个命令
+
+```bash
+apt-file find ntpdate
+```
+
+# 查看某包安装的文件
+
+```bash
+apt-file list ntpdate
+```
+
 
 
