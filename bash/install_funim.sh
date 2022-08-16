@@ -39,3 +39,20 @@ function install_chinese_lang() {
 }
 
 
+function install_funterm() {
+    sudo apt install meson ninja-build libgnutls-dev gnutls-dev libsystemd-dev gobject-introspection libgirepository1.0-dev valac libnautilus-extension-dev gettext
+
+    git clone https://github.com/zhangfuwen/funterm
+    pushd funterm
+    bash prepare_vte.sh
+    mkdir build
+    pushd build
+    cmake ..
+    make -j10
+    sudo make install
+
+    popd
+    popd
+
+}
+
