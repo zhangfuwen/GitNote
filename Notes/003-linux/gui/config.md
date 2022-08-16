@@ -7,6 +7,8 @@ title: linux app/service配置
 
 # desktop 文件
 
+[标准文档](https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html)
+
 ```
 [Desktop Entry]
 Name=Tracker File System Miner
@@ -24,6 +26,8 @@ NoDisplay=true
 OnlyShowIn=GNOME;KDE;XFCE;X-IVI;Unity;
 X-systemd-skip=true
 ```
+
+
 
 桌面入口规范为应用程序启动器创建了一个标准。Gnome 为广泛使用的格式添加了几个扩展，但据我所知，没有记录。这是尝试记录它们，以便我可以为 gnome 编写自己的自动启动启动器。非常欢迎拉取请求。
 
