@@ -112,3 +112,9 @@ git config --global pager.branch false
 ```bash
 git config --global core.editor "vim"
 ```
+
+## 生成gerrit change id
+
+```bash
+echo "Change-Id: I$(date | git hash-object --stdin)"
+```
