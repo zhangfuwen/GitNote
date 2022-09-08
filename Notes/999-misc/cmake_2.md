@@ -58,3 +58,4 @@ ninja
 起作用的方法：写在`/etc/environment`, `/etc/profile.d/xxx`里，重启电脑（也许注销图形界面再回来也行)。
 起作用的方法：写在Clion的`Appearance & Behavior` -> `Path Variable`里。
 
+

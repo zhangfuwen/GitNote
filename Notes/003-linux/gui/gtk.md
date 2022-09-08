@@ -176,6 +176,59 @@ test_basic (void)
 
 [by including <giomm/settings.h> and use class Settings](https://developer-old.gnome.org/glibmm/unstable/classGio_1_1Settings.html)
 
+### qt提供gsettings
+
+可以使用的库叫:[libgsettings-qt](https://bazaar.launchpad.net/~system-settings-touch/gsettings-qt/trunk/files)
+License是LGPL
+
+```asm
+ sudo apt install libgsettings-qt-dev
+
+```
+
+
+```cmake
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(gsettings-qt REQUIRED)
+target_link_libraries(${BIN_NAME} PRIVATE gsettings-qt)
+```
+
+```c++
+#include "QGSettings/qgsettings.h"
+QGSettings settings("org.freedesktop.Tracker.Miner.Files");
+for(const auto & k : settings.keys()) {
+    FUN_DEBUG("tracker key:%s, value:%s", OSTR(k), OSTR(settings.get(k).toString()));
+}
+```
+
+### schema
+
+```asm
+INSTALL(FILES res/fun.xjbcode.funterm.gschema.xml DESTINATION /usr/share/glib-2.0/schemas)
+```
+
+```asm
+<?xml version="1.0" encoding="utf-8"?>
+<schemalist>
+    <schema id="fun.xjbcode.funterm" path="/fun/xjbcode/funterm/">
+        <!-- Intervals -->
+        <key name="scroll-lines" type="i">
+            <default>100000</default>
+            <summary>scroll lines</summary>
+            <description>number of lines of history</description>
+        </key>
+    </schema>
+</schemalist>
+```
+
+
+```bash
+cd /usr/share/glib-2.0/schemas
+sudo glib-compile-schemas .
+```
+
+这里的id不知是干啥用的。这里的path比较重要，是dconf-editor中显示的路径。
+
 
 ## desktop apps
 
