@@ -149,7 +149,7 @@ function get_sudo()
     fi
     return $SUDO
 }
-get_sudo
+#get_sudo
 
 if [[ ! $(command -v wget) || ! $(command -v curl) ]];then
     echo "this script need wget and curl to work correctly, installing"
@@ -218,10 +218,10 @@ function install_nerdfonts()
 architecture=""
 function get_architecture()
 {
-    architecture=$(lscpu | awk '/Architecture:/{print $2}')
+    local architecture=$(lscpu | awk '/Architecture:/{print $2}')
     echo $architecture
 }
-get_architecture
+architecture=$(get_architecture)
 
 pkgman=""
 function get_pkg_manager()
@@ -239,7 +239,7 @@ function get_pkg_manager()
     fi
     echo $pkgman
 }
-get_pkg_manager
+pkgman=$(get_pkg_manager)
 
 function setup_vim()
 {
@@ -258,3 +258,27 @@ function _adb()
         adb "$@"
     fi
 }
+
+function dir() {
+    local dir=$(zenity --file-selection --filename="$pwd" --title="Select a File" --directory) && cd $dir
+}
+
+function gop() {
+    if [[ $# == 0 ]]; then
+        xdg-open .
+    else
+        xdg-open $1
+    fi
+}
+
+function note_upload() {
+    git add -A
+    git commit -m "$(zenity --entry --text='commit msg')"
+    git push
+}
+
+export PATH=~/bin/nvim-linux64/bin:$PATH
+export PATH=~/bin/node-v16.17.1-linux-x64/bin:$PATH
+alias vi=nvim
+
+
