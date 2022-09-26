@@ -14,6 +14,7 @@ function download_nvim_x86()
         [[ -f ~/.zshrc ]] && echo "export PATH=~/bin/nvim-linux64/bin:$PATH" >> ~/.zshrc && source ~/.zshrc
         rm nvim-linux64.tar.gz  -C ~/bin/
     fi
+    export PATH=~/bin/nvim-linux64/bin:$PATH
     echo "nvim installed"
     VIM=nvim
 }
@@ -32,6 +33,10 @@ if [[ "$architecture" == "aarch64" ]]; then
     download_nvim_arm64
 elif [[ "$architecture" == "x86_64" ]]; then
     download_nvim_x86
+fi
+
+if [[ -d ~/bin/nvim-linux64 ]]; then
+    export PATH=~/bin/nvim-linux64/bin:$PATH
 fi
 
 echo "install vim python provider"
