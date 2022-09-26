@@ -275,10 +275,25 @@ function note_upload() {
     git add -A
     git commit -m "$(zenity --entry --text='commit msg')"
     git push
+    git status
 }
 
-export PATH=~/bin/nvim-linux64/bin:$PATH
+if [[ ! $(command -v zenity) ]]; then
+    $SUDO apt install zenity
+fi
+
+if [[ ! -d $HOME/bin ]]; then
+    mkdir $HOME/bin
+fi
+
+if [[ ! -d $HOME/bin/node-v16.17.1-linux-x64 ]]; then
+    wget https://nodejs.org/dist/v16.17.1/node-v16.17.1-linux-x64.tar.xz -O $HOME/Downloads/node.tar.xz
+    tar xvjf $HOME/Downloads/node.tar.xz -C $HOME/bin/
+fi
 export PATH=~/bin/node-v16.17.1-linux-x64/bin:$PATH
+
+
+export PATH=~/bin/nvim-linux64/bin:$PATH
 alias vi=nvim
 
 
