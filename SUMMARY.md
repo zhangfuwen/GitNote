@@ -4,6 +4,8 @@ see [Summary](SUMMARY.md)
 
 ## 现代计算机
 
+{% collapse %}
+
  * [001\. x86启动](Notes/001-modern-computing/001-x86qi-dong.md)
  * [002\. Nandflash芯片简介](Notes/001-modern-computing/002-nandflash.md)
  * [003\. 闪存的磨损均衡](Notes/001-modern-computing/003-wear-leveling-of-nand-flash.md)
@@ -26,6 +28,7 @@ see [Summary](SUMMARY.md)
  * [021\. 显卡到AI芯片\-\-之二](Notes/001-modern-computing/021-modern-gpu2.md)
  * [022\. 显卡到AI芯片\-\-之三](Notes/001-modern-computing/022-modern-gpu-3.md)
 
+{% endcollapse %}
 
 ## android  [index](./Notes/002-android/index.md)
 
