@@ -2,8 +2,6 @@ see [Summary](SUMMARY.md)
 
 # Summary
 
-{% collapse title="现代计算机" %}
-
 ## 现代计算机
 
 
@@ -38,7 +36,6 @@ see [Summary](SUMMARY.md)
 
 ### android
 
-{% endcollapse %}
 
  * [sp wp](./Notes/002-android/android_sp_wp.md)
  * [vsyn and triple buffer](./Notes/002-android/android_vsync_and_triple_buffering.md)
