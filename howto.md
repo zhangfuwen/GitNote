@@ -154,10 +154,10 @@ Mad scientist at work!
 # Avatar 
 
 ```
-{% raw %}{% avatar saowang %}{% endraw %}
+{% raw %}{% avatar zhangfuwen %}{% endraw %}
 ```
 
-{% avatar saowang %}
+{% avatar zhangfuwen %}
 
 ```tip
 Set config `plugins: [jekyll-avatar]`
@@ -242,10 +242,10 @@ For documentation, see: https://kramdown.gettalong.org/syntax.html#math-blocks
 # Mentions Test
 
 ```
-Hey @saowang, what do you think of this?
+Hey @zhangfuwen, what do you think of this?
 ```
 
-Hey @saowang, what do you think of this?
+Hey @zhangfuwen, what do you think of this?
 
 ```tip
 Set config `plugins: [jekyll-mentions]`
