@@ -4,7 +4,7 @@ see [Summary](SUMMARY.md)
 
 ## 现代计算机
 
-{% collapse %}
+{% collapse title="现代计算机" %}
 
  * [001\. x86启动](Notes/001-modern-computing/001-x86qi-dong.md)
  * [002\. Nandflash芯片简介](Notes/001-modern-computing/002-nandflash.md)
