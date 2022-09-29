@@ -90,17 +90,17 @@ Mad scientist at work!
 
 | 符号 | math | 符号 | math |
 | -    | -    | --  |  --  |
-|$ \leftarrow $|	\leftarrow	|$ \Leftarrow $|	\Leftarrow
-|$ \rightarrow $|	\rightarrow	|$ \Rightarrow \;$|	\Rightarrow
-|$ \leftrightarrow $|	\leftrightarrow	|$ \rightleftharpoons $|	\rightleftharpoons
-|$ \uparrow $|	\uparrow	|$ \downarrow $|	\downarrow
-|$ \Uparrow \;$|	\Uparrow	|$ \Downarrow $|	\Downarrow
-|$ \Leftrightarrow \;$|	\Leftrightarrow	|$ \Updownarrow $|	\Updownarrow
-|$ \mapsto $|	\mapsto	|$ \longmapsto \;$|	\longmapsto
-|$ \nearrow $|	\nearrow	|$ \searrow $|	\searrow
-|$ \swarrow $|	\swarrow	|$ \nwarrow $|	\nwarrow
-|$ \leftharpoonup $|	\leftharpoonup	|$ \rightharpoonup $|	\rightharpoonup
-|$ \leftharpoondown $|	\leftharpoondown	|$ \rightharpoondown $|	\rightharpoondown		
+| $$ \leftarrow $$ |	\leftarrow	| $$ \Leftarrow $$ |	\Leftarrow
+| $$ \rightarrow $$ |	\rightarrow	| $$ \Rightarrow \;$$ |	\Rightarrow
+| $$ \leftrightarrow $$ |	\leftrightarrow	| $$ \rightleftharpoons $$ |	\rightleftharpoons
+| $$ \uparrow $$ |	\uparrow	| $$ \downarrow $$ |	\downarrow
+| $$ \Uparrow \;$$ |	\Uparrow	| $$ \Downarrow $$ |	\Downarrow
+| $$ \Leftrightarrow \;$$ |	\Leftrightarrow	| $$ \Updownarrow $$ |	\Updownarrow
+| $$ \mapsto $$ |	\mapsto	| $$ \longmapsto \;$$ |	\longmapsto
+| $$ \nearrow $$ |	\nearrow	| $$ \searrow $$ |	\searrow
+| $$ \swarrow $$ |	\swarrow	| $$ \nwarrow $$ |	\nwarrow
+| $$ \leftharpoonup $$ |	\leftharpoonup	| $$ \rightharpoonup $$ |	\rightharpoonup
+| $$ \leftharpoondown $$ |	\leftharpoondown	| $$ \rightharpoondown $$ |	\rightharpoondown		
 
 ## Miscellaneous symbols
 

@@ -1,6 +1,6 @@
 ---
 
-title: Gtk 工具
+title: Gtk 编程杂记
 
 ---
 
