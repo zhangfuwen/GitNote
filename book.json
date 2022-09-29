@@ -1,5 +1,5 @@
 {
     "plugins": [
-        "math", "uml", "collapse"
+        "math", "uml", "collapse", "expandable-chapters"
     ]
 }
