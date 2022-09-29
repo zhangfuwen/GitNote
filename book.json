@@ -1,5 +1,5 @@
 {
     "plugins": [
-        "math", "puml", "collapse"
+        "math", "uml", "collapse"
     ]
 }
