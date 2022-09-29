@@ -209,10 +209,10 @@ Set config `plugins: [jemoji]`, Emoji searcher, see: [https://emoji.muan.co/](ht
 # Gist Test
 
 ```
-{% raw %}{% gist c08ee0f2726fd0e3909d %}{% endraw %}
+{% raw %}{% gist 56785fa8752ede958df4d7003db0ec90 %}{% endraw %}
 ```
 
-{% gist c08ee0f2726fd0e3909d %}
+{% gist 56785fa8752ede958df4d7003db0ec90 %}
 
 
 # Mathjax Test
