@@ -60,13 +60,11 @@ Mad scientist at work!
 
 # [math](https://www.tutorialspoint.com/tex_commands/brace.htm)
 
-{% raw %}
 ```information
 
-`|`要写作`\|`
+`|` 要写作 `\|`
 
 ```
-{% endraw %}
 
 # math symbools
 
