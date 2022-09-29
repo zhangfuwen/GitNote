@@ -38,13 +38,13 @@ see [Summary](SUMMARY.md)
 ### android
 
 
- * [sp wp](./Notes/002-android/android_sp_wp.md)
- * [vsyn and triple buffer](./Notes/002-android/android_vsync_and_triple_buffering.md)
- * [input/uinput](./Notes/002-android/androidlinux-inputuinput.md)
- * [binder](./Notes/002-android/binder.md)
+ * [Android 的强指针和弱指针](./Notes/002-android/android_sp_wp.md)
+ * [Android的vsync和三缓冲](./Notes/002-android/android_vsync_and_triple_buffering.md)
+ * [通过uinput实现输入事件注入](./Notes/002-android/androidlinux-inputuinput.md)
+ * [binder基础知识](./Notes/002-android/binder.md)
  * [knife](./Notes/002-android/butter-knife-android-chang-yong-zhu-jie-ku.md)
  * [gradle-wrapper](./Notes/002-android/gradlegradle-wrapper.md)
- * [looper/thread handler](./Notes/002-android/looper_thread_handler.md)
+ * [Android的Looper, Handler和MessageQueue](./Notes/002-android/looper_thread_handler.md)
  * [manifest](./Notes/002-android/manifest.md)
  * [ndk/cmake](./Notes/002-android/ndk_cmake.md)
  * [repo](./Notes/002-android/repo.md)

@@ -183,6 +183,7 @@ install(EXPORT MathFunctionsTargets
 
 MathFunctionsTargets.cmake会生成imported targets:
 下面是我的一个工程的xxx-targets.cmake里的内容。
+
 ```cmake
 # Create imported target handycpp::handycpp
 add_library(handycpp::handycpp STATIC IMPORTED)
@@ -196,6 +197,7 @@ set_target_properties(handycpp::handycpp PROPERTIES
 
 似乎是你直接include这个xxx-targets.cmake的绝对路径就可以使用这个包了，但是使用绝对路径不方便。
 xxx-config.cmake是用来让cmake找到这个包的。它的里面会include(xxx-targets.cmake)文件。
+
 ```cmake
 # xxx-config.cmake的内容
 ...
