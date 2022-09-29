@@ -217,7 +217,7 @@ Set config `plugins: [jemoji]`, Emoji searcher, see: [https://emoji.muan.co/](ht
 
 # Mathjax Test
 
-$
+$$
 \begin{aligned}
   & \phi(x,y) = \phi \left(\sum_{i=1}^n x_ie_i, \sum_{j=1}^n y_je_j \right)
   = \sum_{i=1}^n \sum_{j=1}^n x_i y_j \phi(e_i, e_j) = \\
@@ -232,7 +232,7 @@ $
       y_n
     \end{array} \right)
 \end{aligned}
-$
+$$
 
 ```note
 For documentation, see: https://kramdown.gettalong.org/syntax.html#math-blocks
