@@ -41,3 +41,5 @@ gem "kramdown-parser-gfm" # github flavored markdown
 gem 'jekyll-asciidoc'
 gem 'jemoji'
 gem 'kramdown-math-katex'
+gem 'jekyll-avatar'
+gem 'jekyll-mentions'

@@ -66,4 +66,6 @@ gittalk:
 
 plugins:
   - jemoji
+  - jekyll-avatar
+  - jekyll-mentions
   - jekyll-asciidoc
