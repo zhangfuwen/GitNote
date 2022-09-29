@@ -4,6 +4,8 @@ see [Summary](SUMMARY.md)
 
 ## linux
 
+### kernel
+
 * [Introduction](./Notes/003-linux/README.md)
 * [内核模块与驱动程序](./Notes/003-linux/driver/001-kernel_module_versus_device_driver.md)
 * [打印等级](./Notes/003-linux/driver/002-print_level.md)
@@ -13,6 +15,34 @@ see [Summary](SUMMARY.md)
 * [file\_operations结构体](./Notes/003-linux/driver/006-file_operations.md)
 * [Notes/linux驱动中使 work queue处理中断](./Notes/003-linux/driver/007-Notes/linux-work-queue.md)
 * [Notes/linux物理内存](./Notes/003-linux/README.md)
+
+### gui
+
+ * [](./Notes/003-linux/gui/chrome-appmode.md)
+ * [](./Notes/003-linux/gui/config.md)
+ * [](./Notes/003-linux/gui/dbus.md)
+ * [](./Notes/003-linux/gui/debian_package.md)
+ * [](./Notes/003-linux/gui/chrome-appmode.md)
+ * [](./Notes/003-linux/gui/config.md)
+ * [](./Notes/003-linux/gui/dbus.md)
+ * [](./Notes/003-linux/gui/debian_package.md)
+ * [](./Notes/003-linux/gui/DISPLAY.md)
+ * [](./Notes/003-linux/gui/font.md)
+ * [](./Notes/003-linux/gui/gnome-sushi.md)
+ * [](./Notes/003-linux/gui/grub.md)
+ * [](./Notes/003-linux/gui/gtk.md)
+ * [](./Notes/003-linux/gui/index.md)
+ * [](./Notes/003-linux/gui/linux_audio.md)
+ * [](./Notes/003-linux/gui/linux_basics.md)
+ * [](./Notes/003-linux/gui/monitor_display.md)
+ * [](./Notes/003-linux/gui/nautilus-extension.md)
+ * [](./Notes/003-linux/gui/package_manifest_design.md)
+ * [](./Notes/003-linux/gui/qmlprofiler.md)
+ * [](./Notes/003-linux/gui/qmlprofiler.puml)
+ * [](./Notes/003-linux/gui/qt_qml.md)
+ * [](./Notes/003-linux/gui/systemd.md)
+ * [](./Notes/003-linux/gui/xdg-base-directory-spec.md)
+ * [](./Notes/003-linux/gui/zenity.md)
 
 ## 技术笔记
 
