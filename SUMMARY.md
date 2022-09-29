@@ -2,9 +2,10 @@ see [Summary](SUMMARY.md)
 
 # Summary
 
+{% collapse title="现代计算机" %}
+
 ## 现代计算机
 
-{% collapse title="现代计算机" %}
 
  * [001\. x86启动](Notes/001-modern-computing/001-x86qi-dong.md)
  * [002\. Nandflash芯片简介](Notes/001-modern-computing/002-nandflash.md)
@@ -28,7 +29,6 @@ see [Summary](SUMMARY.md)
  * [021\. 显卡到AI芯片\-\-之二](Notes/001-modern-computing/021-modern-gpu2.md)
  * [022\. 显卡到AI芯片\-\-之三](Notes/001-modern-computing/022-modern-gpu-3.md)
 
-{% endcollapse %}
 
 ## android  [index](./Notes/002-android/index.md)
 
@@ -37,6 +37,8 @@ see [Summary](SUMMARY.md)
  * [weston1](./Notes/002-android/weston/weston1.md)
 
 ### android
+
+{% endcollapse %}
 
  * [sp wp](./Notes/002-android/android_sp_wp.md)
  * [vsyn and triple buffer](./Notes/002-android/android_vsync_and_triple_buffering.md)
