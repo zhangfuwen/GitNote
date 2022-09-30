@@ -21,30 +21,52 @@ title: 附件
  * [liquid operators](https://learn.microsoft.com/en-us/power-apps/maker/portals/liquid/liquid-operators)
 
 
----
-
-
-```liquid
-
-
 {% assign image_files = site.static_files %}
 
 {% for myimage in image_files %}
-  {% if myimage.path contains 'attachments' %}
-    [{{ myimage.path }}]({{ myimage.path }})
+  {% if myimage.path contains '/attachments' %}
+    <a href="{{ myimage.path }}">{{ myimage.path }}</a>
   {% endif %}
 {% endfor %}
 
 
-```
+ {% if page.tags.size > 0 %} 
+   {% for tagName in page.tags %} 
+      {% capture tags_content %}
+        {{ tags_content }} 
+        <a href='/tags?tagName={{ tagName }}'><i class='glyphicon glyphicon-tag'></i>{{ tagName }}</a>
+      {% endcapture %} 
+      
+  {% endfor %} 
+  {% else %} 
+    {% assign tags_content = '' %} 
+  {% endif %} 
+  
+  {{ tags_content }} 
 
----
+
+ {% for tag in site.tags %} 
+ {% assign tagName = tag | first | downcase %} 
+ {% assign postsCount = tag | last | size %} 
+ <li>
+ <a href='/tags?tagName={{ tagName }}'><i class='glyphicon glyphicon-tag'></i>{{ tagName }}</a>
+ ({{ postsCount }})
+ </li> 
+ 
+ {% endfor %} 
 
 
-{% assign image_files = site.static_files %}
-
-{% for myimage in image_files %}
-  {% if myimage.path contains 'attachments' %}
-    [{{ myimage.path }}]({{ myimage.path }})
-  {% endif %}
-{% endfor %}
+ <h2>Tags</h2>
+<ul>
+  {{ "{% assign sorted_tags = site.tags | sort %}" }}
+  {{ "{% for tag in sorted_tags %}" }}
+    {{ "{% assign t = tag | first %}" }}
+    {{ "{% assign posts = tag | last %}" }}
+    <li>
+      <a href="/tags/# {{ "{{ t | downcase | replace:' ','-'" }}}}">
+        {{ "{{t | downcase | replace:' ','-' " }}}}
+        <span>({{ "{{ posts | size " }}}})</span>
+      </a>
+    </li>
+  {{ "{% endfor " }}%}
+</ul>

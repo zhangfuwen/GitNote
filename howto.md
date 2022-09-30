@@ -70,7 +70,7 @@ Mad scientist at work!
 
 ## Greek letters
 
-inline math is like \\( \alpha \\), or \$$ \beta $$, or \$$ gamma \$$, or \[ \delta \], or $ \epsilon $;
+inline math is like $ \alpha $, or \$$ \beta $$, or \$$ gamma \$$, or \[ \delta \], or $ \epsilon $;
 
 
 | 符号 | math | 符号 | math |
@@ -108,7 +108,7 @@ inline math is like \\( \alpha \\), or \$$ \beta $$, or \$$ gamma \$$, or \[ \de
 
 | 符号 | math | 符号 | math |
 | -    | -    | --  |  --  |
-| $ \infty $$ |	\infty	| $$ \forall $$ |	\forall
+| $$ \infty $$ |	\infty	| $$ \forall $$ |	\forall
 | $$ \Re $$ |	\Re	| $$ \Im $$ |	\Im
 | $$ \nabla $$ |	\nabla	| $$ \exists $$ |	\exists
 | $$ \partial $$ |	\partial	| $$ \nexists $$ |	\nexists
