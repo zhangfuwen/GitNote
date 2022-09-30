@@ -212,6 +212,11 @@ Set config `plugins: [jemoji]`, Emoji searcher, see: [https://emoji.muan.co/](ht
 
 {% gist 56785fa8752ede958df4d7003db0ec90 %}
 
+{% raw %}{% gist 56785fa8752ede958df4d7003db0ec90 %}{% endraw %}
+
+2:
+{% gist zhangfuwen/56785fa8752ede958df4d7003db0ec90 %}
+
 
 # Mathjax Test
 
