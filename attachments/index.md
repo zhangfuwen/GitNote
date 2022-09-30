@@ -25,7 +25,7 @@ tags: ['jykell', 'cmake', 'android']
 {% assign image_files = site.static_files %}
 
 {% for myimage in image_files %}
-  {% if myimage.path contains '/attachments' %}
+  {% if myimage.path contains 'pdf' %}
     <a href="{{ myimage.path }}">{{ myimage.path }}</a>
   {% endif %}
 {% endfor %}
