@@ -143,11 +143,65 @@ Qt有两个工具可以从xml直接生成代码，但是它不是所有的数据
 
 qdbuscpp2xml和qdbusxml2cpp。
 
+在cmake中，可以用相关命令生成dbus代码：
+
+```cmake
+qt_add_dbus_adaptor(GENERATED_SOURCES org.example.chat.xml chat.h ChatMainWindow)
+```
+上述命令会根据org.example.chat.xml，生成chat.h这样一个头文件，里面包括了对dbus的调用。类名为ChatMainWindow. 这是调用的qdbusxml2cpp。
+
+```cmake
+qt5_add_dbus_interfaces(<VAR> dbus_spec1 [dbus_spec2 ...])
+qt5_add_dbus_interface(<VAR> dbus_spec basename)
+
+```
+上述命令则根据xml，生成具体实现dbus服务器的类。
+
+
 
 
 ### Gtk
 
 Gtk也有一个工具: https://github.com/Pelagicore/gdbus-codegen-glibmm
+
+```bash
+dbus-codegen-glibmm --generate-cpp-code=${HOME}/temperature-service-example/build/generated/temperature-service
+                    ${HOME}/temperature-service-example/temperature-service.xml
+```
+
+它是proxy和stub一起生成的：
+
+
+```
+temperature-service_common.cpp
+temperature-service_common.h
+temperature-service_proxy.cpp
+temperature-service_proxy.h
+temperature-service_stub.cpp
+temperature-service_stub.h
+```
+
+或
+
+```cmake
+SET (CODEGEN gdbus-codegen-glibmm)
+SET (INTROSPECTION_XML ${CMAKE_SOURCE_DIR}/bar.xml)
+
+SET (GENERATED_STUB
+    ${CMAKE_BINARY_DIR}/generated/bar_stub.cpp
+    ${CMAKE_BINARY_DIR}/generated/bar_stub.h
+    ${CMAKE_BINARY_DIR}/generated/bar_common.cpp
+    ${CMAKE_BINARY_DIR}/generated/bar_common.h
+)
+
+ADD_CUSTOM_COMMAND (OUTPUT ${GENERATED_STUB}
+                    COMMAND mkdir -p ${CMAKE_BINARY_DIR}/generated/
+                    COMMAND ${CODEGEN} --generate-cpp-code=${CMAKE_BINARY_DIR}/generated/bar
+                                        ${INTROSPECTION_XML}
+                    DEPENDS ${INTROSPECTION_XML}
+                    COMMENT "Generate the stub for the test program")
+```
+
 
 ## kdbus是啥
 
