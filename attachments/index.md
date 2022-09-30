@@ -21,9 +21,11 @@ title: 附件
  * [liquid operators](https://learn.microsoft.com/en-us/power-apps/maker/portals/liquid/liquid-operators)
 
 
-{% raw %}
+---
 
-~~~html
+
+```liquid
+
 
 {% assign image_files = site.static_files %}
 
@@ -32,6 +34,17 @@ title: 附件
     [{{ myimage.path }}]({{ myimage.path }})
   {% endif %}
 {% endfor %}
-~~~
 
-{% endraw %}
+
+```
+
+---
+
+
+{% assign image_files = site.static_files %}
+
+{% for myimage in image_files %}
+  {% if myimage.path contains 'attachments' %}
+    [{{ myimage.path }}]({{ myimage.path }})
+  {% endif %}
+{% endfor %}
