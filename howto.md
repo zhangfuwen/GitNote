@@ -106,7 +106,7 @@ Mad scientist at work!
 
 | 符号 | math | 符号 | math |
 | -    | -    | --  |  --  |
-|$ \infty \;\;$|	\infty	|$ \forall \;$|	\forall
+| $ \infty \;\; $ |	\infty	|$ \forall \;$|	\forall
 |$ \Re $|	\Re	|$ \Im $|	\Im
 |$ \nabla $|	\nabla	|$ \exists $|	\exists
 |$ \partial $|	\partial	|$ \nexists $|	\nexists
