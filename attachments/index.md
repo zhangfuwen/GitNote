@@ -1,6 +1,7 @@
 ---
 
 title: 附件
+tags: ['jykell', 'cmake', 'android']
 
 ---
 
