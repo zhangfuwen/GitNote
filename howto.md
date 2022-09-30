@@ -90,7 +90,7 @@ Mad scientist at work!
 
 | 符号 | math | 符号 | math |
 | -    | -    | --  |  --  |
-| $$ \leftarrow $$ |	\leftarrow	| $$ \Leftarrow $$ |	\Leftarrow
+| \$$ \leftarrow $$ |	\leftarrow	| $$ \Leftarrow $$ |	\Leftarrow
 | $$ \rightarrow $$ |	\rightarrow	| $$ \Rightarrow \;$$ |	\Rightarrow
 | $$ \leftrightarrow $$ |	\leftrightarrow	| $$ \rightleftharpoons $$ |	\rightleftharpoons
 | $$ \uparrow $$ |	\uparrow	| $$ \downarrow $$ |	\downarrow
