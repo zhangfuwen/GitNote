@@ -1,7 +1,7 @@
 {
-    "name" : "gitbookgitnote",
-    "version" : "0.0.1",
+    "name": "gitbookgitnote",
+    "version": "0.0.1",
     "dependencies": {
         "gitbook-plugin-uml": "1.2.15"
-      }
-  }
+    }
+}
