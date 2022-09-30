@@ -32,19 +32,16 @@ tags: ['jykell', 'cmake', 'android']
 
 
  {% if page.tags.size > 0 %} 
-   {% for tagName in page.tags %} 
-      {% capture tags_content %}
-        {{ tags_content }} 
-        <a href='/tags?tagName={{ tagName }}'><i class='glyphicon glyphicon-tag'></i>{{ tagName }}</a>
-      {% endcapture %} 
-      
+  {% for tagName in page.tags %} 
+<a href='/tags?tagName={{ tagName }}'><i class='glyphicon glyphicon-tag'></i>{{ tagName }}</a>
   {% endfor %} 
-  {% else %} 
+ {% else %} 
     {% assign tags_content = '' %} 
-  {% endif %} 
+ {% endif %} 
   
-  {{ tags_content }} 
-
+  --{{ tags_content }}-- 
+  
+----
 
  {% for tag in site.tags %} 
  {% assign tagName = tag | first | downcase %} 
@@ -59,15 +56,15 @@ tags: ['jykell', 'cmake', 'android']
 
  <h2>Tags</h2>
 <ul>
-  {% assign sorted_tags = site.tags | sort %}
-  {% for tag in sorted_tags %}
-    {% assign t = tag | first %}
-    {% assign posts = tag | last %}
-    <li>
-      <a href="/tags/# {{ "{{ t | downcase | replace:' ','-'" }}}}">
-        {{ t | downcase | replace:' ','-' " }}
-        <span>({{ posts | size }})</span>
-      </a>
-    </li>
-  {% endfor %}
+{% assign sorted_tags = site.tags | sort %}
+{% for tag in sorted_tags %}
+  {% assign t = tag | first %}
+  {% assign posts = tag | last %}
+<li>
+  <a href="/tags/# {{ "{{ t | downcase | replace:' ','-'" }}}}">
+    {{ t | downcase | replace:' ','-' " }}
+    <span>({{ posts | size }})</span>
+  </a>
+</li>
+{% endfor %}
 </ul>
