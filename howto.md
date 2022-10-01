@@ -70,7 +70,7 @@ Mad scientist at work!
 
 ## Greek letters
 
-inline math is like $ \alpha $, or \$ \beta \$, or \$$ gamma \$$, or [ \delta ], or $ \epsilon $;
+inline math is like $ \alpha $, or \$ \beta \$;
 
 
 | 符号 | math | 符号 | math |
@@ -147,8 +147,8 @@ inline math is like $ \alpha $, or \$ \beta \$, or \$$ gamma \$$, or [ \delta ],
 | $$ \sqrt{a*b} $$ |	\sqrt{a*b}	| $$ \int_{i=2}^ni*3 $$ |	\int_{i=2}^ni*3 
 | $$ \sqrt{a*b} $$ |	\sqrt{a*b}	| $$ \oint_{i=2}^ni*3 $$ |	\oint_{i=2}^ni*3 
 | $$ b\pmod{asdf} $$ |	\sqrt{a*b}	| $$ \sum_{i=2}^ni*3 $$ |	\sum_{i=2}^ni*3 
-| $$ \lim_{x\to\infty} f(x) $$ |	\lim_{x\to\infty} f(x) | $$ \prod_{i=2}^ni*3 $$ |	\prod_{i=2}^ni*3 
-| \$\$ \lim_{x\to\infty} f(x) \$\$$ |	`$$ \lim_{x\to\infty} f(x) $$` | $$ \prod_{i=2}^ni*3 $$ |	\prod_{i=2}^ni*3 
+| $ \lim_{x\to\infty} f(x) $ |	\lim_{x\to\infty} f(x) | $$ \prod_{i=2}^ni*3 $$ |	\prod_{i=2}^ni*3 
+| $$ \lim_{x\to\infty} f(x) $$ |	`$$ \lim_{x\to\infty} f(x) $$` | $$ \prod_{i=2}^ni*3 $$ |	\prod_{i=2}^ni*3 
 
 
 # Avatar 

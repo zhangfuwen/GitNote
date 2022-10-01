@@ -47,7 +47,16 @@ tags: ['jykell', 'cmake', 'android']
 {% for post in site.posts %}
   {% assign ttags = post.tags | join:'|' | append:'|' %}
   {% assign rawtags = rawtags | append:ttags %}
-<li class="post">post.title
+<li class="post"> {{ post.title }}
+  {% for tagName in post.tags %}
+<a href='/tags?tagName={{ tagName }}'><i class='glyphicon glyphicon-tag'></i>{{ tagName }}</a>
+  {% endfor %}
+</li>
+{% endfor %}
+{% for post in site.pages %}
+  {% assign ttags = post.tags | join:'|' | append:'|' %}
+  {% assign rawtags = rawtags | append:ttags %}
+<li class="page"> {{ post.title }}
   {% for tagName in post.tags %}
 <a href='/tags?tagName={{ tagName }}'><i class='glyphicon glyphicon-tag'></i>{{ tagName }}</a>
   {% endfor %}
@@ -58,19 +67,19 @@ tags: ['jykell', 'cmake', 'android']
 
 ---
 
-{% if site.tags != "" %}
-  {% assign site.tags = "" %}
-  {% for tag in rawtags %}
-    {% if tag != "" %}
-      {% if tags == "" %}
-        {% assign tags = tag | split:'|' %}
-      {% endif %}
-      {% unless tags contains tag %}
-        {% assign tags = tags | join:'|' | append:'|' | append:tag | split:'|' %}
-      {% endunless %}
+<!-- {% if site.tags != "" %} -->
+<!-- {% assign site.tags = "" %} -->
+{% for tag in rawtags %}
+  {% if tag != "" %}
+    {% if tags == "" %}
+      {% assign tags = tag | split:'|' %}
     {% endif %}
-  {% endfor %}
-{% endif %}
+    {% unless tags contains tag %}
+      {% assign tags = tags | join:'|' | append:'|' | append:tag | split:'|' %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
+<!-- {% endif %} -->
 
 <h2>Site Tags</h2>
 <ul id="site_tags">
