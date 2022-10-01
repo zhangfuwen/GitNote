@@ -28,6 +28,9 @@ jobs:
         &&  cp -r chapters/extensions/images ../vulkan_html/chapters/extensions/ \
         &&  cp -r images ../vulkan_html/ \
         && tree 
+        && mv index.md ../vulkan_html/ \
+        && mv chapters/index.md ../vulkan_html/chapters/ \
+        && mv chapters/extensions/index.md ../vulkan_html/chapters/extensions/ \
         rm -rf ${{ github.workspace }}/.git
 
     - name: GitHub Pages

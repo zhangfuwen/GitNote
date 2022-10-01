@@ -128,6 +128,17 @@ title: Tag Filter
         function tagEventHandler() {
             console.log(this+"tag")
             this.remove();
+            result.innerHTML = "";
+            let lis = filterTag.findElementsByTagName("li");
+            var res=[];
+            for(var i = 1; i< lis.lenght; i++) {
+                let tag = lis[i].textContent;
+                let arr = dict[tag];
+                res = intersect(arr, res);
+            }
+            for(let item of res) {
+                result.appendChild(createPostWithLink(item.title, item.url));
+            }
         }
 
         function parseData() {
