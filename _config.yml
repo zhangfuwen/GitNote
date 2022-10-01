@@ -69,3 +69,4 @@ plugins:
   - jekyll-avatar
   - jekyll-mentions
   - jekyll-asciidoc
+  - jekyll-gist
