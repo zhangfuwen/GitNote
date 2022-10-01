@@ -30,15 +30,26 @@ title: Tag Filter
 {% assign rawtags = rawtags | split:'|' | sort %}
 </ul>
 
-<input type="text" id="tagInput" list="tagDataList">
+{% for tag in rawtags %}
+  {% if tag != "" %}
+    {% if tags == "" %}
+      {% assign tags = tag | split:'|' %}
+    {% endif %}
+    {% unless tags contains tag %}
+      {% assign tags = tags | join:'|' | append:'|' | append:tag | split:'|' %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
+
 <datalist id="tagDataList">
-
-    <option value="tag1" />
-    <option value="tag2" />
-    <option value="tag3" />
-
+{% for tagName in tags %}
+<option value="{{ tagName }}" />
+{% endfor %}
 </datalist>
+
+<input type="text" id="tagInput" list="tagDataList">
 </input>
+
 <button id="butAdd" >Add</button>
 <button id="submit" >submit</button>
 
@@ -92,9 +103,6 @@ title: Tag Filter
             filterTags.appendChild(li);
             tagInput.value = "";
 
-        });
-
-        submit.addEventListener("click", function () {
             result.innerHTML = "";
             let lis = filterTag.findElementsByTagName("li");
             var res=[];
@@ -109,15 +117,14 @@ title: Tag Filter
 
         });
 
+
         function createPostWithLink(title, link) {
             let li = document.createElement("li");
             li.classList.add("post");
             li.innerHTML='<a href="' + link + '" >' + title + '</a>';
             return li;
         }
-        // for(let element of tags) {
-        //     element.addEventListener("click", tagEventHandler);
-        // }
+
         function tagEventHandler() {
             console.log(this+"tag")
             this.remove();
