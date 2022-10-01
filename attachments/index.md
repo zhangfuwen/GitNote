@@ -47,7 +47,8 @@ tags: ['jykell', 'cmake', 'android']
 {% for post in site.posts %}
   {% assign ttags = post.tags | join:'|' | append:'|' %}
   {% assign rawtags = rawtags | append:ttags %}
-<li class="post"> {{ post.title }}
+<li class="post">
+<a href ="{{ post.url }}"> {{ post.title }} </a>
   {% for tagName in post.tags %}
 <a href='/tags?tagName={{ tagName }}'><i class='glyphicon glyphicon-tag'></i>{{ tagName }}</a>
   {% endfor %}
@@ -56,7 +57,8 @@ tags: ['jykell', 'cmake', 'android']
 {% for post in site.pages %}
   {% assign ttags = post.tags | join:'|' | append:'|' %}
   {% assign rawtags = rawtags | append:ttags %}
-<li class="page"> {{ post.title }}
+<li class="page"> 
+<a href ="{{ post.url }}"> {{ post.title }} </a>
   {% for tagName in post.tags %}
 <a href='/tags?tagName={{ tagName }}'><i class='glyphicon glyphicon-tag'></i>{{ tagName }}</a>
   {% endfor %}
