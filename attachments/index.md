@@ -39,16 +39,53 @@ tags: ['jykell', 'cmake', 'android']
     {% assign tags_content = '' %} 
  {% endif %} 
   
-  --{{ tags_content }}-- 
-  
 ----
 
+<h2>Post Tags</h2>
+<ul id="postTags">
+{% assign rawtags = "" %}
+{% for post in site.posts %}
+  {% assign ttags = post.tags | join:'|' | append:'|' %}
+  {% assign rawtags = rawtags | append:ttags %}
+<li class="post">post.title
+  {% for tagName in post.tags %}
+<a href='/tags?tagName={{ tagName }}'><i class='glyphicon glyphicon-tag'></i>{{ tagName }}</a>
+  {% endfor %}
+</li>
+{% endfor %}
+{% assign rawtags = rawtags | split:'|' | sort %}
+</ul>
+
+---
+
+{% if site.tags != "" %}
+  {% assign site.tags = "" %}
+  {% for tag in rawtags %}
+    {% if tag != "" %}
+      {% if tags == "" %}
+        {% assign tags = tag | split:'|' %}
+      {% endif %}
+      {% unless tags contains tag %}
+        {% assign tags = tags | join:'|' | append:'|' | append:tag | split:'|' %}
+      {% endunless %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+<h2>Site Tags</h2>
+<ul id="site_tags">
+{% for tagName in tags %}
+<a href='/tags?tagName={{ tagName }}'><i class='glyphicon glyphicon-tag'></i>{{ tagName }}</a>
+{% endfor %}
+</ul>
+
  {% for tag in site.tags %} 
- {% assign tagName = tag | first | downcase %} 
- {% assign postsCount = tag | last | size %} 
+ <!-- {% assign tagName = tag | first %}  -->
+ <!-- {% assign tagName = tag | first | downcase %}  -->
+ <!-- {% assign postsCount = tag t | size %}  -->
  <li>
  <a href='/tags?tagName={{ tagName }}'><i class='glyphicon glyphicon-tag'></i>{{ tagName }}</a>
- ({{ postsCount }})
+ <!-- ({{ postsCount }}) -->
  </li> 
  
  {% endfor %} 
