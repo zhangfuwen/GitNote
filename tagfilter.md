@@ -99,22 +99,14 @@ title: Tag Filter
             let li = document.createElement("li");
             let liText = document.createTextNode(tagInput.value);
             li.appendChild(liText);
-            li.addEventListener("click", tagEventHandler);
+            li.addEventListener("click", () => {
+                this.remove();
+                listResult();
+            });
             filterTags.appendChild(li);
             tagInput.value = "";
 
-            result.innerHTML = "";
-            let lis = filterTag.findElementsByTagName("li");
-            var res=[];
-            for(var i = 1; i< lis.lenght; i++) {
-                let tag = lis[i].textContent;
-                let arr = dict[tag];
-                res = intersect(arr, res);
-            }
-            for(let item of res) {
-                result.appendChild(createPostWithLink(item.title, item.url));
-            }
-
+            listResult();
         });
 
 
@@ -125,9 +117,7 @@ title: Tag Filter
             return li;
         }
 
-        function tagEventHandler() {
-            console.log(this+"tag")
-            this.remove();
+        function listResult() {
             result.innerHTML = "";
             let lis = filterTag.findElementsByTagName("li");
             var res=[];
