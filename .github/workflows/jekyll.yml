@@ -29,7 +29,7 @@ jobs:
         && tree \
         && ( mv index.md ../vulkan_html/ || true ) \
         && ( mv chapters/index.md ../vulkan_html/chapters/ || true ) \
-        && ( mv chapters/extensions/index.md ../vulkan_html/chapters/extensions/ || true ) \
+        && ( mv chapters/extensions/index.md ../vulkan_html/chapters/extensions/ || true )
         rm -rf ${{ github.workspace }}/.git || true
 
     - name: GitHub Pages
