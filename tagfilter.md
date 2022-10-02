@@ -75,6 +75,12 @@ title: Tag Filter
         display: inline;
         padding: 8px;
     }
+    #tagInput {
+      display:inline;
+    }
+    #butAdd {
+      display:inline;
+    }
 
 </style>
 
