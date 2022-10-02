@@ -21,17 +21,16 @@ jobs:
         
     - name: fix
       run: |
-        sudo apt-get install asciidoctor tree \
+        sudo apt-get install asciidoctor tree  \
         && cd Notes/004-3d-rendering/vulkan/ \
-        && asciidoctor  -a toc=left -n -d book  -R ./ -D ../vulkan_html/ $(find . -name "*.adoc") \
-        &&  cp -r chapters/images ../vulkan_html/chapters/ \
-        &&  cp -r chapters/extensions/images ../vulkan_html/chapters/extensions/ \
-        &&  cp -r images ../vulkan_html/ \
+        && ( asciidoctor  -a toc=left -n -d book  -R ./ -D ../vulkan_html/ $(find . -name "*.adoc") || true ) \
+        &&  ( cp -r chapters/images ../vulkan_html/chapters/ || true ) \
+        && ( cp -r chapters/extensions/images ../vulkan_html/chapters/extensions/ || true  ) \
         && tree \
-        && mv index.md ../vulkan_html/ \
-        && mv chapters/index.md ../vulkan_html/chapters/ \
-        && mv chapters/extensions/index.md ../vulkan_html/chapters/extensions/ \
-        rm -rf ${{ github.workspace }}/.git
+        && ( mv index.md ../vulkan_html/ || true ) \
+        && ( mv chapters/index.md ../vulkan_html/chapters/ || true ) \
+        && ( mv chapters/extensions/index.md ../vulkan_html/chapters/extensions/ || true ) \
+        rm -rf ${{ github.workspace }}/.git || true
 
     - name: GitHub Pages
       env:
