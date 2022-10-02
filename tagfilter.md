@@ -100,7 +100,7 @@ title: Tag Filter
             let liText = document.createTextNode(tagInput.value);
             li.appendChild(liText);
             li.addEventListener("click", () => {
-                this.remove();
+                li.remove();
                 listResult();
             });
             filterTags.appendChild(li);
@@ -119,13 +119,19 @@ title: Tag Filter
 
         function listResult() {
             result.innerHTML = "";
-            let lis = filterTag.findElementsByTagName("li");
+            let lis = filterTags.children;
             var res=[];
-            for(var i = 1; i< lis.lenght; i++) {
+            for(var i = 1; i< lis.length; i++) {
                 let tag = lis[i].textContent;
                 let arr = dict[tag];
-                res = intersect(arr, res);
+                console.log("tag:"+tag +", arr:"+arr.length);
+                if(i==1) {
+                  res = arr;
+                } else {
+                  res = intersect(arr, res);
+                }
             }
+            console.log(res)
             for(let item of res) {
                 result.appendChild(createPostWithLink(item.title, item.url));
             }
@@ -159,6 +165,8 @@ title: Tag Filter
     function intersect(a, b) {
         var setA = new Set(a);
         var setB = new Set(b);
+        console.log("a:"+a.length+", b:" + b.length);
+        console.log("setA:"+setA.size+", setB:" + setB.size);
         var intersection = new Set([...setA].filter(x => setB.has(x)));
         return Array.from(intersection);
     }

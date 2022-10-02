@@ -26,10 +26,11 @@ jobs:
         && ( asciidoctor  -a toc=left -n -d book  -R ./ -D ../vulkan_html/ $(find . -name "*.adoc") || true ) \
         &&  ( cp -r chapters/images ../vulkan_html/chapters/ || true ) \
         && ( cp -r chapters/extensions/images ../vulkan_html/chapters/extensions/ || true  ) \
-        && tree \
-        && ( mv index.md ../vulkan_html/ || true ) \
-        && ( mv chapters/index.md ../vulkan_html/chapters/ || true ) \
-        && ( mv chapters/extensions/index.md ../vulkan_html/chapters/extensions/ || true )
+        && ( cp index.md ../vulkan_html/ || true ) \
+        && ( cp chapters/index.md ../vulkan_html/chapters/ || true ) \
+        && ( cp chapters/extensions/index.md ../vulkan_html/chapters/extensions/ || true ) \
+        && ( for file in $(find ../vulkan_html/ -name "*.html"); do mv -- "$file" "${file%.html}.md"; done) \
+        && tree 
         rm -rf ${{ github.workspace }}/.git || true
 
     - name: GitHub Pages
