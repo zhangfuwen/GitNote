@@ -47,11 +47,9 @@ title: Tag Filter
 {% endfor %}
 </datalist>
 
-<input type="text" id="tagInput" list="tagDataList">
-</input>
+<input type="text" id="tagInput" list="tagDataList" />
 
 <button id="butAdd" >Add</button>
-<button id="submit" >submit</button>
 
 <ul id="filterTags" >
 
@@ -85,7 +83,6 @@ title: Tag Filter
     let dict = {};
 
     let tagInput = document.getElementById("tagInput");
-        let submit = document.getElementById("submit");
         let butAdd = document.getElementById("butAdd");
         let filterTags = document.getElementById("filterTags");
         let result = document.getElementById("results");
@@ -131,7 +128,7 @@ title: Tag Filter
                   res = intersect(arr, res);
                 }
             }
-            console.log(res)
+            console.log(res);
             for(let item of res) {
                 result.appendChild(createPostWithLink(item.title, item.url));
             }
@@ -172,5 +169,6 @@ title: Tag Filter
     }
 
     parseData();
+    listResult();
 
 </script>

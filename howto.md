@@ -223,11 +223,13 @@ Set config `plugins: [jemoji]`, Emoji searcher, see: [https://emoji.muan.co/](ht
 
 {% gist zhangfuwen/56785fa8752ede958df4d7003db0ec90 %}
 
+---
+
+<script src="https://gist.github.com/zhangfuwen/56785fa8752ede958df4d7003db0ec90.js"> </script>
 
 # Mathjax Test
 
-$$
-\begin{aligned}
+$$ \begin{aligned}
   & \phi(x,y) = \phi \left(\sum_{i=1}^n x_ie_i, \sum_{j=1}^n y_je_j \right)
   = \sum_{i=1}^n \sum_{j=1}^n x_i y_j \phi(e_i, e_j) = \\
   & (x_1, \ldots, x_n) \left( \begin{array}{ccc}
@@ -240,8 +242,7 @@ $$
       \vdots \\
       y_n
     \end{array} \right)
-\end{aligned}
-$$
+\end{aligned} $$
 
 ```note
 For documentation, see: https://kramdown.gettalong.org/syntax.html#math-blocks

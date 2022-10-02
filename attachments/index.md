@@ -109,7 +109,7 @@ tags: ['jykell', 'cmake', 'android']
   {% assign t = tag | first %}
   {% assign posts = tag | last %}
 <li>
-  <a href="/tags/# {{ "{{ t | downcase | replace:' ','-'" }}}}">
+  <a href="/tags/# "{{ t | downcase | replace:' ','-' }}">
     {{ t | downcase | replace:' ','-' " }}
     <span>({{ posts | size }})</span>
   </a>
