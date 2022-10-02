@@ -208,24 +208,29 @@ Set config `plugins: [jemoji]`, Emoji searcher, see: [https://emoji.muan.co/](ht
 
 # Gist Test
 
+<script src="https://gist.github.com/zhangfuwen/525bc2685fda962a405d17787703d8a1.js"></script>
+
 ```
-{% raw %}{% gist zhangfuwen/56785fa8752ede958df4d7003db0ec90 %}{% endraw %}
+{% raw %}{% gist zhangfuwen/525bc2685fda962a405d17787703d8a1 %}{% endraw %}
 ```
 ---
 
-{% gist zhangfuwen/56785fa8752ede958df4d7003db0ec90 %}
+{% gist zhangfuwen/525bc2685fda962a405d17787703d8a1 %}
 
 ---
 
-{% raw %}{% gist zhangfuwen/56785fa8752ede958df4d7003db0ec90 %}{% endraw %}
+{% raw %}{% gist zhangfuwen/525bc2685fda962a405d17787703d8a1 %}{% endraw %}
 
 ----
 
-{% gist zhangfuwen/56785fa8752ede958df4d7003db0ec90 %}
+{% gist zhangfuwen/525bc2685fda962a405d17787703d8a1 %}
+
+---
+{% gist 525bc2685fda962a405d17787703d8a1 %}
 
 ---
 
-<script src="https://gist.github.com/zhangfuwen/56785fa8752ede958df4d7003db0ec90.js"> </script>
+<script src="https://gist.github.com/zhangfuwen/525bc2685fda962a405d17787703d8a1.js"> </script>
 
 # Mathjax Test
 
