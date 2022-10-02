@@ -23,7 +23,7 @@ jobs:
       run: |
         sudo apt-get install asciidoctor tree  \
         && cd Notes/004-3d-rendering/vulkan/ \
-        && ( asciidoctor  -a toc=left -n -d book  -R ./ -D ../vulkan_html/ $(find . -name "*.adoc") || true ) \
+        && ( asciidoctor  -a toc=right -n -d inline -s -e  -R ./ -D ../vulkan_html/ $(find . -name "*.adoc") || true ) \
         &&  ( cp -r chapters/images ../vulkan_html/chapters/ || true ) \
         && ( cp -r chapters/extensions/images ../vulkan_html/chapters/extensions/ || true  ) \
         && ( cp index.md ../vulkan_html/ || true ) \

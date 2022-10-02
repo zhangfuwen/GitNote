@@ -1,6 +1,8 @@
 ---
+
 permalink: /Notes/004-3d-rendering/vulkan/guide.html
 layout: post
+
 ---
 
 // Copyright 2019-2022 The Khronos Group, Inc.
