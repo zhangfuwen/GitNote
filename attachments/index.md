@@ -58,7 +58,13 @@ tags: ['jykell', 'cmake', 'android']
   {% assign ttags = post.tags | join:'|' | append:'|' %}
   {% assign rawtags = rawtags | append:ttags %}
 <li class="page"> 
-<a href ="{{ post.url }}"> {{ post.title }} </a>
+<a href ="{{ post.url }}"> 
+  {% if post.title == "" %}
+  {{ post.name }}
+  {% else %}
+  {{ post.title }} 
+  {% endfor %}
+</a>
   {% for tagName in post.tags %}
 <a href='/tags?tagName={{ tagName }}'><i class='glyphicon glyphicon-tag'></i>{{ tagName }}</a>
   {% endfor %}
