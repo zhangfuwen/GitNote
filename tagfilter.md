@@ -22,7 +22,7 @@ title: Tag Filter
   {% assign rawtags = rawtags | append:ttags %}
 <li class="page"> 
 <a href ="{{ post.url }}">
-  {% if post.title == "" %}
+  {% if post.title == empty %}
       {{ post.name }}
   {% else %}
       {{ post.title }} 
