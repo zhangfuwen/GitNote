@@ -53,8 +53,8 @@ title: Tag Filter
 {% endfor %}
 </datalist>
 
-<input type="text" id="tagInput" list="tagDataList" />
 
+<input type="text" id="tagInput" list="tagDataList" />
 <button id="butAdd" >Add</button>
 
 <ul id="filterTags" >
