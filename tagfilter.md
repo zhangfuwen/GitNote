@@ -26,7 +26,7 @@ title: Tag Filter
       {{ post.name }}
   {% else %}
       {{ post.title }} 
-  {% endfor %}
+  {% endif %}
 </a>
   {% for tagName in post.tags %}
 <a href='/tags?tagName={{ tagName }}'><i class='glyphicon glyphicon-tag'></i>{{ tagName }}</a>
