@@ -59,7 +59,7 @@ tags: ['jykell', 'cmake', 'android']
   {% assign rawtags = rawtags | append:ttags %}
 <li class="page"> 
 <a href ="{{ post.url }}"> 
-  {% if post.title == "" %}
+  {% if post.title == null %}
   {{ post.name }}
   {% else %}
   {{ post.title }} 
