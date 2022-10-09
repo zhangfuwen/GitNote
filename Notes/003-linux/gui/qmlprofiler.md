@@ -1,6 +1,7 @@
 ---
 
 title: qt/qml profiler
+tags: ['qml', 'profiler', 'engine']
 
 ---
 

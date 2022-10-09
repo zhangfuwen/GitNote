@@ -1,6 +1,7 @@
 ---
 
 title: debian 打包
+tags:['dpkg', 'debian', 'apt', 'changelog', 'debchange', 'apt-file','apt-rdepends']
 
 ---
 

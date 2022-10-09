@@ -1,6 +1,7 @@
 ---
 
 title: Linux下的DISPLAY环境变量以及wayland equivalent
+tags: ['display', 'linux', 'wayland', 'x11', 'uds', 'xrandr', 'screen']
 
 ---
 
