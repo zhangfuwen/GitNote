@@ -112,3 +112,23 @@ git config --global pager.branch false
 ```bash
 git config --global core.editor "vim"
 ```
+
+## config
+
+git config分 --system --global --local等。
+
+--system是使用/etc/gitconfig文件的。
+--global使用提~/.gitconfig文件
+--local使用的是当前git仓的.git/config文件。
+
+所以你可以进行一些本地化的配置。比如说git config --local user.email "xx"，可以让你在不同的仓使用不同的身份提交代码。
+
+### 具体常用配置
+
+```bash
+git config --global user.name "zhangfuwen"
+git config --global user.email "zhangfuwen@xxx.com"
+git config --global core.editor vim
+git config --global pager.branch false
+git config --global alias.ll 'log --oneline'
+```
