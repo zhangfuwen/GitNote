@@ -58,3 +58,48 @@ ninja
 起作用的方法：写在`/etc/environment`, `/etc/profile.d/xxx`里，重启电脑（也许注销图形界面再回来也行)。
 起作用的方法：写在Clion的`Appearance & Behavior` -> `Path Variable`里。
 
+## cmake configure git hash
+
+
+```cmake
+
+find_package(Git)
+if(Git_FOUND)
+    message("Git found: ${GIT_EXECUTABLE}")
+    execute_process(COMMAND
+            ${GIT_EXECUTABLE} rev-parse --short HEAD
+            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+            OUTPUT_VARIABLE GIT_SHA1
+            ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+    execute_process(COMMAND
+            ${GIT_EXECUTABLE} log -1 --format=%ad --date=local
+            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+            OUTPUT_VARIABLE GIT_DATE
+            ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+    execute_process(COMMAND
+            "${GIT_EXECUTABLE}" log -1 --format=%s
+            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+            OUTPUT_VARIABLE GIT_COMMIT_SUBJECT
+            ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+    message("GIT SHA1: ${GIT_SHA1}")
+    message("GIT DATE: ${GIT_DATE}")
+    message("GIT COMMIT SUBJECT: ${GIT_COMMIT_SUBJECT}")
+endif()
+
+
+```
+
+
+```cpp {filename=src/common/version.h.in}
+
+#include <string>
+const std::string GIT_SHA1 = "@GIT_SHA1@";
+const std::string GIT_DATE = "@GIT_DATE@";
+const std::string GIT_COMMIT_SUBJECT = "@GIT_COMMIT_SUBJECT@";
+
+```
+
+
