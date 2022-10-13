@@ -88,6 +88,8 @@ fi
 ## dd image from http url
 
 ```bash
+
+command -v zenity || sudo apt -y install zenity
 function select_disk() {
     IFS=$'\n' disks=$(zenity --list --title="select" --column "selection" $(lsblk -no path,vendor,size,type /dev/sd*  2> /dev/null| grep disk))
     if [[ $? == 0 ]]; then
@@ -109,10 +111,29 @@ function input_url() {
     fi
 }
 
-disk=$(select_disk) && url=$(input_url) && echo "dd if=$url of=$disk" 
+disk=$(select_disk) && url=$(input_url) && echo "dd if=$url of=$disk" \
+&& curl -u zhangfuwen:zhangfuwen --silent $url | \
+sudo dd conv=noerror,sync iflag=fullblock oflag=direct,sync status=progress bs=1M of=$disk
 
 ```
 
+# wget显示进度
+
+```bash
+    wget --progress=bar:force "http://base.url.here/filename.txt" -O/your/destination/and/filename 2>&1 | zenity --title="File transfer in progress!" --progress --auto-close --auto-kill
+```
+
+
+# wget via ssh
+```bash
+ssh -C user@hostB "wget -O- http://website-C" >> file-from-website-C
+```
+
+# dd
+
+```bash
+dd if=.. of=.. status=progress oflag=direct,sync bs=10M
+```
 
 # 所有代码
 
