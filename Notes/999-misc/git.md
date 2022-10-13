@@ -111,6 +111,13 @@ git config --global pager.branch false
 
 ```bash
 git config --global core.editor "vim"
+
+```
+
+## git hash
+
+```bash
+git rev-parse --short HEAD
 ```
 
 ## config
