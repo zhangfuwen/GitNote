@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
-git pull --rebase
+git fetch
+git rebase --autostash
 git add .
 git commit -m "update"
