@@ -123,11 +123,11 @@ void
 gbm_surface_destroy(struct gbm_surface *surface);
 ```
 
-[x] 问题：gbm_surface_create创建的surface是对应/dev/fb还是什么，eglSwapBuffers的时候是送显还是离屏？
+- [x] 问题：gbm_surface_create创建的surface是对应/dev/fb还是什么，eglSwapBuffers的时候是送显还是离屏？
     gbm_surface创建的是只一个交换链+ surface format，是离屏的。要送显需要lock_front然后通过drm送给drm_fb。
-[x] 问题：gbm_surface_create调用的是drm的什么函数？
+- [x] 问题：gbm_surface_create调用的是drm的什么函数？
     不同的gbm back end应该不一样。
-[x] 问题: drm与KMS是啥关系？
+- [x] 问题: drm与KMS是啥关系？
     KMS是DRM的一部分，DRM除了KMS还包含缓冲区管理和master/slave的Auth.
 
 
