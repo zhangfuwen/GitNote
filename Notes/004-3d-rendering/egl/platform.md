@@ -12,7 +12,7 @@ tags: ['egl', 'platform', 'surfaceless', 'x11', 'wayland', 'haiku']
 -D platforms=...
 List the platforms (window systems) to support. Its argument is a comma separated string such as -D platforms=x11,wayland. It decides the platforms a driver may support. The first listed platform is also used by the main library to decide the native platform.
 
-The available platforms are x11, wayland, android, and haiku. The android platform can either be built as a system component, part of AOSP, using Android.mk files, or cross-compiled using appropriate options. Unless for special needs, the build system should select the right platforms automatically.
+The available platforms are `x11`, `wayland`, `android`, and `haiku`. The android platform can either be built as a system component, part of AOSP, using Android.mk files, or cross-compiled using appropriate options. Unless for special needs, the build system should select the right platforms automatically.
 
 
 `EGL_PLATFORM`
@@ -144,7 +144,7 @@ DRM分用户态和内核态两部分。
 ![drm functions](assets/libdrm_functions.png)
 
 
-```info
+```note
 原文链接里有代码，可以打开看看。
 
 KMS：CRTC，ENCODER，CONNECTOR，PLANE，FB，VBLANK，property
@@ -187,9 +187,10 @@ PRIME使用DMA_buf来在进程间共享缓冲区。为了与GEM相互转换，�
 
 KMS是DRM的一个sub part，主要处理送显。KMS是fbdev alternative。
 
-显卡的设备文件分为两部分：
-/dev/dri/renderX and
-/dev/dri/controlDX或cardX
+显卡的设备文件分为三部分：
+/dev/dri/renderX （仅渲染和非特权ioctrl）
+/dev/dri/controlDX (暂时是[无用节点](https://mjmwired.net/kernel/Documentation/gpu/drm-uapi.rst)，可能将来也不会有用)
+/dev/dri/cardX (传统设备节点，支持所有功能)
 
 渲染节点无需特权，仅支持PRIME DMA_buf buffer object的申请，不支持GEM。
 cardX节点支持GEN和送显。
@@ -237,7 +238,7 @@ PRIME最初用于nVidia的GPU offloading，所以GPU offloading就是集成显�
 ### 通过render node离屏渲染
 
 
-#### 通过gbm
+#### 通过gbm compute
 
 ```cpp
 #include <EGL/egl.h>
@@ -350,6 +351,8 @@ main (int32_t argc, char* argv[])
    return 0;
 }
 ```
+
+代码编译：`gcc main.c `pkg-config --libs --cflags egl gbm gl`
 
 ### 渲染到gbm_surface
 
@@ -647,36 +650,410 @@ EGLImageKHR image = eglCreateImageKHR(display, context, bo);
 glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image);
 ```
 
+## 代码片断
+
+以下代码复制自：[T知乎](https://zhuanlan.zhihu.com/p/336395524)
+
+更详细且严谨的代码请参考: [GITHUB](https://github.com/zlgopen/awtk-linux-fb/blob/master/awtk-port/lcd_linux/lcd_linux_drm.c)
+
+### 打开DRM设备
+
+```cpp
+/* 打开设备有专门的接口：drmOpen ，但此处为方便，使用open函数 */
+int fd = open("/dev/dri/card0", O_RDWR | O_CLOEXEC);
+    if (fd < 0) {
+        ret = -errno;
+        fprintf(stderr, "cannot open '%s': %m\n", node);
+        return ret;
+    }
+```
+
+### 检查DRM的能力
+
+DRM的能力通过drmGetCap接口获取，用drm_get_cap结构描述：
+
+```cpp
+/** DRM_IOCTL_GET_CAP ioctl argument type */
+struct drm_get_cap {
+    __u64 capability;
+    __u64 value;
+};
+
+int drmGetCap(int fd, uint64_t capability, uint64_t *value)
+{
+    struct drm_get_cap cap;
+    int ret;
+
+    memclear(cap);
+    cap.capability = capability;
+
+    ret = drmIoctl(fd, DRM_IOCTL_GET_CAP, &cap);
+    if (ret)
+        return ret;
+
+    *value = cap.value;
+    return 0;
+}
+```
+
+使用示例：
+
+```cpp
+uint64_t has_dumb;
+    if (drmGetCap(fd, DRM_CAP_DUMB_BUFFER, &has_dumb) < 0 || !has_dumb) {
+        fprintf(stderr, "drm device '%s' does not support dumb buffers\n",
+            node);
+        close(fd);
+        return -EOPNOTSUPP;
+    }
+
+```
+
+
+### 检索Resource
+
+获取Resource具体看以下函数：
+
+`drmModeResPtr drmModeGetResources(int fd)`
+
+Resource结构封装：
+
+```cpp
+struct drm_mode_card_res {
+    __u64 fb_id_ptr;
+    __u64 crtc_id_ptr;
+    __u64 connector_id_ptr;
+    __u64 encoder_id_ptr;
+    __u32 count_fbs;
+    __u32 count_crtcs;
+    __u32 count_connectors;
+    __u32 count_encoders;
+    __u32 min_width, max_width;
+    __u32 min_height, max_height;
+};
+typedef struct _drmModeRes {
+
+    int count_fbs;
+    uint32_t *fbs;
+
+    int count_crtcs;
+    uint32_t *crtcs;
+
+    int count_connectors;
+    uint32_t *connectors;
+
+    int count_encoders;
+    uint32_t *encoders;
+
+    uint32_t min_width, max_width;
+    uint32_t min_height, max_height;
+} drmModeRes, *drmModeResPtr;
+
+```
+
+使用示例：
+
+```cpp
+/* retrieve resources */
+    int ret = drmModeGetResources(fd);
+    if (!res) {
+        fprintf(stderr, "cannot retrieve DRM resources (%d): %m\n",
+            errno);
+        return -errno;
+    }
+```
+
+### 获取Connector
+
+_drmModeConnector描述结构：
+
+```cpp
+typedef struct _drmModeConnector {
+    uint32_t connector_id;
+    uint32_t encoder_id; /**< Encoder currently connected to */
+    uint32_t connector_type;
+    uint32_t connector_type_id;
+    drmModeConnection connection;
+    uint32_t mmWidth, mmHeight; /**< HxW in millimeters */
+    drmModeSubPixel subpixel;
+
+    int count_modes;
+    drmModeModeInfoPtr modes;
+
+    int count_props;
+    uint32_t *props; /**< List of property ids */
+    uint64_t *prop_values; /**< List of property values */
+
+    int count_encoders;
+    uint32_t *encoders; /**< List of encoder ids */
+} drmModeConnector, *drmModeConnectorPtr;
+
+```
+
+使用示例：
+
+```cpp
+drmModeConnector *conn = drmModeGetConnector(fd, res->connectors[i]);
+        if (!conn) {
+            fprintf(stderr, "cannot retrieve DRM connector %u:%u (%d): %m\n",
+                i, res->connectors[i], errno);
+            continue;
+        }
+```        
+
+### Encoder
+
+Encoder的结构描述：
+
+```cpp
+typedef struct _drmModeEncoder {
+    uint32_t encoder_id;
+    uint32_t encoder_type;
+    uint32_t crtc_id;
+    uint32_t possible_crtcs;
+    uint32_t possible_clones;
+} drmModeEncoder, *drmModeEncoderPtr;
+
+```
+
+使用示例：
+
+```cpp
+if (conn->encoder_id)
+        drmModeEncoder *enc = drmModeGetEncoder(fd, conn->encoder_id);
+    }
+drmModeEncoderPtr drmModeGetEncoder(int fd, uint32_t encoder_id)
+{
+    struct drm_mode_get_encoder enc;
+    drmModeEncoderPtr r = NULL;
+
+    memclear(enc);
+    enc.encoder_id = encoder_id;
+
+    if (drmIoctl(fd, DRM_IOCTL_MODE_GETENCODER, &enc))
+        return 0;
+
+    if (!(r = drmMalloc(sizeof(*r))))
+        return 0;
+
+    r->encoder_id = enc.encoder_id;
+    r->crtc_id = enc.crtc_id;
+    r->encoder_type = enc.encoder_type;
+    r->possible_crtcs = enc.possible_crtcs;
+    r->possible_clones = enc.possible_clones;
+
+    return r;
+}
+```
+
+
+### CRTC
+
+CRTC结构描述：
+
+```cpp
+struct crtc {
+    drmModeCrtc *crtc;
+    drmModeObjectProperties *props;
+    drmModePropertyRes **props_info;
+    drmModeModeInfo *mode;
+};
+typedef struct _drmModeCrtc {
+    uint32_t crtc_id;
+    uint32_t buffer_id; /**< FB id to connect to 0 = disconnect */
+
+    uint32_t x, y; /**< Position on the framebuffer */
+    uint32_t width, height;
+    int mode_valid;
+    drmModeModeInfo mode;
+
+    int gamma_size; /**< Number of gamma stops */
+
+} drmModeCrtc, *drmModeCrtcPtr;
+
+```
+
+### FrameBuffer
+
+创建DUMB Buffer：
+
+```cpp
+ret = drmIoctl(fd, DRM_IOCTL_MODE_CREATE_DUMB, &creq);
+    if (ret < 0) {
+        fprintf(stderr, "cannot create dumb buffer (%d): %m\n",
+            errno);
+        return -errno;
+    
+}
+```
+
+添加FrameBuffer：
+
+```cpp
+/* create framebuffer object for the dumb-buffer */
+    ret = drmModeAddFB(fd, dev->width, dev->height, 24, 32, dev->stride,
+               dev->handle, &dev->fb);
+    if (ret) {
+        fprintf(stderr, "cannot create framebuffer (%d): %m\n",
+            errno);
+        ret = -errno;
+        goto err_destroy;
+    }
+```
+
+准备map：
+
+```cpp
+/* prepare buffer for memory mapping */
+    memset(&mreq, 0, sizeof(mreq));
+    mreq.handle = dev->handle;
+    ret = drmIoctl(fd, DRM_IOCTL_MODE_MAP_DUMB, &mreq);
+    if (ret) {
+        fprintf(stderr, "cannot map dumb buffer (%d): %m\n",
+            errno);
+        ret = -errno;
+        goto err_fb;
+    }
+```
+
+做map操作：
+
+```cpp
+/* perform actual memory mapping */
+    dev->map = mmap(0, dev->size, PROT_READ | PROT_WRITE, MAP_SHARED,
+                fd, mreq.offset);
+    if (dev->map == MAP_FAILED) {
+        fprintf(stderr, "cannot mmap dumb buffer (%d): %m\n",
+            errno);
+        ret = -errno;
+        goto err_fb;
+    }
+```
+
+### CRTC的准备
+
+准备函数：drmModeGetCrtc、drmModeSetCrtc
+
+```cpp
+drmModeCrtcPtr drmModeGetCrtc(int fd, uint32_t crtcId)
+{
+    struct drm_mode_crtc crtc;
+    drmModeCrtcPtr r;
+
+    memclear(crtc);
+    crtc.crtc_id = crtcId;
+
+    if (drmIoctl(fd, DRM_IOCTL_MODE_GETCRTC, &crtc))
+        return 0;
+
+    /*
+     * return
+     */
+
+    if (!(r = drmMalloc(sizeof(*r))))
+        return 0;
+
+    r->crtc_id         = crtc.crtc_id;
+    r->x               = crtc.x;
+    r->y               = crtc.y;
+    r->mode_valid      = crtc.mode_valid;
+    if (r->mode_valid) {
+        memcpy(&r->mode, &crtc.mode, sizeof(struct drm_mode_modeinfo));
+        r->width = crtc.mode.hdisplay;
+        r->height = crtc.mode.vdisplay;
+    }
+    r->buffer_id       = crtc.fb_id;
+    r->gamma_size      = crtc.gamma_size;
+    return r;
+}
+
+int drmModeSetCrtc(int fd, uint32_t crtcId, uint32_t bufferId,
+           uint32_t x, uint32_t y, uint32_t *connectors, int count,
+           drmModeModeInfoPtr mode)
+{
+    struct drm_mode_crtc crtc;
+
+    memclear(crtc);
+    crtc.x             = x;
+    crtc.y             = y;
+    crtc.crtc_id       = crtcId;
+    crtc.fb_id         = bufferId;
+    crtc.set_connectors_ptr = VOID2U64(connectors);
+    crtc.count_connectors = count;
+    if (mode) {
+      memcpy(&crtc.mode, mode, sizeof(struct drm_mode_modeinfo));
+      crtc.mode_valid = 1;
+    }
+
+    return DRM_IOCTL(fd, DRM_IOCTL_MODE_SETCRTC, &crtc);
+}
+
+```
+
+
+### 绘制
+
+```cpp
+static void modeset_draw(void)
+{
+    uint8_t r, g, b;
+    bool r_up, g_up, b_up;
+    unsigned int i, j, k, off;
+    struct modeset_dev *iter;
+
+    srand(time(NULL));
+    r = rand() % 0xff;
+    g = rand() % 0xff;
+    b = rand() % 0xff;
+    r_up = g_up = b_up = true;
+
+    for (i = 0; i < 50; ++i) {
+        r = next_color(&r_up, r, 20);
+        g = next_color(&g_up, g, 10);
+        b = next_color(&b_up, b, 5);
+
+        for (iter = modeset_list; iter; iter = iter->next) {
+            for (j = 0; j < iter->height; ++j) {
+                for (k = 0; k < iter->width; ++k) {
+                    off = iter->stride * j + k * 4;
+                    *(uint32_t*)&iter->map[off] =
+                             (r << 16) | (g << 8) | b;
+                }
+            }
+        }
+
+        usleep(100);
+    }
+}
+
+```
+
+五、总结
+以上使用示例仅为简单绘制，更详细且严谨的代码请参考：http://awtk-linux-fb/awtk-port/lcd_linux/lcd_linux_drm.c
+
+
+
+
 # libdrm
 
 [代码](https://github.com/freedesktop/mesa-drm/tree/main)
 
 libdrm不光包含基础部分，还包含vendor的自定义部分，所以代码仓比较大。
 
-Installed Libraries:
-libdrm_amdgpu.so, libdrm_intel.so, libdrm_nouveau.so, libdrm_radeon.so, and libdrm.so
-Installed Directories:
-/usr/include/libdrm and /usr/share/libdrm
-Short Descriptions
-libdrm_amdgpu.so
+Installed Libraries: `libdrm_amdgpu.so`, `libdrm_intel.so`, `libdrm_nouveau.so`, `libdrm_radeon.so`, and `libdrm.so`
+Installed Directories: `/usr/include/libdrm` and `/usr/share/libdrm`
 
-contains the AMDGPU specific Direct Rendering Manager functions
+Short Descriptions 
 
-libdrm_intel.so
+`libdrm_amdgpu.so`:  contains the AMDGPU specific Direct Rendering Manager functions
 
-contains the Intel specific Direct Rendering Manager functions
+`libdrm_intel.so`: contains the Intel specific Direct Rendering Manager functions
 
-libdrm_nouveau.so
+`libdrm_nouveau.so`: contains the open source nVidia (Nouveau) specific Direct Rendering Manager functions
 
-contains the open source nVidia (Nouveau) specific Direct Rendering Manager functions
+`libdrm_radeon.so`: contains the AMD Radeon specific Direct Rendering Manager functions
 
-libdrm_radeon.so
-
-contains the AMD Radeon specific Direct Rendering Manager functions
-
-libdrm.so
-
-contains the Direct Rendering Manager API functions
+`libdrm.so`: contains the Direct Rendering Manager API functions
 
 # libgbm
 
@@ -696,3 +1073,27 @@ egl使用gbm的公开api即可完成应用的功能：
 2. egl使用gbm的lock_front_buffer函数即可实现eglSwapbuffers
 
 但很可能是不对的，在mesa里没有找到gbm_surface_create的调用。
+
+# TODO
+
+https://en.wikipedia.org/wiki/Direct_Rendering_Manager#API
+
+Auth
+TTM
+CRTC
+Encoders
+等概念，API，调用示例代码。
+
+
+https://github.com/freelancer-leon/notes/blob/master/kernel/graphic/Linux-Graphic.md
+
+[drm和wayland](https://www.dounaite.com/article/626b474bfce9ed0dacd981e2.html)
+
+## man pages
+
+[drm-memory](https://manpages.ubuntu.com/manpages/bionic/man7/drm-memory.7.html)
+
+[drmOpen](https://manpages.ubuntu.com/manpages/bionic/man3/drmOpen.3.html)
+
+[drmPrime](https://manpages.ubuntu.com/manpages/bionic/man7/drm-prime.7.html)
+

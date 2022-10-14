@@ -139,3 +139,74 @@ git config --global core.editor vim
 git config --global pager.branch false
 git config --global alias.ll 'log --oneline'
 ```
+
+
+# git commit message 与 issue navigation
+
+## udacity的git message
+
+[link](https://udacity.github.io/git-styleguide/)
+
+overall picture:
+
+```tip
+type: Subject
+
+body
+
+footer
+```
+
+footer是元数据，用于指向issue id等。
+
+### type
+
+`feat`: A new feature
+`fix`: A bug fix
+`docs`: Changes to documentation
+`style`: Formatting, missing semi colons, etc; no code change
+`refactor`: Refactoring production code
+`test`: Adding tests, refactoring test; no production code change
+`chore`: Updating build tasks, package manager configs, etc; no production code change
+
+### example
+
+```note
+feat: Summarize changes in around 50 characters or less
+
+More detailed explanatory text, if necessary. Wrap it to about 72
+characters or so. In some contexts, the first line is treated as the
+subject of the commit and the rest of the text as the body. The
+blank line separating the summary from the body is critical (unless
+you omit the body entirely); various tools like `log`, `shortlog`
+and `rebase` can get confused if you run the two together.
+
+Explain the problem that this commit is solving. Focus on why you
+are making this change as opposed to how (the code explains that).
+Are there side effects or other unintuitive consequences of this
+change? Here's the place to explain them.
+
+Further paragraphs come after blank lines.
+
+ - Bullet points are okay, too
+
+ - Typically a hyphen or asterisk is used for the bullet, preceded
+   by a single space, with blank lines in between, but conventions
+   vary here
+
+If you use an issue tracker, put references to them at the bottom,
+like this:
+
+Resolves: #123
+See also: #456, #789
+```
+
+# git alias
+
+```bash
+git config --global alias.st 'status -sb'
+git config --global alias.ll 'log --oneline'
+git config --global alias.last 'log -1 HEAD --stat'
+git config --global alias.se '!git rev-list --all | xargs git grep -F'  # search commit
+```
+

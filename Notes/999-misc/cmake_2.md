@@ -102,4 +102,30 @@ const std::string GIT_COMMIT_SUBJECT = "@GIT_COMMIT_SUBJECT@";
 
 ```
 
+## cmake configure_file
+
+[document link](https://cmake.org/cmake/help/latest/command/configure_file.html)
+
+```cmake
+option(FOO_ENABLE "Enable Foo" ON)
+if(FOO_ENABLE)
+  set(FOO_STRING "foo")
+endif()
+configure_file(foo.h.in foo.h @ONLY)
+```
+
+```cpp {filename=foo.h.in}
+#cmakedefine FOO_ENABLE
+#cmakedefine FOO_STRING "@FOO_STRING@"
+
+```
+
+#cmakedefine的好处是如果对应的宏没有定义，则输出的foo.h内容为：
+
+```cpp {filename=foo.h}
+/* #undef FOO_ENABLE */
+/* #undef FOO_STRING */
+```
+
+
 
