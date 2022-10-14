@@ -22,6 +22,14 @@ qmlprofiler -a localhsot -p 12345
 
 ```
 
+参考（[来源](https://doc.qt.io/qtcreator/creator-debugging-qml.html#setting-up-qml-debugging)）：
+
+```info
+-qmljsdebugger=port:<port>[,host:<ip address>][,block]
+
+Where port (mandatory) specifies the debugging port, ip address (optional) specifies the IP address of the host where the application is running, and block (optional) prevents the application from running until the debug client connects to the server. This enables debugging from the start.
+```
+
 # diagram
 
 
