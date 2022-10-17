@@ -170,6 +170,20 @@ A product of EFI guru Rod Smith - who also wrote gdisk. It really is magic: it f
 
 这个有点类似于grub shell，提供一个命令行可以用来做一些事情，也是可以自己安装的
 
+## boot.csv
+
+https://www.rodsbooks.com/efi-bootloaders/fallback.html
+
+```note
+Under any filename, fallback.efi is a sort of boot manager—but rather than present a menu of boot options, it scans the subdirectories of EFI on its own disk for files called BOOT.CSV, BOOTX64.CSV, or other architecture-specific variants of that filename. With this file found, it's read and processed to generate a new NVRAM entry. The program then launches the first of the new NVRAM entries it creates. A comma-separated value (CSV) file holds multiple data elements separated by commas; and in this case, the values are:
+
+filename—This is the filename of the file to be added to the NVRAM boot manager list, in the same directory as BOOT.CSV.
+label—This is the label to be associated with the file. This label is displayed by the firmware's own built-in boot manager.
+options—If the boot loader requires options, you'd specify them here. Most boot loaders don't normally take options, so this field is likely to be empty.
+description—This field describes the entry. It's not used by fallback.efi; it exists solely for human consumption.
+```
+
+
 # 参考资料
 
 [refind homepage](http://www.rodsbooks.com/)

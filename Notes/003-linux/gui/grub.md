@@ -163,3 +163,10 @@ echo "mkfs home done"
 # loop  back
 
 loopback loop12345 ./rootfs.img 不过这个过程需要把整个文件加载到内存，而efi的驱动效率不高，文件大点就搞不定。
+
+
+# grub.cfg vs menu.lst
+
+/boot/grub/menu.lst = old
+/boot/grub/grub.conf = new
+
