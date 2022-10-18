@@ -210,3 +210,12 @@ git config --global alias.last 'log -1 HEAD --stat'
 git config --global alias.se '!git rev-list --all | xargs git grep -F'  # search commit
 ```
 
+# git submodule
+
+```bash
+cd thirdparty
+git submodule add https://xxx
+git submodule init
+git submodule update
+```
+
