@@ -1,4 +1,4 @@
-# 漂亮的git lg
+# git
 
 默认的git log显示很难看，所以在一台新的电脑上做的第一件事就是美化一下。填加一个git lg命令，显示得好看一点。
 ![](/assets/git-lg.png)
@@ -10,15 +10,12 @@ git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Crese
 
 # 漂亮的textui tig
 
-在gitg命令窗口中可以使用gitk或gitg命令打开一个GUI来方便地操作。命令行一个一个命令打字不适合所有场景。如果你不喜欢或是没有gui的话，也可以试试tig，vim一样的操作手感。
 ![](/assets/tig.png)
 安装：
 
 ``` bash
 sudo apt install tig
 ```
-
-tig使用很简单，但未必浅显，后面我可以搞成专题。
 
 # 常用的git命令
 
