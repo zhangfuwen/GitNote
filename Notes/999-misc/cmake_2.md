@@ -93,7 +93,7 @@ endif()
 ```
 
 
-```cpp {filename=src/common/version.h.in}
+```cpp
 
 #include <string>
 const std::string GIT_SHA1 = "@GIT_SHA1@";
@@ -114,7 +114,8 @@ endif()
 configure_file(foo.h.in foo.h @ONLY)
 ```
 
-```cpp {filename=foo.h.in}
+foo.h.in
+```cpp
 #cmakedefine FOO_ENABLE
 #cmakedefine FOO_STRING "@FOO_STRING@"
 
@@ -122,7 +123,8 @@ configure_file(foo.h.in foo.h @ONLY)
 
 #cmakedefine的好处是如果对应的宏没有定义，则输出的foo.h内容为：
 
-```cpp {filename=foo.h}
+foo.h
+```cpp
 /* #undef FOO_ENABLE */
 /* #undef FOO_STRING */
 ```
@@ -162,6 +164,7 @@ libxml-2.0和libxml要有一个存在。
 
 #### 使用变量（不建议）
 
+```
 The following variables may be set upon return. Two sets of values exist: One for the common case (<XXX> = <prefix>) and another for the information pkg-config provides when called with the --static option (<XXX> = <prefix>_STATIC).
 
 <XXX>_FOUND
@@ -190,6 +193,7 @@ all required cflags
 
 <XXX>_CFLAGS_OTHER
 the other compiler flags
+```
  
  #### 使用imported target
  
