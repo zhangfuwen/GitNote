@@ -127,5 +127,87 @@ configure_file(foo.h.in foo.h @ONLY)
 /* #undef FOO_STRING */
 ```
 
+## cmake PkgConfig
 
+`pkg-config`是一个linux命令，可以用来在linux查找提供了.pc文件的包。
+
+引用一个软件包主要有三件事，一个是确定这个包有没有安装，二个是这个的头文件在哪个目录下面，三个是这个包的动态链接库都有啥。
+
+使用pkg-config的方式：
+
+### 确定pkgconfig命令在系统里是存在的
+
+```cmake
+find_package(PkgConfig REQUIRED)
+```
+
+### 确定要引用的软件包是存在的
+
+这里有两个命令。
+
+
+`pkg_check_modules (FOO glib-2.0>=2.10 gtk+-2.0)`
+确定glib-2.0和gtk+-2.0都是存在的，并且glib-2.0的版本要大小等于2.10。
+
+`pkg_search_module (BAR libxml-2.0 libxml2 libxml>=2)`
+libxml-2.0和libxml要有一个存在。
+
+上述命令中的FOO, BAR称为`prefix`， glib-2.0>=2.10 libxml2这种称为`moduleSpec`。
+
+在prefix和moduleSpec之间可以加`REQUIRED`，如果没有找到cmake就会报错停止。
+
+### 头文件路径和动态链接库
+
+有两种方法：
+
+#### 使用变量（不建议）
+
+The following variables may be set upon return. Two sets of values exist: One for the common case (<XXX> = <prefix>) and another for the information pkg-config provides when called with the --static option (<XXX> = <prefix>_STATIC).
+
+<XXX>_FOUND
+set to 1 if module(s) exist
+
+<XXX>_LIBRARIES
+only the libraries (without the '-l')
+
+<XXX>_LINK_LIBRARIES
+the libraries and their absolute paths
+
+<XXX>_LIBRARY_DIRS
+the paths of the libraries (without the '-L')
+
+<XXX>_LDFLAGS
+all required linker flags
+
+<XXX>_LDFLAGS_OTHER
+all other linker flags
+
+<XXX>_INCLUDE_DIRS
+the '-I' preprocessor flags (without the '-I')
+
+<XXX>_CFLAGS
+all required cflags
+
+<XXX>_CFLAGS_OTHER
+the other compiler flags
+ 
+ #### 使用imported target
+ 
+ ```cmake
+ pkg_check_modules(foo_libs REQUIRED libxml glib-2.0 IMPORTED_TARGET)
+ target_link_libraries(xxxx PkgConfig::foo_libs)
+ ```
+ 
+ ```note
+ New in version 3.6: The IMPORTED_TARGET argument will create an imported target named PkgConfig::<prefix> that can be passed directly as an argument to target_link_libraries().
+ 
+ target_link_libraries(<target>
+                      <PRIVATE|PUBLIC|INTERFACE> <item>...
+                     [<PRIVATE|PUBLIC|INTERFACE> <item>...]...)
+ ```
+                       
+ target_link_libraries引用一个item时，会同时让target使用它的动态链接和头文件路径。
+ 
+ 
+ 
 
