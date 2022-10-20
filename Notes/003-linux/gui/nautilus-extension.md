@@ -30,6 +30,35 @@ Nautilus支持extension，可以安装一些extension来扩展nautilus的功能�
 killall nautilus; nautilus
 ```
 
+## 加载路径
+
+`/usr/lib/x86_64-linux-gnu/nautilus/extensions-3.0`
+
+系统里有好多其他组件的extensions加载路径，可以用命令`find /usr -name "extensions*" -type d`查看。
+
+## 编译依赖
+
+使用makefile的话，可以用
+
+`pkg-config --cflags libnautilus-extension`查看包含头文件的路径。
+可以用
+`pkg-config --libs libnautilus-extension`查看链接的动态链接库。
+
+cmake的话可以用：
+```cmake
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(libnautilus-extension REQUIRED libnautilus-extension IMPORTED_TARGET)
+add_library(xxxx SHARED src/nautilus_extension.cpp)
+target_include_directories(xxxx
+        PRIVATE ${GTKMM3_INCLUDE_DIRS}
+        )
+target_link_libraries(xxxx
+        ${GTKMM3_LIBRARIES}
+        PkgConfig::libnautilus-extension
+        )
+```        
+
+
 ## 代码解析
 
 这个extension以.so方式存在，nautilus启动时会加载这个so，并在启动和结束时调用两个主要的函数，即：
