@@ -16,3 +16,11 @@ git clone https://github.com/Microsoft/vcpkg.git
 ```bash
 ./vcpkg install cpp-httplib
 ```
+
+# 创建包
+
+```bash
+vcpkg create handycpp https://github.com/zhangfuwen/handycpp
+vcpkg edit handycpp # and then edit
+vcpkg install handycpp
+```
