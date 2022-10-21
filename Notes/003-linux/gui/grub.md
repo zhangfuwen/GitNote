@@ -29,6 +29,7 @@ set gfxpayload=keep
 
 # rescue command
 
+```
 grub rescue> set prefix=(hd0,1)/boot/grub
 grub rescue> set root=(hd0,1)
 grub rescue> insmod normal
@@ -37,10 +38,12 @@ grub rescue> insmod linux
 grub rescue> linux /boot/vmlinuz-3.13.0-29-generic root=/dev/sda1
 grub rescue> initrd /boot/initrd.img-3.13.0-29-generic
 grub rescue> boot
+```
 
 
 # chroot 
 
+```bash
 mount -n --bind /root/dev /dev/.static/dev
 mount -n --move /dev /root/dev
 mount -n --move /proc /root/proc
@@ -48,6 +51,7 @@ mount -n --move /sys /root/sys
 
 exec chroot /root
 exec systemd --system
+```
 
 ## in conclusion
 
@@ -71,7 +75,9 @@ exec chroot . sh -c "exec /bin/systemd --system"
 
 # mount failed
 
+```
 rootfstype=ext4 add after root=
+```
 
 problem is `root=(hd0,4)` is wrong, should be `root=/dev/sda4`
 
@@ -162,11 +168,13 @@ echo "mkfs home done"
 
 # loop  back
 
-loopback loop12345 ./rootfs.img 不过这个过程需要把整个文件加载到内存，而efi的驱动效率不高，文件大点就搞不定。
+`loopback loop12345 ./rootfs.img` 不过这个过程需要把整个文件加载到内存，而efi的驱动效率不高，文件大点就搞不定。
 
 
 # grub.cfg vs menu.lst
 
+```
 /boot/grub/menu.lst = old
 /boot/grub/grub.conf = new
+```
 
