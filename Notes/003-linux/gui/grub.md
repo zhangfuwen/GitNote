@@ -178,3 +178,34 @@ echo "mkfs home done"
 /boot/grub/grub.conf = new
 ```
 
+# EFI引导过程
+
+efi从内置碰盘引导是参考NVRAM来列出引导项的（efibootmgr)。
+efi在NVRAM之外会有fallback模式，这个模式是让你选一个盘，然后它去盘上找esp分区，然后在esp分区里找自己认识的.efi文件，这个过程一定会找的有efi/BOOT/BOOTX64.efi，剩下的就全凭
+efi firmware的开发者个人爱好了，比如说会找找grubx64.efi之类的。
+
+efi找到grubx64.efi引导之后，通过当前文件夹下包含一下grub.cfg文件，它的内容是：
+```ini
+search.fs_uuid eaac9bfe-14d5-437a-ad5a-e17c13010d4c root hd0,gpt5 
+set prefix=($root)'/boot/grub'
+configfile $prefix/grub.cfg
+```
+
+三行，意思分别是：
+1. 找到一个uuid为`eaac9bfe-14d5-437a-ad5a-e17c13010d4c`的分区，取名为hd0,gpt5，并且设置变量root的值为这个分区，即(hd0,gpt5)。
+2. 设置prefix这个变量值为(hd0,gpt5)/boot/grub，即把好个分区的/boot/grub文件夹做为grub后续操作的根文件夹。
+3. 加载另一个grub.cfg文件，即那个分区的/boot/grub/grub.cfg文件。
+
+通常如果我们知道哪个分区下面的linux操作系统的话，一句就能加载它了，即config_file (hdx,gpty)/boot/grub/grub.cfg，然后你就会看到grub正常的选OS界面了。
+
+(hd0,gpt5)这样的碰盘命名规则：
+磁盘从0开始，分区从1开始。
+
+/dev/sda5这样的命令规则：
+磁盘从a开始，分区从1开始。
+
+# 参考链接
+
+http://www.jinbuguo.com/linux/grub.cfg.html 中文的
+https://www.happyassassin.net/posts/2014/01/25/uefi-boot-how-does-that-actually-work-then/ efiboot的方法，没有读完。
+
