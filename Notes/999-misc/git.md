@@ -220,5 +220,9 @@ git submodule update
 
 ```bash
 git config --global url.ssh://git@github.com/.insteadOf https://github.com/
+# or push use ssh
+git config --global url.ssh://git@github.com/.pushInsteadOf https://github.com/
+
+
 ```
 
