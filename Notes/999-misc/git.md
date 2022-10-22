@@ -216,3 +216,9 @@ git submodule init
 git submodule update
 ```
 
+# git auto ssh push
+
+```bash
+git config --global url.ssh://git@github.com/.insteadOf https://github.com/
+```
+
