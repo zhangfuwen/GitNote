@@ -59,4 +59,3 @@ public, private, protected
 #### nested name specifier(嵌套命名说明符)
 
 `::`
-
