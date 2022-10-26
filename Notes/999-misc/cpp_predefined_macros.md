@@ -83,4 +83,61 @@ std::bind/std::thread无法用std::forward实现完美转发了，需要一个he
     maybe_wrap(std::forward<Args>(args))...
 ```    
 
+# C++ type list
+
+```cpp
+using MyTypeList = std::tuple<GenericFile,
+                                  TextFile,
+                                  ImageFile,
+                                  AudioFile,
+                                  VideoFile>;
+                                  
+template<typename List, int... ints>
+void UseTypes(std::integer_sequence<int, ints...> int_seq)
+{
+    ((printf("%d\n",ints)), ...);
+    ([&]{
+         printf("%d\n", ints);
+         using E = typename std::tuple_element<ints, List>::type;
+         auto name = E::name(); // call static member function
+         auto ptr = std::make_shared<E>(); // construct an instance
+         auto instName = ptr->instName(); // call instance member function
+     }(),...); // fold expression
+}
+
+const int numTypes = std::tuple_size_v<MyTypeList>;
+UseTypes<MyTypeList>(std::make_integer_sequence<int, numTypes>{});
+```
+
+# C++ print variant
+
+```cpp
+using Error = int;
+using File = std::variant<
+    Error,
+    std::shared_ptr<GenericFile>,
+      std::shared_ptr<TextFile>,
+      std::shared_ptr<ImageFile>,
+      std::shared_ptr<AudioFile>,
+      std::shared_ptr<VideoFile>>;
+
+
+template <typename Variant, int... ints>
+void PrintResult(Variant & v, std::integer_sequence<int, ints...>) {
+    ([&]{
+        printf("%d\n", ints);
+        using E = typename std::variant_alternative_t<ints, Variant>;
+        if constexpr (std::is_same_v<E, int>) {
+            std::cout << "error " << std::get<int>(v) << std::endl;
+        } else {
+            std::cout << std::get<E>(v)->toString() << std::endl; // other types must implement toString
+        }
+    }(),...);
+}
+
+auto ret = SomeFunctionThatReturnsVariant();
+constexpr int numTypes = std::variant_size_v<FileInfo>;
+PrintResult(ret, std::make_integer_sequence<int, numTypes>{});
+
+```
 
