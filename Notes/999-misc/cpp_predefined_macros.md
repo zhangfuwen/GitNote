@@ -246,3 +246,117 @@ void PrintInfo(const Variant &info) {
 }
 ```
 
+# concept
+
+## use a concept
+
+### replace typename
+
+```cpp
+template <HasNameConcept T>
+std::string GetName(T &t) {
+    return t.name();
+}
+
+// or
+
+template <HasStaticNameConcept T>
+std::string GetName(T &t) {
+    return T::name();
+}
+```
+
+### requires key word & junction
+
+```cpp
+template <typename T>
+requires HasNameConcept<T> && HasClassNameConcept<T>
+std::string GetName(T &t) {
+    return t.name() + T::class_name();
+}
+```
+
+## defination
+
+### = requires (T t) { /* compiles */}
+
+```cpp
+template <typename T>
+concept HasName = requires(T t) {
+    t.name();
+};
+
+
+template <typename T>
+concept HasClassName = requires(T t) {
+   T::className(); 
+};
+
+static_assert(HasName<A>);
+static_assert(HasClassName<A>);
+```
+
+### alias and conjunction(compile time true/false values)
+
+```cpp
+template <typename B, typename D>
+concept Derived = std::is_base_of<B,D>::value;
+
+class A {
+public:
+    const static int value = 8;
+}
+template <typename T>
+concept BigClass = T::value >= 8;
+
+template <T, D>
+concept HasBothNames = HasName<A> 
+                    && HasClassName<T> 
+                    && (!std::is_base_of<T,D>::value)
+                    && (sizeof(T) > 8 || T::class_value == 8);
+```
+
+### partial specialization
+
+```cpp
+template <typename B, typename D>
+concept Derived = std::is_base_of<B,D>::value;
+
+template <typename T>
+concept DerivedFromA = Derived<A, T>;
+
+class B :  A {};
+static_assert(DerivedFromA<B>)
+```
+
+### atomic constrains i.e. compile time bool like operator bool
+
+can't be alias'd as a concept.
+
+```cpp
+template <typename T>
+struct IS {
+    constexpr operator bool() {
+        return T::ok;
+    }
+    constexpr bool func() {
+        return T::ok;
+    }
+};
+
+class C {
+public:
+    const static bool ok = true;
+};
+
+//template <typename T>
+//concept XX = requires (IS<T>{});  // does not work
+//
+//static_assert(XX<C>); // does not work
+
+template <typename T>
+requires (IS<T>{} ) && (IS<T>{}.func())  // works
+void test() {
+}
+```
+
