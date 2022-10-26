@@ -128,9 +128,13 @@ void PrintResult(Variant & v, std::integer_sequence<int, ints...>) {
         printf("%d\n", ints);
         using E = typename std::variant_alternative_t<ints, Variant>;
         if constexpr (std::is_same_v<E, int>) {
-            std::cout << "error " << std::get<int>(v) << std::endl;
+            if(std::holds_alternative<E>(v) { // runtime type test
+                std::cout << "error " << std::get<int>(v) << std::endl;
+            }
         } else {
-            std::cout << std::get<E>(v)->toString() << std::endl; // other types must implement toString
+            if(std::holds_alternative<E>(v) { // runtime type test
+                std::cout << std::get<E>(v)->toString() << std::endl; // other types must implement toString
+            }
         }
     }(),...);
 }
@@ -140,4 +144,8 @@ constexpr int numTypes = std::variant_size_v<FileInfo>;
 PrintResult(ret, std::make_integer_sequence<int, numTypes>{});
 
 ```
+
+# static member function and compile time polymorphism
+
+just return variant and use printResult like in the previous section. 
 
