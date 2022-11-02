@@ -92,9 +92,13 @@ DBusActivatable=true
 
 与url scheme handler 紧密相关的是mime type。
 
-mime type的处理有一个通用的脚本，叫xdg-mime，它实际上是先检测一下DE，如果是kde就调用`kde`这个软件，如果是gnome就调用update-mime-database这个软件。
+mime type的处理有一个通用的脚本，叫xdg-mime，它实际上是先检测一下DE，如果是kde就调用`kbuildsycoca`这个软件，如果是gnome就调用update-mime-database这个软件。
 
-## 以update-mime-database
+xdg-mine这个脚本是`xdg-utils`包的一部分，这个包里面只是几个脚本，可以通过`apt source xdg-utils`下载代码看一下，也可以在[github上直接看](https://github.com/freedesktop/xdg-utils/tree/master/scripts)。
+
+## update-mime-database
+
+update-mime-database是一个可执行文件，它存在于包`shared-mime-info`里，可以通过`apt source shared-mime-info`查看代码，也可以[在github上直接查看](https://github.com/freedesktop/xdg-shared-mime-info/tree/master/src)。
 
 它接受一个目录做为参数，这个目录就是存放mime定义文件的地方，这个目录包括：
 
@@ -318,6 +322,50 @@ mime type的处理有一个通用的脚本，叫xdg-mime，它实际上是先检
   </mime-type>
 </mime-info>
 ```
+
+## update-mime-database代码
+
+### 下载代码
+
+找个目录，然后`apt source shared-mime-info`, 里面只有几个文件，`find . -name update-mime-database.c`得到结果`./shared-mime-info-2.2/src/update-mime-database.c
+`。
+
+打开它，`write_cache`函数是它写入cache文件的地方，
+
+```
+	{
+		FILE *stream;
+		char *path;
+		
+		path = g_strconcat(mime_dir, "/mime.cache.new", NULL);
+		stream = fopen_gerror(path, error);
+		if (!stream)
+			goto out;
+		write_cache(stream);
+		if (!fclose_gerror(stream, error))
+			goto out;
+		if (!atomic_update(path, error))
+			goto out;
+		g_free(path);
+	}
+
+```
+
+写的cache文件的名字为`mime.cache`,存放在:
+
+```
+~/.local/share/mime/
+/usr/share/mime
+```
+
+
+它们是二进制可映射到内存为map的文件格式，所以查询速度非常的快。
+
+
+## kbuildsycoca
+
+kbuildsycoca是kservice的一部分，代码可以在[这里](https://github.com/KDE/kservice/tree/master/src/kbuildsycoca)看。
+
 
 
 
