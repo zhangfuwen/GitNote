@@ -367,5 +367,5 @@ update-mime-database是一个可执行文件，它存在于包`shared-mime-info`
 kbuildsycoca是kservice的一部分，代码可以在[这里](https://github.com/KDE/kservice/tree/master/src/kbuildsycoca)看。
 
 
-
-
+[这里](https://web.fe.up.pt/~jmcruz/etc/kde/kdeqt/kde3arch/ksycoca.html)有一个文档，介绍了sycoca的用法。
+sycoca的意思是system configuration cache，三个单词各取了两个字母。
