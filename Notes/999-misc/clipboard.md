@@ -53,3 +53,26 @@ CLIPBOARD `selection`或PRIMARY `selection`中粘贴内容。`y`命令同理。�
 在gtk中，可以通过`gtk_selection_data_set` 和 `gtk_selection_data_set_text`函数设置普通数据和文本到`selection`。
 具体参考： http://irtfweb.ifa.hawaii.edu/SoftwareDocs/gtk20/gtk/gtk-selections.html
 
+# paste clipboard image to named file
+
+```bash
+xclip -o -target TARGETS -selection clipboard          
+TIMESTAMP
+TARGETS
+SAVE_TARGETS
+MULTIPLE
+image/png
+application/web;type="custom/formatmap"
+application/web;type="custom/format1"
+application/web;type="custom/format0"
+```
+
+```bash
+xclip -o -target 'application/web;type="custom/format0"'  -selection clipboard | head
+file:///home/u_6878103688133476353/.config/LarkShell/sdk_storage/05bb4cd2df8ee3085a5d7e6dd5b354c0/resources/images/img_v2_f59a38a6-e41b-49f2-9442-5b50d34f926g.png
+
+```
+
+
+
+
