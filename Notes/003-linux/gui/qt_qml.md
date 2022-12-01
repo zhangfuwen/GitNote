@@ -49,4 +49,34 @@ function httpGet(keyword) {
     }
 ```
 
-## 
+## qml singleton
+
+```qml
+pragma Singleton  
+import QtQuick 2.0  
+  
+Item {  
+    readonly property string colourBlue: "blue"  
+    readonly property string colourRed: "red"  
+    readonly property int fontPointSize: 16  
+    
+    property Action firstAction
+    firstAction : Action {
+        name: "xxx"
+    }
+}  
+```
+
+```C++
+qmlRegisterSingletonType( QUrl("file:///absolute/path/MyStyleObject.qml"), "MyNameSpace", 1, 0, "MySingletonItem" );
+
+```
+
+使用：
+```qml
+import MyNameSpace 1.0
+
+Button {
+        action:MySingletonItem.firstAction
+}
+```
