@@ -80,3 +80,22 @@ Button {
         action:MySingletonItem.firstAction
 }
 ```
+
+## Qt5 GDB pretty printer
+
+```bash
+ if [[ ! -d ~/.gdb/qt5printers ]]; then mkdir -p ~/.gdb/qt5printers; cd ~/.gdb; git clone https://github.com/Lekensteyn/qt5printers; cd -; fi
+ 
+ cat > ~/.gdbinit << EOM
+set auto-load local-gdbinit on
+add-auto-load-safe-path /
+python
+import sys, os.path
+sys.path.insert(0, os.path.expanduser('~/.gdb'))
+import qt5printers
+qt5printers.register_printers(gdb.current_objfile())
+end
+EOM
+```
+
+
