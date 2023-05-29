@@ -70,3 +70,54 @@ xrandr --query
 ![](assets/monitor_settings_kde.png)
 
 
+# wayland protocol
+
+```plantuml
+
+@startmindmap
+wayland protocols 
+** core protocol
+*** wl_display - core global object
+*** wl_registry - global registry object
+*** wl_callback - callback object
+*** wl_compositor - the compositor singleton
+*** wl_shm_pool - a shared memory pool
+*** wl_shm - shared memory support
+*** wl_buffer - content for a wl_surface
+*** wl_data_offer - offer to transfer data
+*** wl_data_source - offer to transfer data
+*** wl_data_device - data transfer device
+*** wl_data_device_manager - data transfer interface
+*** wl_shell - create desktop-style surfaces
+*** wl_shell_surface - desktop-style metadata interface
+*** wl_surface - an onscreen surface
+*** wl_seat - group of input devices
+*** wl_pointer - pointer input device
+*** wl_keyboard - keyboard input device
+*** wl_touch - touchscreen input device
+*** wl_output - compositor output region
+*** wl_region - region interface
+*** wl_subcompositor - sub-surface compositing
+*** wl_subsurface - sub-surface interface to a wl_surface
+++ wl_shell (deprecated by xdg_shell_protocol_v6)
+++ ivi_shell 
+++ wlr_layer_shell
+++ wlr-foreign-toplevel-management
+** xdg_shell_protocol_v6
+*** xdg_wm_base
+*** xdg_surface
+*** xdg_popup
+*** xdg_positioner
+*** xdg_decoration_v1
+*** xdg_output
+*** xdg_foreign
+++ xwayland
+++ linux-dmabuf
+++ keyboard-shortcuts-inhibit
+++ virtual-keyboard
+++ pointer-gestures
+
+
+@endmindmap
+```
+
