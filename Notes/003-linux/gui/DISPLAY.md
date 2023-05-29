@@ -72,6 +72,8 @@ xrandr --query
 
 # wayland protocol
 
+https://wayland.app/protocols/input-method-unstable-v1
+
 ```plantuml
 
 @startmindmap
