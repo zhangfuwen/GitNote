@@ -77,7 +77,7 @@ https://wayland.app/protocols/input-method-unstable-v1
 ```plantuml
 
 @startmindmap
-wayland protocols 
+* wayland protocols 
 ** core protocol
 *** wl_display - core global object
 *** wl_registry - global registry object
