@@ -63,7 +63,7 @@ Plug 'skywind3000/vim-preview'
 " 1.5 VCS {{{
 Plug 'airblade/vim-gitgutter'
 "Plug 'motemen/git-vim'
-Plug 'tpope/vim-fugitive'
+"Plug 'tpope/vim-fugitive'
 Plug 'will133/vim-dirdiff'
 Plug 'gregsexton/gitv'
 " }}}
@@ -122,7 +122,7 @@ if(has('python3'))
     " }}}
 
 " coc conquer of completion {{{
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"    Plug 'neoclide/coc.nvim', {'branch': 'release'}
     " to use language server:
     " :CocInstall coc-clangd
     " :CocInstall coc-sh

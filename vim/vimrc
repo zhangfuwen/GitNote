@@ -381,7 +381,7 @@ nnoremap <F3> :call quickui#tools#preview_tag('')<cr>
 
 "}}}
 
-if !empty(glob("~/.vim/plugged/coc.nvim/plugin/coc.vim"))
-    source ~/.vim/coc.vim
-endif
+"if !empty(glob("~/.vim/plugged/coc.nvim/plugin/coc.vim"))
+"    source ~/.vim/coc.vim
+"endif
 let g:cmake_ctest_args='-j8 --output-on-failure'
