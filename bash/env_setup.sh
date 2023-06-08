@@ -297,6 +297,7 @@ function wizard() {
     Install_Github \
     Install_Git \
     Install_NerdFonts \
+    Github_AuthLogin \
     Quit; do
     if test ${option} == "TryInstall_All"; then
       $SUDO ${pkgman_install} neovim
@@ -304,6 +305,7 @@ function wizard() {
       install_gh
       install_git
       install_nerdfonts
+      gh auth login
     elif test ${option} == "Install_Neovim"; then
       $SUDO ${pkgman_install} neovim
     elif test ${option} == "Setup_VimPlugins"; then
@@ -314,6 +316,8 @@ function wizard() {
       install_git
     elif test ${option} == "Install_NerdFonts"; then
       install_nerdfonts
+    elif test ${option} == "Github_AuthLogin"; then
+      gh auth login
     elif test ${option} == "Quit"; then
       break
     fi
