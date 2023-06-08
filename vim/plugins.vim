@@ -142,7 +142,7 @@ endif
 
 " 1.9 Background jobs {{{
 " 自动生成tags文件
-Plug 'ludovicchabant/vim-gutentags'
+" Plug 'ludovicchabant/vim-gutentags'
 " }}}
 
 " 1.10 Quick access {{{
@@ -153,7 +153,7 @@ Plug 'easymotion/vim-easymotion'
 
 " 1.11 Snippet {{{
 " Track the engine.
-Plug 'SirVer/ultisnips'
+" Plug 'SirVer/ultisnips'
 Plug 'zhangfuwen/vim-snippets'
 " Snippets are separated from the engine. Add this if you want them:
 " Trigger configuration. You need to change this to something other than <tab> if you use one of the following:

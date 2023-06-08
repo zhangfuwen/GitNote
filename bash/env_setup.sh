@@ -180,7 +180,7 @@ function install_git() {
 
   if [[ ! $(command -v git) ]]; then
     echo "git not found, installing"
-    $SUDO pkgman install git
+    $SUDO $pkgman_install git
   else
     echo "git already installed"
   fi
@@ -243,7 +243,37 @@ echo "pkgman=$pkgman"
 echo "pkgman_install=$pkgman_install"
 
 function setup_vim() {
-  download_and_run https://gitee.com/zhangfuwen/GitNote/raw/master/bash/vim_setup.sh
+  echo "init nvim config file"
+  mkdir -p ~/.config/nvim
+  if test ! -f ~/.config/nvim/init.vim || user_confirm "$HOME/.config/nvim/init.vim exists, do you want to update?"; then
+    cat >~/.config/nvim/init.vim <<EOF
+" updated by GitNote
+set runtimepath^=~/.vim runtimepath+=~/.vim/after
+let &packpath=&runtimepath
+source ~/.vimrc
+EOF
+  fi
+
+  echo "installing vim-plug"
+  if test ! -f ~/.vimrc || user_confirm "$HOME/.vimrc exists, do you want us to append new contents to it?"; then
+    set -x
+    curl -fLo ~/.vimrc --create-dirs https://github.com/zhangfuwen/GitNote/raw/master/vim/vimrc
+    curl -fLo ~/.vim/coc.vim --create-dirs https://github.com/zhangfuwen/GitNote/raw/master/vim/coc.vim
+    curl -fLo ~/.vim/plugins.vim --create-dirs https://github.com/zhangfuwen/GitNote/raw/master/vim/plugins.vim
+    set +x
+  fi
+
+  echo "install ripgrep"
+  $SUDO $pkgman_install  ripgrep
+  echo "install cppman"
+  $SUDO $pkgman_install  cppman
+  echo "install universal-ctags"
+  if not $SUDO $pkgman_install  universal-ctags; then
+    $SUDO $pkgman_install ctags
+  fi
+
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 }
 
 function _adb() {
