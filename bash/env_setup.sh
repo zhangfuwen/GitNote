@@ -322,6 +322,14 @@ function setup_git() {
   git config --global url.ssh://git@github.com/.insteadOf https://github.com/
 }
 
+function install_zsh_and_oh_my_zsh() {
+  $SUDO $pkgman_install zsh
+  if test ! command -v curl; then
+    $SUDO $pkgman_install curl
+  fi
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+}
+
 function wizard() {
 
   PS3="Enter a number: "
@@ -334,6 +342,7 @@ function wizard() {
     Setup_Git \
     Install_NerdFonts \
     Github_AuthLogin \
+    Install_OhMyZsh \
     Quit; do
     if test ${option} == "TryInstall_All"; then
       $SUDO ${pkgman_install} neovim
@@ -357,6 +366,8 @@ function wizard() {
       install_nerdfonts
     elif test ${option} == "Github_AuthLogin"; then
       gh auth login
+    elif test ${option} == "Install_OhMyZsh"; then
+      install_zsh_and_oh_my_zsh
     elif test ${option} == "Quit"; then
       break
     fi
