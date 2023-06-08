@@ -278,7 +278,7 @@ function note_upload() {
 }
 
 function setup_git() {
-  git config --global user.email zhangfuwen@bytedance.com
+  git config --global user.email dean.sinaean@gmail.com
   git config --global user.name zhangfuwen
   git config --global alias.st status
   git config --global alias.co checkout
