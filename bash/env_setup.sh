@@ -185,16 +185,6 @@ function install_git() {
     echo "git already installed"
   fi
 
-  git config --global user.email zhangfuwen@bytedance.com
-  git config --global user.name zhangfuwen
-  git config --global alias.st status
-  git config --global alias.co checkout
-  git config --global alias.ci commit
-  git config --global alias.br branch
-  git config --global alias.unstage 'reset HEAD'
-  git config --global alias.last 'log -1'
-  git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-  git config --global mergetool.vimdiff.cmd "nvim -d $LOCAL $REMOTE $MERGED -c \'$wincmd w\' -c \'wincmd J\'"
 }
 
 function install_nerdfonts() {
@@ -287,6 +277,21 @@ function note_upload() {
   git status
 }
 
+function setup_git() {
+  git config --global user.email zhangfuwen@bytedance.com
+  git config --global user.name zhangfuwen
+  git config --global alias.st status
+  git config --global alias.co checkout
+  git config --global alias.ci commit
+  git config --global alias.br branch
+  git config --global alias.unstage 'reset HEAD'
+  git config --global mergetool.vimdiff.cmd "nvim -d $LOCAL $REMOTE $MERGED -c \'$wincmd w\' -c \'wincmd J\'"
+  git config --global core.editor nvim
+  git config --global core.excludesfile ~/.gitignore
+  git config --global core.pager "less -R"
+  git config --global url.ssh://git@github.com/.insteadOf https://github.com/
+}
+
 function wizard() {
 
   PS3="Enter a number: "
@@ -296,6 +301,7 @@ function wizard() {
     Setup_VimPlugins \
     Install_Github \
     Install_Git \
+    Setup_Git \
     Install_NerdFonts \
     Github_AuthLogin \
     Quit; do
@@ -304,6 +310,7 @@ function wizard() {
       setup_vim
       install_gh
       install_git
+      setup_git
       install_nerdfonts
       gh auth login
     elif test ${option} == "Install_Neovim"; then
@@ -314,6 +321,8 @@ function wizard() {
       install_gh
     elif test ${option} == "Install_Git"; then
       install_git
+    elif test ${option} == "Setup_Git"; then
+      setup_git
     elif test ${option} == "Install_NerdFonts"; then
       install_nerdfonts
     elif test ${option} == "Github_AuthLogin"; then
