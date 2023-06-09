@@ -1,2 +1,4 @@
 *.sh linguist-detectable=false
+*.vim linguist-detectable=false
+vimrc linguist-detectable=false
 Gemfile linguist-detectable=false
