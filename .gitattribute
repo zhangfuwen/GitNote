@@ -1,2 +1,0 @@
-*.sh linguist-detectable=false
-Gemfile linguist-detectable=true
