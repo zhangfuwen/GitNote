@@ -153,8 +153,8 @@ Plug 'easymotion/vim-easymotion'
 
 " 1.11 Snippet {{{
 " Track the engine.
-" Plug 'SirVer/ultisnips'
-Plug 'zhangfuwen/vim-snippets'
+"Plug 'SirVer/ultisnips'
+"Plug 'zhangfuwen/vim-snippets'
 " Snippets are separated from the engine. Add this if you want them:
 " Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
 " - https://github.com/Valloric/YouCompleteMe
