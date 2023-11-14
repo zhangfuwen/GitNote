@@ -2,6 +2,12 @@ see [Summary](SUMMARY.md)
 
 # Summary
 
+## AI
+
+* [llama](./Notes/006-ai/llama.md)
+* [高通](./Notes/006-ai/qualcomm.md)
+
+
 ## linux
 
 * [Introduction](./Notes/003-linux/README.md)
@@ -27,7 +33,7 @@ see [Summary](SUMMARY.md)
 
 ## 知乎专栏文章
 
-* [现代计算机](Notes/001-modern-computing/000-x86qi-dong.md)
+* [现代计算机](Notes/001-modern-computing/001-x86qi-dong.md)
     * [001\. x86启动](Notes/001-modern-computing/001-x86qi-dong.md)
     * [002\. Nandflash芯片简介](Notes/001-modern-computing/002-nandflash.md)
     * [003\. 闪存的磨损均衡](Notes/001-modern-computing/003-wear-leveling-of-nand-flash.md)

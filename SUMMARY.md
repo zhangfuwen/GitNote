@@ -3,6 +3,7 @@ see [Summary](SUMMARY.md)
 # Summary
 
  * [how to](./howto.md)
+ * [writerside](./Writerside/topics/starter-topic.md)
 
 ## 现代计算机
 
