@@ -404,3 +404,9 @@ Edit this page to see how to add this to your docs, theme can use [@primer/css u
 # jykell
 
 [jykell variables](https://jekyllrb.com/docs/variables/)
+
+# ipynb
+
+{::nomarkdown}
+{% jupyter_notebook "chatglm2-6b.ipynb" %}
+{:/nomarkdown}

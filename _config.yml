@@ -70,3 +70,4 @@ plugins:
   - jekyll-mentions
   - jekyll-asciidoc
   - jekyll-gist
+  - jekyll-jupyter-notebook

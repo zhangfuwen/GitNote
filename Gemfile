@@ -44,3 +44,4 @@ gem 'jemoji'
 gem 'jekyll-avatar'
 gem 'jekyll-mentions'
 gem 'jekyll-gist'
+gem "jekyll-jupyter-notebook"
