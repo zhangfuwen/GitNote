@@ -149,3 +149,191 @@ cmake -B build -DANDROID_ABI=arm64-v8a -DANDROID_NATIVE_API_LEVEL=29 -DCMAKE_TOO
 ninja -C build
 
 ```
+
+# conda environment
+
+
+## cuda build and execute
+
+install cuda tool kit for compilation.
+
+```bash
+conda create -n myenv
+conda install -c nvidia cuda cuda-nvcc
+```
+
+example code(test.cu):
+
+```cuda
+#include <stdio.h>
+
+// CUDA kernel to perform vector addition
+__global__ void vectorAdd(int* a, int* b, int* c, int size) {
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    if (tid < size) {
+        c[tid] = a[tid] + b[tid];
+    }
+}
+
+int main() {
+    int size = 1024; // Size of the vectors
+    int a[size], b[size], c[size]; // Input and output arrays
+
+    // Initialize input arrays
+    for (int i = 0; i < size; i++) {
+        a[i] = i;
+        b[i] = 2 * i;
+    }
+
+    // Declare GPU memory pointers
+    int *dev_a, *dev_b, *dev_c;
+    // Allocate GPU memory
+    cudaMalloc((void**)&dev_a, size * sizeof(int));
+    cudaMalloc((void**)&dev_b, size * sizeof(int));
+    cudaMalloc((void**)&dev_c, size * sizeof(int));
+
+    // Copy input arrays from host to GPU memory
+    cudaMemcpy(dev_a, a, size * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(dev_b, b, size * sizeof(int), cudaMemcpyHostToDevice);
+
+    // Define grid and block dimensions
+    int blockSize = 256;
+    int gridSize = (size + blockSize - 1) / blockSize;
+
+    // Launch CUDA kernel on the GPU
+    vectorAdd<<<gridSize, blockSize>>>(dev_a, dev_b, dev_c, size);
+
+    // Copy the result back from GPU to host memory
+    cudaMemcpy(c, dev_c, size * sizeof(int), cudaMemcpyDeviceToHost);
+
+    // Print the result
+    for (int i = 0; i < size; i++) {
+        printf("%d + %d = %d\n", a[i], b[i], c[i]);
+    }
+
+    // Free GPU memory
+    cudaFree(dev_a);
+    cudaFree(dev_b);
+    cudaFree(dev_c);
+
+    return 0;
+}
+
+
+```
+
+## build and run
+
+```bash
+nvcc test.cu -o example
+./example
+```
+
+# conda install pytorch and pytorch-cuda
+
+
+## nvidia version matching
+
+nvidia kernel version, toolkit version must roughly match.
+
+to see kernel version, use `nvidia-smi` command:
+
+```bash
+nvidia-smi     
+Tue Apr 30 18:06:30 2024       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.171.04             Driver Version: 535.171.04   CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  NVIDIA GeForce GTX 1080        Off | 00000000:01:00.0  On |                  N/A |
+| 32%   45C    P8              12W / 180W |    289MiB /  8192MiB |      9%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+
+```
+
+` CUDA Version: 12.2  ` is what we want to know.
+
+to figure out cudatoolkit version, use `nvcc --version` command:
+
+```
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2024 NVIDIA Corporation
+Built on Thu_Mar_28_02:18:24_PDT_2024
+Cuda compilation tools, release 12.4, V12.4.131
+Build cuda_12.4.r12.4/compiler.34097967_0
+
+```
+
+`cuda_12.4.r12.4` is what we want to know.
+
+
+## install pytorch 
+
+With `pytorch` installed, you can run your model on `cpu`.
+With `pytorch-cuda` installed, you can run your model on `cuda`.
+
+Install pytorch:
+
+```bash 
+conda install pytorch=2.2
+```
+or
+
+```bash
+conda install pytorch==2.2.2
+```
+
+Single equal sign indicates none exact match, while double equal sign means exact match.
+
+
+
+To test if cuda is available:
+
+```
+python3
+>>> import torch 
+>>> print(torch.cuda.is_available())
+False
+```
+
+Install pytorch-cuda:
+
+```bash
+conda install pytorch-cuda=12.4 -c pytorch
+```
+
+The version better matches the cuda version you got using `nvidia-smi` command.
+
+Sometimes, the version you wanted does not exist, try some other versions as long as the major version matches:
+
+```
+conda search pytorch-cuda -c pytorch
+Loading channels: done
+# Name                       Version           Build  Channel             
+pytorch-cuda                    11.6      h867d48c_0  pytorch             
+pytorch-cuda                    11.6      h867d48c_1  pytorch             
+pytorch-cuda                    11.7      h67b0de4_0  pytorch             
+pytorch-cuda                    11.7      h67b0de4_1  pytorch             
+pytorch-cuda                    11.7      h67b0de4_2  pytorch             
+pytorch-cuda                    11.7      h778d358_3  pytorch             
+pytorch-cuda                    11.7      h778d358_5  pytorch             
+pytorch-cuda                    11.8      h7e8668a_3  pytorch             
+pytorch-cuda                    11.8      h7e8668a_5  pytorch             
+pytorch-cuda                    11.8      h8dd9ede_2  pytorch             
+pytorch-cuda                    12.1      ha16c6d3_5  pytorch             
+pytorch-cuda                    12.4      hc786d27_6  pytorch 
+```
+
+For example, if your cuda version is 11.3, you may try 11.7 which has backward compatibility with version 11.3.
+
+Sometimes, pytorch-cuda would have dependency conflicts with python version. so you may downgrade to an older version of python as well:
+
+```bash
+conda install python=3.8 pytorch-cuda=12.4  -c pytorch -v
+```
+
+better follow instructions here: https://pytorch.org/get-started/previous-versions/
