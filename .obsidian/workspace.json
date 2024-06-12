@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "31e16a42f0c99481",
+        "id": "8fa9112d513a19bc",
         "type": "tabs",
         "children": [
           {
-            "id": "7ac42d5816f54c35",
+            "id": "b4fac4c2554c3eea",
             "type": "leaf",
             "state": {
               "type": "canvas",
@@ -149,9 +149,17 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "7ac42d5816f54c35",
+  "active": "b4fac4c2554c3eea",
   "lastOpenFiles": [
+    "Notes/005-algorithm/quick_sort.md",
     "未命名.canvas",
+    "Notes/cheatsheets.md",
+    "Notes/assets/img.png",
+    "Notes/assets",
+    "Notes/006-ai/cnn-yolo-tensor.md",
+    "Notes/006-ai/assets/img_1.png",
+    "Notes/006-ai/assets",
+    "Notes/002-android/kotlin.md",
     "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
     "Notes/006-ai/llama.md",
     "Notes/006-ai/qualcomm.md",

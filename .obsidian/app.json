@@ -1,5 +1,6 @@
 {
   "newFileLocation": "current",
   "newLinkFormat": "relative",
-  "attachmentFolderPath": "./assets"
+  "attachmentFolderPath": "./assets",
+  "vimMode": true
 }
