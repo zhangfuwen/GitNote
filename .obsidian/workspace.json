@@ -1,0 +1,170 @@
+{
+  "main": {
+    "id": "54971fa9b3654cf5",
+    "type": "split",
+    "children": [
+      {
+        "id": "31e16a42f0c99481",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7ac42d5816f54c35",
+            "type": "leaf",
+            "state": {
+              "type": "canvas",
+              "state": {
+                "file": "未命名.canvas",
+                "viewState": {
+                  "x": 0,
+                  "y": 0,
+                  "zoom": 0
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "0df883ba4d35bb82",
+    "type": "split",
+    "children": [
+      {
+        "id": "dc544b5d514d5f86",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1811bdc6bf476244",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "773701a6d5c83f5a",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "tag:#cmake",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "f7749baa03cafba7",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "33e6a9ce37303beb",
+    "type": "split",
+    "children": [
+      {
+        "id": "9d46db5a4b6f0943",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6fab8ff3f77d62cc",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "未命名.canvas",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "ba28b7efcd822576",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "未命名.canvas",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "5711c485da272151",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "alphabetical",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "c5e653a369892aee",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "未命名.canvas"
+              }
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false
+    }
+  },
+  "active": "7ac42d5816f54c35",
+  "lastOpenFiles": [
+    "未命名.canvas",
+    "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
+    "Notes/006-ai/llama.md",
+    "Notes/006-ai/qualcomm.md",
+    "Notes/998-zhihu/有益却无法去做.md",
+    "Notes/998-zhihu/稀缺资源的配置能力.md",
+    "Notes/998-zhihu/强大的自我.md",
+    "Notes/007-economy/index.md",
+    "Notes/006-ai/index.md",
+    "Notes/004-3d-rendering/egl/list.md",
+    "attachments/index.md",
+    "Notes/004-3d-rendering/egl/platform.md",
+    "Notes/005-algorithm/fuzzy_search.md",
+    "Notes/006-ai/img.png",
+    "2024-05-06.md"
+  ]
+}

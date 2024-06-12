@@ -1,7 +1,7 @@
 # qualcomm dsp
 
 SDK position:
-```angular2html
+```bash
 ➜  adsp_proc git:(master) ls ~/Qualcomm/
 HelloWorld  Hexagon_SDK
 
@@ -16,7 +16,7 @@ dsps
 
 tools
 
-```angular2html
+```bash
 ➜  3.5.4 cd tools
 ➜  tools ls
 android-ndk-r19c  audio  debug  elfsigner  HALIDE_Tools  hexagon_ide  HEXAGON_Tools  Installer_logs  libusb  python_venv  qaic  utils

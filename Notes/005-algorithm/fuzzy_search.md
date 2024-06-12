@@ -4,7 +4,6 @@ title: 字符串的fuzzy search
 
 ---
 
-
 # levenshtein-distance
 
 [利文斯坦 距离](https://en.wikipedia.org/wiki/Levenshtein_distance) 简要来说：
@@ -60,3 +59,4 @@ bool match(std::string &s, std::string & term) {
 实际试用了下，发现效率超级低，用于搜索app名字都被导致卡顿和风扇狂转。
 
 最简单的优化就是超过一定距离后放弃。比如说超过搜索term长度一半的时候。
+
