@@ -137,7 +137,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -149,7 +150,7 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "b4fac4c2554c3eea",
+  "active": "1811bdc6bf476244",
   "lastOpenFiles": [
     "Notes/005-algorithm/quick_sort.md",
     "未命名.canvas",
