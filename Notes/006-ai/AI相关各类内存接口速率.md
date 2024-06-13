@@ -1,3 +1,6 @@
+---
+title: AI相关各类内存接口速率
+---
 # 汇总
 
 | GPU | vRAM | Memory interface width |. Memory Bandwidth ||

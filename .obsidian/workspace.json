@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
+                "file": "howto.md",
                 "mode": "source",
                 "source": false
               }
@@ -69,8 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "33e6a9ce37303beb",
@@ -86,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
+                "file": "howto.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
+                "file": "howto.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -126,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Notes/006-ai/AI相关各类内存接口速率.md"
+                "file": "howto.md"
               }
             }
           }
@@ -149,6 +148,10 @@
   },
   "active": "e4a343ea4e9e59e8",
   "lastOpenFiles": [
+    "Notes/006-ai/AI相关各类内存接口速率.md",
+    "Notes/006-ai/qualcomm.md",
+    "Notes/006-ai/llama.md",
+    "Notes/006-ai/index.md",
     "Notes/006-ai/assets/Pasted image 20240613174348.png",
     "Notes/006-ai/assets/Pasted image 20240613173926.png",
     "Notes/006-ai/assets/Pasted image 20240613173706.png",
@@ -158,12 +161,10 @@
     "Notes/006-ai/assets/Pasted image 20240613160621.png",
     "Notes/006-ai/assets/Pasted image 20240613160328.png",
     "assets/Pasted.md",
-    "Notes/006-ai/AI相关各类内存接口速率.md",
     "Notes/006-ai/assets/Pasted image 20240613160014.png",
     "Notes/006-ai/assets/Pasted image 20240613120743.png",
     "Notes/006-ai/assets/JESD79-3E.pdf",
     "Notes/006-ai/assets/JESD79-4.pdf",
-    "Notes/006-ai/assets/Pasted image 20240613114903.png",
     "Notes/006-ai/assets/JESD239.01.pdf",
     "未命名.canvas",
     "Notes/005-algorithm/quick_sort.md",
@@ -173,13 +174,10 @@
     "Notes/006-ai/assets",
     "Notes/002-android/kotlin.md",
     "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
-    "Notes/006-ai/llama.md",
-    "Notes/006-ai/qualcomm.md",
     "Notes/998-zhihu/有益却无法去做.md",
     "Notes/998-zhihu/稀缺资源的配置能力.md",
     "Notes/998-zhihu/强大的自我.md",
     "Notes/007-economy/index.md",
-    "Notes/006-ai/index.md",
     "Notes/004-3d-rendering/egl/list.md",
     "attachments/index.md",
     "Notes/004-3d-rendering/egl/platform.md",
