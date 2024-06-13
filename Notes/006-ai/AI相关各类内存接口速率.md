@@ -7,7 +7,9 @@
 [jedec spec](assets/JESD79-3E.pdf)
 
 DDR3用于PC和服务器架构。
-一个Socket(CPU)可能有多个Memory Controller。一个Controller可以支持多个channel，通常就是dual channel。一个channel代表一组内存颗粒。
+一个Socket(CPU)可能有多个Memory Controller。一个Controller可以支持多个channel，通常就是dual channel。一个channel代表一个DIMM条。一个DIMM条可以有多个rank，通常是两个。每个rank是一组内存颗粒。一个channel上的所有内存颗粒共享数据总线，所以同一个channel上有多个rank并不会增加内存带宽，它的作用更多的是增加内存密度。
+每个内存颗粒都有一个CS#，即片选引脚。内存控制器能过将这个引脚置高来选择这个rank。
+所以对于DDR
 ### Addressing
 
 ![[assets/Pasted image 20240613120743.png]]
