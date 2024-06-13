@@ -5,7 +5,8 @@ title: AI相关各类内存接口速率
 
 
 
-GTK780 ![[assets/Pasted image 20240613160328.png]] 
+ 
+![GTK780](assets/Pasted image 20240613160328.png)
 
 
 # DDR
@@ -89,13 +90,15 @@ GDDR就是更高速的DDR, 它的本质是 Quad Data Rate或Octal Data Rate(WCK#
 
 ## GDDR6
 
-![](assets/JESD250D.pdf)
+[jedec spec](assets/JESD250D.pdf)
 
 
 ### 典型显卡解读
 
 RTX 2060数据：（[来源](https://www.techpowerup.com/gpu-specs/geforce-rtx-2060.c3310)）
+
 ![](assets/Pasted image 20240613162001.png)
+
 CK# 1.75GHz
 WK# 3.5GHz
 data rate per pin:  3.5GHz * 4(quad data rate) = 14Gbps
@@ -104,17 +107,27 @@ number of chips: 192/32 = 6
 total bandwidth: 54GB/s * 6 = 336GB/s
 
 这个参数匹配下面的[芯片](https://www.anandtech.com/show/12345/sk-hynix-lists-gddr6-memory-as-available-now)：
+
 ![](assets/Pasted image 20240613172020.png)
+
 显卡上有6颗芯片也符合从[图](https://www.techpowerup.com/gpu-specs/geforce-rtx-2060.c3310#gallery-7)上看到的：
+
 ![](assets/Pasted image 20240613172130.png)
 
 ## GDDR6W
 
 https://semiconductor.samsung.com/news-events/tech-blog/a-bridge-between-worlds-how-samsungs-gddr6w-is-creating-immersive-vr-with-powerful-graphics-memory/
 相比GDDR6, 两层，64根线。
+
 ![](assets/Pasted image 20240613173706.png)
-![](assets/Pasted image 20240613173926.png) 与HBM2E的区别
+
+![](assets/Pasted image 20240613173926.png) 
+
+
+与HBM2E的区别
+
 ## GDDR7
+
 [Jedec Spec](assets/JESD239.01.pdf)
 
 GDDR7把channel做为芯片内部概念，一个芯片有4个channel，一个channel有32个数据引脚，即单个芯片有128位宽。最高频率是32Gps，且每个时钟周期传输3bit数据。所以单颗GDDR7芯片的带宽为192GB/s。

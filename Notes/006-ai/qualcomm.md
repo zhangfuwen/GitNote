@@ -1,3 +1,6 @@
+---
+title: 高通DSP编程笔记
+---
 # qualcomm dsp
 
 SDK position:

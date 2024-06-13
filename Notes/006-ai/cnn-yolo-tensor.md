@@ -1,7 +1,5 @@
 ---
-
-title: AI入门 CNN-Yolo-Tensor
-
+title: AI入门： CNN-Yolo-Tensor分别是什么含义
 ---
 
 ## Yolo

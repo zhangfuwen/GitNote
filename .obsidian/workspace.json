@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "Notes/006-ai/AI相关各类内存接口速率.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": true
               }
             }
@@ -65,12 +65,11 @@
               "state": {}
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 427.5
   },
   "right": {
     "id": "33e6a9ce37303beb",
@@ -139,7 +138,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -157,15 +156,22 @@
   },
   "active": "ec972c18dd72d892",
   "lastOpenFiles": [
+    "未命名.canvas",
+    "Notes/001-modern-computing/022-modern-gpu-3.md",
     "Notes/001-modern-computing/023-memory.md",
+    "Notes/005-algorithm/quick_sort.md",
+    "Notes/005-algorithm/index.md",
+    "Notes/005-algorithm/fuzzy_search.md",
+    "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
     "Notes/006-ai/AI相关各类内存接口速率.md",
+    "Notes/006-ai/cnn-yolo-tensor.md",
+    "Notes/006-ai/qualcomm.md",
+    "Notes/006-ai/llama.md",
+    "Notes/006-ai/img.png",
+    "Notes/006-ai/index.md",
     "Notes/006-ai/assets/Pasted image 20240613191023.png",
     "Notes/006-ai/assets/JESD250D.pdf",
     "howto.md",
-    "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
-    "Notes/006-ai/qualcomm.md",
-    "Notes/006-ai/llama.md",
-    "Notes/006-ai/index.md",
     "Notes/006-ai/assets/Pasted image 20240613174348.png",
     "Notes/006-ai/assets/Pasted image 20240613173926.png",
     "Notes/006-ai/assets/Pasted image 20240613173706.png",
@@ -175,15 +181,11 @@
     "Notes/006-ai/assets/Pasted image 20240613160621.png",
     "Notes/006-ai/assets/Pasted image 20240613160328.png",
     "assets/Pasted.md",
-    "Notes/006-ai/assets/Pasted image 20240613160014.png",
     "Notes/006-ai/assets/JESD79-3E.pdf",
     "Notes/006-ai/assets/JESD79-4.pdf",
     "Notes/006-ai/assets/JESD239.01.pdf",
-    "未命名.canvas",
-    "Notes/005-algorithm/quick_sort.md",
     "Notes/cheatsheets.md",
     "Notes/assets",
-    "Notes/006-ai/cnn-yolo-tensor.md",
     "Notes/006-ai/assets",
     "Notes/002-android/kotlin.md",
     "Notes/998-zhihu/有益却无法去做.md",
@@ -193,7 +195,6 @@
     "Notes/004-3d-rendering/egl/list.md",
     "attachments/index.md",
     "Notes/004-3d-rendering/egl/platform.md",
-    "Notes/005-algorithm/fuzzy_search.md",
     "2024-05-06.md"
   ]
 }
