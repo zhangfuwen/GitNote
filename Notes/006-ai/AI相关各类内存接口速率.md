@@ -34,7 +34,7 @@ DDR3用于PC和服务器架构。
 
 #  GDDR
 
-RTX 4090有24颗 GDDR6X芯片(16Gb density)，u
+RTX 4090有24颗 GDDR6X芯片(16Gb density)，总容量48GB，
 
 
 GDDR就是更高速的DDR,
