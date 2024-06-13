@@ -6,9 +6,11 @@
 
 [jedec spec](assets/JESD79-3E.pdf)
 
+DDR3用于PC和服务器架构。
+一个Socket(CPU)可能有多个Memory Controller。一个Controller可以支持多个channel，通常就是dual channel。一个channel代表一组内存颗粒。
 ### Addressing
 
-
+![[assets/Pasted image 20240613120743.png]]
 ## DDR4 
 
 [jedec spec](assets/JESD79-4.pdf)
