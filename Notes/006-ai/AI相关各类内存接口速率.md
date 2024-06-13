@@ -3,11 +3,11 @@
 # DDR
 
 
-| Generation | 时钟频率              | MT/s(clock rate的二倍) | burst chop | burst length | per chip data width |
-| ---------- | ----------------- | ------------------- | ---------- | ------------ | ------------------- |
-| DDR3       | 800MHz ~  1600MHz | 1600MT/s ~ 3200MT/s | 4          | 8            | x4, x8, x16         |
-| DDR4       | 1066MHz ~ 2666MHz | 2133MT/s ~ 5333MT/s | 4          | 8            | x4, x8, x16         |
-| DDR5       | 2000MHz ~ 4000MHz | 4GT/s ~ 8GT/s       | 8          | 16           | x32+x8 ECC          |
+| Generation | 时钟频率              | MT/s(clock rate的二倍) | burst chop | burst length | per chip data width | per channel (64bit) band width |
+| ---------- | ----------------- | ------------------- | ---------- | ------------ | ------------------- | ------------------------------ |
+| DDR3       | 800MHz ~  1600MHz | 1600MT/s ~ 3200MT/s | 4          | 8            | x4, x8, x16         | 25.6 GB/s                      |
+| DDR4       | 1066MHz ~ 2666MHz | 2133MT/s ~ 5333MT/s | 4          | 8            | x4, x8, x16         | 42.6 GB/s                      |
+| DDR5       | 2000MHz ~ 4000MHz | 4GT/s ~ 8GT/s       | 8          | 16           | x32+x8 ECC          | 64 GB/s                        |
 
 
 ## DDR3
@@ -34,6 +34,8 @@ DDR3用于PC和服务器架构。
 
 #  GDDR
 
+RTX 4090有24颗 GDDR6X芯片(16Gb density)，u
+
 
 GDDR就是更高速的DDR,
 
@@ -45,6 +47,8 @@ GDDR就是更高速的DDR,
 |                |                      |               |          |         |           |
 ## GDDR7
 [Jedec Spec](assets/JESD239.01.pdf)
+
+与DDR不同，GDDR把channel做为芯片内部概念，一个芯片有4个channel，一个channel有32个数据引脚，即单个芯片有128位宽。最高频率是32Gps，且每个时钟周期传输3bit数据。所以单颗GDDR7芯片的带宽为192GB/s。
 
 主要参数：
 ![[assets/Pasted image 20240613112549.png]]
