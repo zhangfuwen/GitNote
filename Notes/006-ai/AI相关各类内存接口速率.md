@@ -100,7 +100,12 @@ GDDR6分GDDR6和GDDR6X。GDDR6X在GDDR6的基础上，每个时钟周期传输�
 
 RTX 2060数据：（[来源](https://www.techpowerup.com/gpu-specs/geforce-rtx-2060.c3310)）
 ![[assets/Pasted image 20240613162001.png]]
-CK# 1750MHz
+CK# 1.75GHz
+WK# 3.5GHz
+data rate per pin:  7Gbps
+per chip. bandwidth(16 pins): 7Gbps * 16 / 8bits per byte = 14GB/s
+number of chips: 192/16 = 12
+total bandwidth: 14GB/s * 12 = 168GB/s
 
 ## GDDR7
 [Jedec Spec](assets/JESD239.01.pdf)
