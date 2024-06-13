@@ -17,7 +17,10 @@ GDDR就是更高速的DDR,
 |                |                      |               |          |         |
 |                |                      |               |          |         |
 ## GDDR7
-![[assets/JESD239.01.pdf]]
+[[assets/JESD239.01.pdf]]
+
+主要参数：
+![[assets/Pasted image 20240613112549.png]]
 ### GDDR7的单芯片192GB/s计算方法
 
 根据提供的搜索结果,192GB/s这个带宽数值是针对GDDR7显存标准中每个单个GDDR7内存芯片的理论峰值带宽。具体来说:
