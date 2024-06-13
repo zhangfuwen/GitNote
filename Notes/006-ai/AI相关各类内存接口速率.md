@@ -50,6 +50,8 @@ DDR3用于PC和服务器架构。
 
 #  GDDR
 
+![[assets/Pasted image 20240613174348.png]]
+
 RTX 4090有24颗 GDDR6X芯片(16Gb density)，总容量48GB，
 
 
