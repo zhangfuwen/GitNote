@@ -138,7 +138,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
@@ -154,7 +154,7 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "ec972c18dd72d892",
+  "active": "6bb194fee9ede672",
   "lastOpenFiles": [
     "未命名.canvas",
     "Notes/001-modern-computing/022-modern-gpu-3.md",
