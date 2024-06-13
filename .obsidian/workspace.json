@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
+                "file": "howto.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
+                "file": "howto.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
+                "file": "howto.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Notes/006-ai/AI相关各类内存接口速率.md"
+                "file": "howto.md"
               }
             }
           }
@@ -148,9 +148,9 @@
   },
   "active": "e4a343ea4e9e59e8",
   "lastOpenFiles": [
+    "Notes/006-ai/AI相关各类内存接口速率.md",
     "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
     "howto.md",
-    "Notes/006-ai/AI相关各类内存接口速率.md",
     "Notes/006-ai/qualcomm.md",
     "Notes/006-ai/llama.md",
     "Notes/006-ai/index.md",
