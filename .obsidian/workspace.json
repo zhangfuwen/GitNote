@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "d25153f7b6741c0c",
+        "id": "f021bd8d7e327b35",
         "type": "tabs",
         "children": [
           {
-            "id": "e4a343ea4e9e59e8",
+            "id": "ec972c18dd72d892",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "howto.md",
+                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "howto.md",
+                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "howto.md",
+                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "howto.md"
+                "file": "Notes/006-ai/AI相关各类内存接口速率.md"
               }
             }
           }
@@ -146,11 +146,12 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "e4a343ea4e9e59e8",
+  "active": "ec972c18dd72d892",
   "lastOpenFiles": [
+    "Notes/006-ai/assets/JESD250D.pdf",
+    "howto.md",
     "Notes/006-ai/AI相关各类内存接口速率.md",
     "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
-    "howto.md",
     "Notes/006-ai/qualcomm.md",
     "Notes/006-ai/llama.md",
     "Notes/006-ai/index.md",
