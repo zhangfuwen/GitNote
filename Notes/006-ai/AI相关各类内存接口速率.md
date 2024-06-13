@@ -2,6 +2,14 @@
 
 # DDR
 
+## DDR4 
+
+[jedec spec](assets/JESD79-4.pdf)
+
+### Addressing
+
+![[assets/Pasted image 20240613114903.png]]
+
 # LPDDR
 
 
