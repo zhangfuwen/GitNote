@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "howto.md",
+                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "howto.md",
+                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "howto.md",
+                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "howto.md"
+                "file": "Notes/006-ai/AI相关各类内存接口速率.md"
               }
             }
           }
@@ -148,6 +148,8 @@
   },
   "active": "e4a343ea4e9e59e8",
   "lastOpenFiles": [
+    "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
+    "howto.md",
     "Notes/006-ai/AI相关各类内存接口速率.md",
     "Notes/006-ai/qualcomm.md",
     "Notes/006-ai/llama.md",
@@ -173,7 +175,6 @@
     "Notes/006-ai/cnn-yolo-tensor.md",
     "Notes/006-ai/assets",
     "Notes/002-android/kotlin.md",
-    "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
     "Notes/998-zhihu/有益却无法去做.md",
     "Notes/998-zhihu/稀缺资源的配置能力.md",
     "Notes/998-zhihu/强大的自我.md",

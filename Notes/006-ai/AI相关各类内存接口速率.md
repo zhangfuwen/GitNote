@@ -72,7 +72,7 @@ GDDR就是更高速的DDR,
 |                                                            |               |                      |                   |               |          |         |                   |
 |                                                            |               |                      |                   |               |          |         |                   |
 |                                                            |               |                      |                   |               |          |         |                   |
-### GDDR5
+## GDDR5
 
 
 | key                    | typical value                     | value range |
@@ -92,7 +92,7 @@ GDDR就是更高速的DDR,
 总带宽288.4GB/s，算出单颗288.4/12=24GB/s。
 单针脚带宽6Gbps，算出每颗芯片引脚数24GB/s / 6Gbps = 16个。
 单针脚带宽6Gbps，则CK#频率1.25GHz, WK#频率2.5GHz。
-### GDDR6
+## GDDR6
 
 
 GDDR6分GDDR6和GDDR6X。GDDR6X在GDDR6的基础上，每个时钟周期传输的不再是2bits数据，而是4bits数据。原因是它在一个时钟的上升沿和下降沿各采样一次数据，一次采样的电平不再是两个电平，而是4个电平，即一次采样采2bits数据，这种技术叫PAM4。还有一种PAM3技术，是一个时钟周期传输3bits数据。
