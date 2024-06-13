@@ -3,18 +3,7 @@ title: AI相关各类内存接口速率
 ---
 # 汇总
 
-| GPU | vRAM | Memory interface width |. Memory Bandwidth ||
-| --- | --- | --- | --- | --- |
-|P4000|8GB GDDR5|256-bit|243 GB/s||
-|P5000|16GB GDDR5X|256-bit|288 GB/s||
-|P6000|24GB GDDR5X|384-bit|432 GB/s||
-|V100|32GB HBM2|4096-bit|900 GB/s||
-|RTX4000|8GB GDDR6|256-bit|416 GB/s||
-|RTX5000|16GB GDDR6|256-bit|448 GB/s||
-|A4000|16GB GDDR6|256-bit|448 GB/s||
-|A5000|24GB GDDR6|384-bit|768 GB/s||
-|A6000|48GB GDDR6|384-bit|768 GB/s||
-|A100|40GB HBM2|5120-bit|1555 GB/s||
+
 
 GTK780 ![[assets/Pasted image 20240613160328.png]] 
 
