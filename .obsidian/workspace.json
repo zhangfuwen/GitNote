@@ -11,14 +11,11 @@
             "id": "b4fac4c2554c3eea",
             "type": "leaf",
             "state": {
-              "type": "canvas",
+              "type": "markdown",
               "state": {
-                "file": "未命名.canvas",
-                "viewState": {
-                  "x": 0,
-                  "y": 0,
-                  "zoom": 0
-                }
+                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
+                "mode": "source",
+                "source": false
               }
             }
           }
@@ -88,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "未命名.canvas",
+                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -105,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "未命名.canvas",
+                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -128,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "未命名.canvas"
+                "file": "Notes/006-ai/AI相关各类内存接口速率.md"
               }
             }
           }
@@ -150,10 +147,11 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "1811bdc6bf476244",
+  "active": "b4fac4c2554c3eea",
   "lastOpenFiles": [
-    "Notes/005-algorithm/quick_sort.md",
     "未命名.canvas",
+    "Notes/006-ai/AI相关各类内存接口速率.md",
+    "Notes/005-algorithm/quick_sort.md",
     "Notes/cheatsheets.md",
     "Notes/assets/img.png",
     "Notes/assets",
