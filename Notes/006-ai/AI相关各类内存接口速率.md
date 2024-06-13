@@ -84,24 +84,15 @@ GDDR就是更高速的DDR, 它的本质是 Quad Data Rate或Octal Data Rate(WCK#
 ## GDDR6
 
 ![[assets/JESD250D.pdf]]
-GDDR6分GDDR6和GDDR6X。GDDR6X在GDDR6的基础上，每个时钟周期传输的不再是2bits数据，而是4bits数据。原因是它在一个时钟的上升沿和下降沿各采样一次数据，一次采样的电平不再是两个电平，而是4个电平，即一次采样采2bits数据，这种技术叫PAM4。还有一种PAM3技术，是一个时钟周期传输3bits数据。
 
-| key               | typical value                     |     |
-| ----------------- | --------------------------------- | --- |
-| **CK#时钟信号**：      | 1GHz                              |     |
-| **WCK#时钟信号**：<br> | 2GHz (二倍CK#)                      |     |
-| **DATA信号**：       | 16Gbps(WCK#的上升沿和下降沿各采样一次)         |     |
-| **单芯片数据引脚个数**:    | 32                                |     |
-| **单芯片带宽**:        | 5Gbps * 32 = 160Gbps = 20GB/s<br> |     |
-|                   |                                   |     |
-|                   |                                   |     |
+
 ### 典型显卡解读
 
 RTX 2060数据：（[来源](https://www.techpowerup.com/gpu-specs/geforce-rtx-2060.c3310)）
 ![[assets/Pasted image 20240613162001.png]]
 CK# 1.75GHz
 WK# 3.5GHz
-data rate per pin:  3.5GHz * 2(dual data rate) * 2(PAM4) = 14Gbps
+data rate per pin:  3.5GHz * 4(quad data rate) = 14Gbps
 per chip. bandwidth(16 pins): 14Gbps * 32 / 8bits per byte = 54GB/s
 number of chips: 192/32 = 6
 total bandwidth: 54GB/s * 6 = 336GB/s
@@ -119,7 +110,7 @@ https://semiconductor.samsung.com/news-events/tech-blog/a-bridge-between-worlds-
 ## GDDR7
 [Jedec Spec](assets/JESD239.01.pdf)
 
-与DDR不同，GDDR把channel做为芯片内部概念，一个芯片有4个channel，一个channel有32个数据引脚，即单个芯片有128位宽。最高频率是32Gps，且每个时钟周期传输3bit数据。所以单颗GDDR7芯片的带宽为192GB/s。
+GDDR7把channel做为芯片内部概念，一个芯片有4个channel，一个channel有32个数据引脚，即单个芯片有128位宽。最高频率是32Gps，且每个时钟周期传输3bit数据。所以单颗GDDR7芯片的带宽为192GB/s。
 
 主要参数：
 ![[assets/Pasted image 20240613112549.png]]
@@ -134,7 +125,15 @@ https://semiconductor.samsung.com/news-events/tech-blog/a-bridge-between-worlds-
 因此,如果一个GDDR7芯片有32个数据引脚,每个引脚32Gbps,4个独立通道,则该芯片的理论带宽为:  
 32 (引脚数) x 32Gbps (每引脚数据率) x 4 (通道数) x 1.5 (PAM3编码效率) = 192GB/s所以192GB/s是基于GDDR7标准中规定的最大配置时,单个GDDR7芯片可实现的理论峰值带宽。[](https://pcr.cloud-mercato.com/providers/digitalocean/flavors/s-32vcpu-192gb)[](https://ieeexplore.ieee.org/document/9731621)这一带宽数值相比上一代GDDR6有了翻番的提升,主要得益于PAM3编码、更高的数据速率和增加的独立通道数等技术创新。
 # HBM
+HBM是位宽高，但是单引脚速度慢。采用堆叠方式，放了好多DRAM。
+![[assets/Pasted image 20240613173926.png]] 与HBM2E的区别
 
 # PCIe
+
+PCIe 3.0是8GT/s
+PCIe 4.0是16GT/s
+PCIe 5.0是32GT/s
+
+PCIe 5.0一个link最大支持32个lane，带宽为`32*32/8 = 128GB/s`。
 
 # NVLink
