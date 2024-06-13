@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "8fa9112d513a19bc",
+        "id": "707dd53883113890",
         "type": "tabs",
         "children": [
           {
-            "id": "b4fac4c2554c3eea",
+            "id": "5f154c0bd8902325",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -131,7 +131,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -148,12 +148,12 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "b4fac4c2554c3eea",
+  "active": "c5e653a369892aee",
   "lastOpenFiles": [
+    "Notes/006-ai/AI相关各类内存接口速率.md",
     "Notes/006-ai/assets/Pasted image 20240613112549.png",
     "Notes/006-ai/assets/JESD239.01.pdf",
     "未命名.canvas",
-    "Notes/006-ai/AI相关各类内存接口速率.md",
     "Notes/005-algorithm/quick_sort.md",
     "Notes/cheatsheets.md",
     "Notes/assets/img.png",
