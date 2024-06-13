@@ -129,9 +129,17 @@
                 "file": "Notes/006-ai/AI相关各类内存接口速率.md"
               }
             }
+          },
+          {
+            "id": "6bb194fee9ede672",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {}
+            }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
