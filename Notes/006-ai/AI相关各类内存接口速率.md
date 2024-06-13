@@ -28,21 +28,22 @@ DDR3用于PC和服务器架构。
 所以对于DDR3来说，rank是一个外部概念，但它通过片选信号还支持这个外部概念。
 ### Addressing
 
-![[assets/Pasted image 20240613120743.png]]
+![](assets/Pasted image 20240613120743.png)
+
 ## DDR4 
 
 [jedec spec](assets/JESD79-4.pdf)
 
 ### Addressing
 
-![[assets/Pasted image 20240613114903.png]]
+![](assets/Pasted image 20240613114903.png)
 
 # LPDDR
 
 
 #  GDDR
 
-![[assets/Pasted image 20240613174348.png]]
+![](assets/Pasted image 20240613174348.png)
 
 RTX 4090有24颗 GDDR6X芯片(16Gb density)，总容量48GB，
 
@@ -61,6 +62,7 @@ GDDR就是更高速的DDR, 它的本质是 Quad Data Rate或Octal Data Rate(WCK#
 |                                                            |               |                      |                   |               |          |         |                   |
 |                                                            |               |                      |                   |               |          |         |                   |
 |                                                            |               |                      |                   |               |          |         |                   |
+
 ## GDDR5
 
 
@@ -73,23 +75,27 @@ GDDR就是更高速的DDR, 它的本质是 Quad Data Rate或Octal Data Rate(WCK#
 | **单芯片带宽**:             | 5Gbps * 32 = 160Gbps = 20GB/s<br> |             |
 |                        |                                   |             |
 |                        |                                   |             |
+
 ### 典型显卡解读
 
-![[assets/Pasted image 20240613160621.png]]
- ![[assets/Pasted image 20240613160328.png]]
+![](assets/Pasted image 20240613160621.png)
+
+ ![](assets/Pasted image 20240613160328.png)
+ 
 单芯片32位宽，总384位宽，算出芯片个数为12颗。即图中上、左、右各4颗。
 总带宽288.4GB/s，算出单颗288.4/12=24GB/s。
 单针脚带宽6Gbps，算出每颗芯片引脚数24GB/s / 6Gbps = 16个。
 单针脚带宽6Gbps，则CK#频率1.25GHz, WK#频率2.5GHz。
+
 ## GDDR6
 
-![[assets/JESD250D.pdf]]
+![](assets/JESD250D.pdf)
 
 
 ### 典型显卡解读
 
 RTX 2060数据：（[来源](https://www.techpowerup.com/gpu-specs/geforce-rtx-2060.c3310)）
-![[assets/Pasted image 20240613162001.png]]
+![](assets/Pasted image 20240613162001.png)
 CK# 1.75GHz
 WK# 3.5GHz
 data rate per pin:  3.5GHz * 4(quad data rate) = 14Gbps
@@ -98,22 +104,23 @@ number of chips: 192/32 = 6
 total bandwidth: 54GB/s * 6 = 336GB/s
 
 这个参数匹配下面的[芯片](https://www.anandtech.com/show/12345/sk-hynix-lists-gddr6-memory-as-available-now)：
-![[assets/Pasted image 20240613172020.png]]
+![](assets/Pasted image 20240613172020.png)
 显卡上有6颗芯片也符合从[图](https://www.techpowerup.com/gpu-specs/geforce-rtx-2060.c3310#gallery-7)上看到的：
-![[assets/Pasted image 20240613172130.png]]
+![](assets/Pasted image 20240613172130.png)
+
 ## GDDR6W
 
 https://semiconductor.samsung.com/news-events/tech-blog/a-bridge-between-worlds-how-samsungs-gddr6w-is-creating-immersive-vr-with-powerful-graphics-memory/
 相比GDDR6, 两层，64根线。
-![[assets/Pasted image 20240613173706.png]]
-![[assets/Pasted image 20240613173926.png]] 与HBM2E的区别
+![](assets/Pasted image 20240613173706.png)
+![](assets/Pasted image 20240613173926.png) 与HBM2E的区别
 ## GDDR7
 [Jedec Spec](assets/JESD239.01.pdf)
 
 GDDR7把channel做为芯片内部概念，一个芯片有4个channel，一个channel有32个数据引脚，即单个芯片有128位宽。最高频率是32Gps，且每个时钟周期传输3bit数据。所以单颗GDDR7芯片的带宽为192GB/s。
 
 主要参数：
-![[assets/Pasted image 20240613112549.png]]
+![](assets/Pasted image 20240613112549.png)
 ### GDDR7的单芯片192GB/s计算方法
 
 根据提供的搜索结果,192GB/s这个带宽数值是针对GDDR7显存标准中每个单个GDDR7内存芯片的理论峰值带宽。具体来说:
@@ -126,7 +133,7 @@ GDDR7把channel做为芯片内部概念，一个芯片有4个channel，一个cha
 32 (引脚数) x 32Gbps (每引脚数据率) x 4 (通道数) x 1.5 (PAM3编码效率) = 192GB/s所以192GB/s是基于GDDR7标准中规定的最大配置时,单个GDDR7芯片可实现的理论峰值带宽。[](https://pcr.cloud-mercato.com/providers/digitalocean/flavors/s-32vcpu-192gb)[](https://ieeexplore.ieee.org/document/9731621)这一带宽数值相比上一代GDDR6有了翻番的提升,主要得益于PAM3编码、更高的数据速率和增加的独立通道数等技术创新。
 # HBM
 HBM是位宽高，但是单引脚速度慢。采用堆叠方式，放了好多DRAM。
-![[assets/Pasted image 20240613173926.png]] 与HBM2E的区别
+![](assets/Pasted image 20240613173926.png) 与HBM2E的区别
 
 # PCIe
 
@@ -137,3 +144,24 @@ PCIe 5.0是32GT/s
 PCIe 5.0一个link最大支持32个lane，带宽为`32*32/8 = 128GB/s`。
 
 # NVLink
+
+2017年，Nvidia推出了第二代NVLink技术。两颗GPU V100之间含6条NVLink, 每个link中包含8个lane, 每条lane的速率提升到25Gb/s, 整个系统的双向带宽变为300GB/s，带宽是NVLink 1.0的近2倍。
+
+2020年，NVLink 3.0技术诞生，两颗GPU A100芯片之间存在12条NVLink, 每条NVLink含有4条lane, 单条lane的速率为50Gb/s, 因此整个系统的双向带宽提升到600GB/s，总带宽相比NVLink 2.0提升了1倍。由于NVLink的数目增加了，NVSwitch的port数目也相应增加到36个，每个port的速率为50GB/s。由8颗GPU A100与4个NVSwitch组成了DGX A100, 如下图所示。
+![](assets/Pasted image 20240613191023.png)
+
+2022年，NVLink技术升级到第四代，两个GPU H100芯片间通过18条NVLink互联，每条link中含2条lane, 每条lane支持100Gb/s PAM4的速率，因此双向总带宽提升到900GB/s。NVSwitch也升级到第三代，每个NVSwitch支持64个port，每个port的速率为50GB/s。DGX H100由8颗H100芯片与4颗NVSwitch芯片构成，如下图所示。图中每个NVSwitch的另一侧与多个800G OSFP光模块相连。以左侧第一个NVSwitch为例，其与GPU相连侧的单向总带宽为4Tbps (20NVLink*200Gbps)，与光模块相连侧的总带宽为也为4Tbps (5*800Gbps)，两者大小相等， 是非阻塞(non-blocking)网络。需要注意的是，光模块中的带宽是单向带宽，而在AI芯片中一般习惯使用双向带宽。
+
+![](https://developer.qcloudimg.com/http-save/yehe-7659610/58dc9107f1f996ebc9905bd4e7baf089.png)
+
+(图片来自https://blog.apnic.net/2023/08/10/large-language-models-the-hardware-connection/)
+
+下表整理了每一代NVLink的指标参数。
+
+![](https://developer.qcloudimg.com/http-save/yehe-7659610/8a519ba9a12693c97db961ca5746102c.png)
+
+而PCIe每一代的参数如下表所示，
+
+![](https://developer.qcloudimg.com/http-save/yehe-7659610/91e527e1413711e2fb23882ac0c75335.png)
+
+从单条lane的速率来看，NVLink整体比同一时期的PCIe的指标高1倍左右，而总带宽的优势更是明显，NVLink是PCIe总带宽的5倍左右。一直在超越，从未停止。

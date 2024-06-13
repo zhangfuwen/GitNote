@@ -15,7 +15,7 @@
               "state": {
                 "file": "Notes/006-ai/AI相关各类内存接口速率.md",
                 "mode": "source",
-                "source": false
+                "source": true
               }
             }
           }
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#cmake",
+                "query": "DDR",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -65,7 +65,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -148,9 +149,11 @@
   },
   "active": "ec972c18dd72d892",
   "lastOpenFiles": [
+    "Notes/001-modern-computing/023-memory.md",
+    "Notes/006-ai/AI相关各类内存接口速率.md",
+    "Notes/006-ai/assets/Pasted image 20240613191023.png",
     "Notes/006-ai/assets/JESD250D.pdf",
     "howto.md",
-    "Notes/006-ai/AI相关各类内存接口速率.md",
     "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
     "Notes/006-ai/qualcomm.md",
     "Notes/006-ai/llama.md",
@@ -165,7 +168,6 @@
     "Notes/006-ai/assets/Pasted image 20240613160328.png",
     "assets/Pasted.md",
     "Notes/006-ai/assets/Pasted image 20240613160014.png",
-    "Notes/006-ai/assets/Pasted image 20240613120743.png",
     "Notes/006-ai/assets/JESD79-3E.pdf",
     "Notes/006-ai/assets/JESD79-4.pdf",
     "Notes/006-ai/assets/JESD239.01.pdf",
