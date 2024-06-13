@@ -2,6 +2,13 @@
 
 # DDR
 
+## DDR3
+
+[jedec spec](assets/JESD79-3E.pdf)
+
+### Addressing
+
+
 ## DDR4 
 
 [jedec spec](assets/JESD79-4.pdf)
