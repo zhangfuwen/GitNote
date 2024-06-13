@@ -55,17 +55,17 @@ RTX 4090有24颗 GDDR6X芯片(16Gb density)，总容量48GB，
 
 GDDR就是更高速的DDR,
 
-| ==Generation==                                             | CK# freq      | data rate in ref CK# | ==单引脚速率==            | 单芯片（DRAM)数据位宽 | 单芯片支持通道数 | 单芯片最大带宽 | 显卡可集成几块芯片         |
-| ---------------------------------------------------------- | ------------- | -------------------- | -------------------- | ------------- | -------- | ------- | ----------------- |
-| [GDDR5](https://en.wikipedia.org/wiki/GDDR5_SDRAM)         | 1~1.5GHz      | Quad                 | 4~6Gbps              | 16/32         | N.A.     | 24GB/s  | GTX 780集成16颗      |
-| [GDDR5X](https://en.wikipedia.org/wiki/GDDR5_SDRAM#GDDR5X) | 1.125~1.25GHz | Octal(PAM4)          | 10~14Gbps            | 16/32         | N.A.     | 56GB/s  |                   |
-| GDDR6                                                      |               | Octal(PAM4)          | 14Gbps\16Gbps\20Gbps | 32            |          | 64GB/   | RTX 2060有12颗16位芯片 |
-| GDDR6X                                                     |               |                      |                      |               |          |         |                   |
-| GDDR7                                                      |               |                      | **32**Gbps\48GBps    | 64            | 4        | 192GB/s |                   |
-|                                                            |               |                      |                      |               |          |         |                   |
-|                                                            |               |                      |                      |               |          |         |                   |
-|                                                            |               |                      |                      |               |          |         |                   |
-|                                                            |               |                      |                      |               |          |         |                   |
+| ==Generation==                                             | CK# freq      | data rate in ref CK# | ==单引脚速率==         | 单芯片（DRAM)数据位宽 | 单芯片支持通道数 | 单芯片最大带宽 | 显卡可集成几块芯片         |
+| ---------------------------------------------------------- | ------------- | -------------------- | ----------------- | ------------- | -------- | ------- | ----------------- |
+| [GDDR5](https://en.wikipedia.org/wiki/GDDR5_SDRAM)         | 1~1.5GHz      | Quad                 | 4~6Gbps           | 16/32         | N.A.     | 24GB/s  | GTX 780集成16颗      |
+| [GDDR5X](https://en.wikipedia.org/wiki/GDDR5_SDRAM#GDDR5X) | 1.125~1.25GHz | Octal(PAM4)          | 10~14Gbps         | 16/32         | N.A.     | 56GB/s  |                   |
+| GDDR6                                                      | 1.25GHz       | Octal(PAM4)          | 14Gbps\16Gbps     | 32            | N.A.     | 64GB    | RTX 2060有12颗16位芯片 |
+| GDDR6X                                                     |               | Octal(PAM4)<br>      | 19~21Gbps         | 32            |          | 84GB/s  |                   |
+| GDDR7                                                      |               |                      | **32**Gbps\48Gbps | 64            | 4        | 192GB/s |                   |
+|                                                            |               |                      |                   |               |          |         |                   |
+|                                                            |               |                      |                   |               |          |         |                   |
+|                                                            |               |                      |                   |               |          |         |                   |
+|                                                            |               |                      |                   |               |          |         |                   |
 ### GDDR5
 
 
