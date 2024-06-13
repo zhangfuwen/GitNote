@@ -59,7 +59,8 @@ GDDR就是更高速的DDR,
 | ---------------------------------------------------------- | ------------- | -------------------- | -------------------- | ------------- | -------- | ------- | ----------------- |
 | [GDDR5](https://en.wikipedia.org/wiki/GDDR5_SDRAM)         | 1~1.5GHz      | Quad                 | 4~6Gbps              | 16/32         | N.A.     | 24GB/s  | GTX 780集成16颗      |
 | [GDDR5X](https://en.wikipedia.org/wiki/GDDR5_SDRAM#GDDR5X) | 1.125~1.25GHz | Octal(PAM4)          | 10~14Gbps            | 16/32         | N.A.     | 56GB/s  |                   |
-| GDDR6                                                      |               | Octal(PAM4)          | 14Gbps\16Gbps\20Gbps | 16/32         |          | 64GB/   | RTX 2060有12颗16位芯片 |
+| GDDR6                                                      |               | Octal(PAM4)          | 14Gbps\16Gbps\20Gbps | 32            |          | 64GB/   | RTX 2060有12颗16位芯片 |
+| GDDR6X                                                     |               |                      |                      |               |          |         |                   |
 | GDDR7                                                      |               |                      | **32**Gbps\48GBps    | 64            | 4        | 192GB/s |                   |
 |                                                            |               |                      |                      |               |          |         |                   |
 |                                                            |               |                      |                      |               |          |         |                   |
@@ -106,10 +107,14 @@ RTX 2060数据：（[来源](https://www.techpowerup.com/gpu-specs/geforce-rtx-2
 CK# 1.75GHz
 WK# 3.5GHz
 data rate per pin:  3.5GHz * 2(dual data rate) * 2(PAM4) = 14Gbps
-per chip. bandwidth(16 pins): 14Gbps * 16 / 8bits per byte = 28GB/s
-number of chips: 192/16 = 12
-total bandwidth: 28GB/s * 12 = 336GB/s
+per chip. bandwidth(16 pins): 14Gbps * 32 / 8bits per byte = 54GB/s
+number of chips: 192/32 = 6
+total bandwidth: 54GB/s * 6 = 336GB/s
 
+这个参数匹配下面的[芯片](https://www.anandtech.com/show/12345/sk-hynix-lists-gddr6-memory-as-available-now)：
+![[assets/Pasted image 20240613172020.png]]
+显卡上有6颗芯片也符合从[图](https://www.techpowerup.com/gpu-specs/geforce-rtx-2060.c3310#gallery-7)上看到的：
+![[assets/Pasted image 20240613172130.png]]
 ## GDDR7
 [Jedec Spec](assets/JESD239.01.pdf)
 
