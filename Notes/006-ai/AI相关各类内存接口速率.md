@@ -61,6 +61,7 @@ GDDR就是更高速的DDR,
 | [GDDR5X](https://en.wikipedia.org/wiki/GDDR5_SDRAM#GDDR5X) | 1.125~1.25GHz | Octal(PAM4)          | 10~14Gbps         | 16/32         | N.A.     | 56GB/s  |                   |
 | GDDR6                                                      | 1.25GHz       | Octal(PAM4)          | 14Gbps\16Gbps     | 32            | N.A.     | 64GB    | RTX 2060有12颗16位芯片 |
 | GDDR6X                                                     |               | Octal(PAM4)<br>      | 19~21Gbps         | 32            |          | 84GB/s  |                   |
+| GDDR6W                                                     |               |                      | 22Gbps            | 64            |          |         |                   |
 | GDDR7                                                      |               |                      | **32**Gbps\48Gbps | 64            | 4        | 192GB/s |                   |
 |                                                            |               |                      |                   |               |          |         |                   |
 |                                                            |               |                      |                   |               |          |         |                   |
@@ -115,6 +116,12 @@ total bandwidth: 54GB/s * 6 = 336GB/s
 ![[assets/Pasted image 20240613172020.png]]
 显卡上有6颗芯片也符合从[图](https://www.techpowerup.com/gpu-specs/geforce-rtx-2060.c3310#gallery-7)上看到的：
 ![[assets/Pasted image 20240613172130.png]]
+## GDDR6W
+
+https://semiconductor.samsung.com/news-events/tech-blog/a-bridge-between-worlds-how-samsungs-gddr6w-is-creating-immersive-vr-with-powerful-graphics-memory/
+相比GDDR6, 两层，64根线。
+![[assets/Pasted image 20240613173706.png]]
+![[assets/Pasted image 20240613173926.png]] 与HBM2E的区别
 ## GDDR7
 [Jedec Spec](assets/JESD239.01.pdf)
 
