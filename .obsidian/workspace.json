@@ -13,8 +13,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
-                "mode": "preview",
+                "file": "Notes/006-ai/a.puml.md",
+                "mode": "source",
                 "source": true
               }
             }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
+                "file": "Notes/006-ai/a.puml.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Notes/006-ai/AI相关各类内存接口速率.md",
+                "file": "Notes/006-ai/a.puml.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Notes/006-ai/AI相关各类内存接口速率.md"
+                "file": "Notes/006-ai/a.puml.md"
               }
             }
           },
@@ -142,7 +142,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -154,8 +155,12 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "6bb194fee9ede672",
+  "active": "ec972c18dd72d892",
   "lastOpenFiles": [
+    "Notes/006-ai/Apple调用路径猜测.md",
+    "Notes/006-ai/未命名.md",
+    "Notes/006-ai/a.puml.md",
+    "Notes/006-ai/AI相关各类内存接口速率.md",
     "未命名.canvas",
     "Notes/001-modern-computing/022-modern-gpu-3.md",
     "Notes/001-modern-computing/023-memory.md",
@@ -163,7 +168,6 @@
     "Notes/005-algorithm/index.md",
     "Notes/005-algorithm/fuzzy_search.md",
     "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
-    "Notes/006-ai/AI相关各类内存接口速率.md",
     "Notes/006-ai/cnn-yolo-tensor.md",
     "Notes/006-ai/qualcomm.md",
     "Notes/006-ai/llama.md",
