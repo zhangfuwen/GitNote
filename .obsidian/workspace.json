@@ -160,8 +160,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -173,7 +172,7 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "13d0fdb43a4a7f55",
+  "active": "ec972c18dd72d892",
   "lastOpenFiles": [
     "Notes/006-ai/Apple调用路径猜测.md",
     "Notes/006-ai/CLIP模型学习.md",
