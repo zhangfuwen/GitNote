@@ -18,8 +18,19 @@
                 "source": true
               }
             }
+          },
+          {
+            "id": "6b037caf961cf4cf",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.6.5"
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       },
       {
         "id": "aa5d29bb0427ae1f",
@@ -172,7 +183,7 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "ec972c18dd72d892",
+  "active": "6b037caf961cf4cf",
   "lastOpenFiles": [
     "Notes/006-ai/Apple调用路径猜测.md",
     "Notes/006-ai/CLIP模型学习.md",
