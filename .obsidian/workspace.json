@@ -13,26 +13,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Notes/006-ai/CLIP模型学习.md",
+                "file": "Notes/006-ai/模型学习技巧.md",
                 "mode": "source",
-                "source": true
-              }
-            }
-          }
-        ]
-      },
-      {
-        "id": "aa5d29bb0427ae1f",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "13d0fdb43a4a7f55",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Notes/006-ai/CLIP模型学习.md",
-                "mode": "preview",
                 "source": true
               }
             }
@@ -87,7 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 427.5
+    "width": 320.5
   },
   "right": {
     "id": "33e6a9ce37303beb",
@@ -103,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Notes/006-ai/CLIP模型学习.md",
+                "file": "Notes/006-ai/模型学习技巧.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -120,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Notes/006-ai/CLIP模型学习.md",
+                "file": "Notes/006-ai/模型学习技巧.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -143,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Notes/006-ai/CLIP模型学习.md"
+                "file": "Notes/006-ai/模型学习技巧.md"
               }
             }
           },
@@ -160,7 +142,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 229.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -174,8 +156,9 @@
   },
   "active": "ec972c18dd72d892",
   "lastOpenFiles": [
-    "Notes/006-ai/Apple调用路径猜测.md",
     "Notes/006-ai/CLIP模型学习.md",
+    "Notes/006-ai/模型学习技巧.md",
+    "Notes/006-ai/Apple调用路径猜测.md",
     "Notes/006-ai/AI相关各类内存接口速率.md",
     "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
     "Notes/006-ai/a.puml.md",
@@ -215,7 +198,6 @@
     "Notes/007-economy/index.md",
     "Notes/004-3d-rendering/egl/list.md",
     "attachments/index.md",
-    "Notes/004-3d-rendering/egl/platform.md",
-    "2024-05-06.md"
+    "Notes/004-3d-rendering/egl/platform.md"
   ]
 }
