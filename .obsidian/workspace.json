@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Notes/006-ai/环镜搭建.md",
+                "file": "Notes/006-ai/未命名.md",
                 "mode": "source",
                 "source": false
               }
@@ -98,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Notes/006-ai/环镜搭建.md",
+                "file": "Notes/006-ai/未命名.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Notes/006-ai/环镜搭建.md",
+                "file": "Notes/006-ai/未命名.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Notes/006-ai/环镜搭建.md"
+                "file": "Notes/006-ai/未命名.md"
               }
             }
           },
@@ -169,8 +169,8 @@
   },
   "active": "0c0d25faeebc32e8",
   "lastOpenFiles": [
-    "Notes/003-linux/bash/install brew on linux.md",
     "Notes/006-ai/环镜搭建.md",
+    "Notes/003-linux/bash/install brew on linux.md",
     "Notes/006-ai/未命名.md",
     "Notes/003-linux/bash/index.md",
     "Notes/006-ai/模型学习技巧.md",
