@@ -13,13 +13,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Notes/003-linux/bash/index.md",
+                "file": "Notes/006-ai/环镜搭建.md",
                 "mode": "source",
                 "source": true
               }
             }
+          },
+          {
+            "id": "0c0d25faeebc32e8",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Notes/006-ai/环镜搭建.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -85,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Notes/003-linux/bash/index.md",
+                "file": "Notes/006-ai/环镜搭建.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Notes/003-linux/bash/index.md",
+                "file": "Notes/006-ai/环镜搭建.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Notes/003-linux/bash/index.md"
+                "file": "Notes/006-ai/环镜搭建.md"
               }
             }
           },
@@ -154,8 +167,12 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "6bb194fee9ede672",
+  "active": "0c0d25faeebc32e8",
   "lastOpenFiles": [
+    "Notes/003-linux/bash/install brew on linux.md",
+    "Notes/006-ai/环镜搭建.md",
+    "Notes/006-ai/未命名.md",
+    "Notes/003-linux/bash/index.md",
     "Notes/006-ai/模型学习技巧.md",
     "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
     "Notes/006-ai/Apple调用路径猜测.md",
@@ -194,10 +211,6 @@
     "Notes/002-android/kotlin.md",
     "Notes/998-zhihu/有益却无法去做.md",
     "Notes/998-zhihu/稀缺资源的配置能力.md",
-    "Notes/998-zhihu/强大的自我.md",
-    "Notes/007-economy/index.md",
-    "Notes/004-3d-rendering/egl/list.md",
-    "attachments/index.md",
-    "Notes/004-3d-rendering/egl/platform.md"
+    "Notes/998-zhihu/强大的自我.md"
   ]
 }
