@@ -142,3 +142,7 @@ dd if=.. of=.. status=progress oflag=direct,sync bs=10M
      * [{{ file.path }}]({{ site.baseurl }}{{ file.path }})
   {%- endif %}
 {% endfor %}
+
+# zsh
+
+plugins=(git zsh-autosuggestions)

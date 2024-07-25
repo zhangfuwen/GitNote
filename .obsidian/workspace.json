@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Notes/006-ai/模型学习技巧.md",
+                "file": "Notes/003-linux/bash/index.md",
                 "mode": "source",
                 "source": true
               }
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "DDR",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Notes/006-ai/模型学习技巧.md",
+                "file": "Notes/003-linux/bash/index.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Notes/006-ai/模型学习技巧.md",
+                "file": "Notes/003-linux/bash/index.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Notes/006-ai/模型学习技巧.md"
+                "file": "Notes/003-linux/bash/index.md"
               }
             }
           },
@@ -142,7 +142,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 229.5
+    "width": 262.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -154,8 +154,9 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "ec972c18dd72d892",
+  "active": "6bb194fee9ede672",
   "lastOpenFiles": [
+    "Notes/006-ai/模型学习技巧.md",
     "Notes/006-ai/无Pytorch情况下只使用tokenizer.md",
     "Notes/006-ai/Apple调用路径猜测.md",
     "Notes/006-ai/AI相关各类内存接口速率.md",
@@ -165,7 +166,6 @@
     "Notes/006-ai/cnn-yolo-tensor.md",
     "Notes/006-ai/CLIP模型学习.md",
     "Notes/006-ai/a.puml.md",
-    "Notes/006-ai/模型学习技巧.md",
     "未命名.canvas",
     "Notes/001-modern-computing/022-modern-gpu-3.md",
     "Notes/001-modern-computing/023-memory.md",
