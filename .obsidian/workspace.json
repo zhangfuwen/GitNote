@@ -82,7 +82,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 320.5
+    "width": 200
   },
   "right": {
     "id": "33e6a9ce37303beb",
@@ -155,7 +155,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 262.5
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -167,7 +167,7 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "6bb194fee9ede672",
+  "active": "0c0d25faeebc32e8",
   "lastOpenFiles": [
     "Notes/006-ai/assets/my_graph.svg",
     "未命名 1.canvas",
