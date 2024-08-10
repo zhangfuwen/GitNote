@@ -1,4 +1,7 @@
 [
   "obsidian-git",
-  "obsidian-plantuml"
+  "obsidian-plantuml",
+  "code-styler",
+  "execute-code",
+  "highlightr-plugin"
 ]
