@@ -4,22 +4,45 @@
     "type": "split",
     "children": [
       {
-        "id": "f0ad1e4f6d0899cf",
+        "id": "f021bd8d7e327b35",
         "type": "tabs",
         "children": [
           {
-            "id": "e3d86c1d013ecec8",
+            "id": "ec972c18dd72d892",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "Notes/006-ai/环镜搭建.md",
-                "mode": "preview",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "0c0d25faeebc32e8",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Notes/006-ai/环镜搭建.md",
+                "mode": "source",
                 "source": false
               }
             }
+          },
+          {
+            "id": "0798e29ac9941013",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.6.7"
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -65,8 +88,7 @@
               "state": {}
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -143,7 +165,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 363.5
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -155,11 +177,11 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "e3d86c1d013ecec8",
+  "active": "0c0d25faeebc32e8",
   "lastOpenFiles": [
     "未命名.md",
-    "Notes/006-ai/环镜搭建.md",
     "Notes/006-ai/模型学习技巧.md",
+    "Notes/006-ai/环镜搭建.md",
     "Notes/006-ai/cuda 学习.md",
     "Notes/006-ai/assets/my_graph.svg",
     "未命名 1.canvas",
