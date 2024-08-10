@@ -4,45 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "f021bd8d7e327b35",
+        "id": "f0ad1e4f6d0899cf",
         "type": "tabs",
         "children": [
           {
-            "id": "ec972c18dd72d892",
+            "id": "e3d86c1d013ecec8",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "Notes/006-ai/环镜搭建.md",
-                "mode": "source",
-                "source": true
-              }
-            }
-          },
-          {
-            "id": "0c0d25faeebc32e8",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Notes/006-ai/环镜搭建.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               }
             }
-          },
-          {
-            "id": "0798e29ac9941013",
-            "type": "leaf",
-            "state": {
-              "type": "release-notes",
-              "state": {
-                "currentVersion": "1.6.7"
-              }
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -88,7 +65,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -177,10 +155,11 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "0c0d25faeebc32e8",
+  "active": "e3d86c1d013ecec8",
   "lastOpenFiles": [
-    "Notes/006-ai/模型学习技巧.md",
+    "未命名.md",
     "Notes/006-ai/环镜搭建.md",
+    "Notes/006-ai/模型学习技巧.md",
     "Notes/006-ai/cuda 学习.md",
     "Notes/006-ai/assets/my_graph.svg",
     "未命名 1.canvas",
@@ -221,7 +200,6 @@
     "Notes/assets",
     "Notes/006-ai/assets",
     "Notes/002-android/kotlin.md",
-    "Notes/998-zhihu/有益却无法去做.md",
-    "Notes/998-zhihu/稀缺资源的配置能力.md"
+    "Notes/998-zhihu/有益却无法去做.md"
   ]
 }
