@@ -26,18 +26,8 @@
               "type": "markdown",
               "state": {
                 "file": "Notes/006-ai/环镜搭建.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
-              }
-            }
-          },
-          {
-            "id": "0798e29ac9941013",
-            "type": "leaf",
-            "state": {
-              "type": "release-notes",
-              "state": {
-                "currentVersion": "1.6.7"
               }
             }
           }
@@ -165,7 +155,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 254.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -179,9 +169,9 @@
   },
   "active": "0c0d25faeebc32e8",
   "lastOpenFiles": [
+    "Notes/006-ai/环镜搭建.md",
     "未命名.md",
     "Notes/006-ai/模型学习技巧.md",
-    "Notes/006-ai/环镜搭建.md",
     "Notes/006-ai/cuda 学习.md",
     "Notes/006-ai/assets/my_graph.svg",
     "未命名 1.canvas",
