@@ -25,8 +25,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Notes/006-ai/环镜搭建.md",
-                "mode": "preview",
+                "file": "Notes/006-ai/模型学习技巧.md",
+                "mode": "source",
                 "source": false
               }
             }
@@ -82,7 +82,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 323.5
   },
   "right": {
     "id": "33e6a9ce37303beb",
@@ -98,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Notes/006-ai/环镜搭建.md",
+                "file": "Notes/006-ai/模型学习技巧.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Notes/006-ai/环镜搭建.md",
+                "file": "Notes/006-ai/模型学习技巧.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Notes/006-ai/环镜搭建.md"
+                "file": "Notes/006-ai/模型学习技巧.md"
               }
             }
           },
@@ -155,23 +155,23 @@
       }
     ],
     "direction": "horizontal",
-    "width": 254.5
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Open quick switcher": false,
-      "graph:Open graph view": false,
-      "canvas:Create new canvas": false,
-      "daily-notes:Open today's daily note": false,
-      "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false
     }
   },
   "active": "0c0d25faeebc32e8",
   "lastOpenFiles": [
     "Notes/006-ai/环镜搭建.md",
-    "未命名.md",
     "Notes/006-ai/模型学习技巧.md",
+    "未命名.md",
     "Notes/006-ai/cuda 学习.md",
     "Notes/006-ai/assets/my_graph.svg",
     "未命名 1.canvas",
