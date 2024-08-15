@@ -19,5 +19,9 @@ which nvcc
 # /root/anaconda3/envs/qwen/bin/nvcc
 
 export CUDA_HOME="/roo/anaconda3/envs/qwen/"
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_HOME/lib
+
+export LD_LIBRARY_PATH=/opt/tiger/native_libhdfs/lib/native:/opt/tiger/jdk/jdk8u265-b01/jre/lib/amd64/server:/opt/tiger/yarn_deploy/hadoop/lib/native:/opt/tiger/yarn_deploy/hadoop/lib/native/ufs:/opt/tiger/native_libhdfs/lib/native:/opt/tiger/jdk/jdk8u265-b01/jre/lib/amd64/server:/opt/tiger/yarn_deploy/hadoop/lib/native:/opt/tiger/yarn_deploy/hadoop/lib/native/ufs:/opt/tiger/yarn_deploy/hadoop/lib/native:/opt/tiger/yarn_deploy/hadoop_current/lib/native:/opt/tiger/yarn_deploy/hadoop_current/lzo/lib:/root/anaconda3/envs/qwen//lib 
 ```
+
+LD_LIBRARY_PATH关系非常大，里面文件夹的顺序也很重要。
+特别是当你的系统里有多种方式安装的cuda runtime的时候，比如你linux的方式安装了一些，用conda的方式又在venv里安装了一些。这时最好只有一个发挥作用。
