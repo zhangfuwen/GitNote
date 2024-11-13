@@ -6,7 +6,52 @@ title: uefi 引导启动过程
 
 # GPT (GUID Partition Table)
 
-GPT是相对于MBR而提出来分区格式，可以支持好多个分区，每个分区是平等的，不存在包含关系。没啦。
+GPT是相对于MBR而提出来分区格式，可以支持好多个分区，每个分区是平等的，不存在包含关系。
+
+
+GPT分区表方案将整个磁盘视为一个拥有N个扇区(sector)的设备。每个sector的大小可以是512或4K字节。N是64位整数，每个sector用一个LBA(Logical Block Address, 逻辑块地址）来表示。对于sector大小为512的磁盘来讲，LBA表示机制最多可以表达2的63次方*1KB的存储空间。
+
+GPT与MBR兼容，它不占用第一个sector（用于MBR)，从第二个sector开始存储primary GPT header。
+
+## primary GPT header
+
+| Offset	| Length	| Contents |
+| --- | --- | --- |
+| 0 (0x00)	| 8 bytes	| Signature ("EFI PART", 45h 46h 49h 20h 50h 41h 52h 54h or 0x5452415020494645ULL[a] on little-endian machines)
+| 8 (0x08)	| 4 bytes |	Revision number of header - 1.0 (00h 00h 01h 00h) for UEFI 2.10
+| 12 (0x0C)	| 4 bytes |	Header size in little endian (in bytes, usually 5Ch 00h 00h 00h or 92 bytes)
+| 16 (0x10)	| 4 bytes  |	CRC32 of header (offset +0 to +0x5c) in little endian, with this field zeroed during calculation
+| 20 (0x14)	| 4 bytes |	Reserved; must be zero
+| 24 (0x18)	| 8 bytes |	Current LBA (location of this header copy)
+| 32 (0x20)	| 8 bytes |	Backup LBA (location of the other header copy)
+| 40 (0x28)	| 8 bytes |	First usable LBA for partitions (primary partition table last LBA + 1)
+| 48 (0x30)	| 8 bytes |	Last usable LBA (secondary partition table first LBA − 1)
+| 56 (0x38)	| 16 bytes |	Disk GUID in mixed endian[11]
+| 72 (0x48)	| 8 bytes |	Starting LBA of array of partition entries (usually 2 for compatibility)
+| 80 (0x50)	| 4 bytes |	Number of partition entries in array
+| 84 (0x54)	| 4 bytes |	Size of a single partition entry (usually 80h or 128)
+| 88 (0x58)	| 4 bytes |	CRC32 of partition entries array in little endian
+| 92 (0x5C)	| *	| Reserved; must be zeroes for the rest of the block (420 bytes for a sector size of 512 bytes; but can be more with larger sector sizes)
+
+
+这里指明了partition entry的个数和大小。每个entry的大小一般是128，即0x80。
+
+## partition entry
+
+header后面跟的就是partition entry，即分区描述符的列表。每个entry大小是一样的：
+每个entry的格式如下：
+
+| Offset | 	Length |	Contents |
+| --- | --- | --- |
+| 0 (0x00) | 	16 bytes | 	Partition type GUID (mixed endian[11])
+| 16 (0x10) | 	16 bytes | 	Unique partition GUID (mixed endian)
+| 32 (0x20) | 	8 bytes | 	First LBA (little endian)
+| 40 (0x28) | 	8 bytes | 	Last LBA (inclusive, usually odd)
+| 48 (0x30) | 	8 bytes | 	Attribute flags (e.g. bit 60 denotes read-only)
+| 56 (0x38) | 	72 bytes | 	Partition name (36 UTF-16LE code units)
+
+
+
 
 # EFI Boot menu
 
