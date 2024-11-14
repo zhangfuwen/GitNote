@@ -50,7 +50,96 @@ header后面跟的就是partition entry，即分区描述符的列表。每个en
 | 48 (0x30) | 	8 bytes | 	Attribute flags (e.g. bit 60 denotes read-only)
 | 56 (0x38) | 	72 bytes | 	Partition name (36 UTF-16LE code units)
 
+## 图示
 
+![GPT结构](assets/image.png)
+
+## 代码
+
+下面的代码可以读取并打印GPT表：
+
+```cpp
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <cstring>
+#include <cstdint>
+
+#pragma pack(push, 1) // 确保结构体按1字节对齐
+
+// GPT Header结构体
+struct GPTHeader {
+    uint64_t signature; // "EFI PART"
+    uint32_t revision;  // 版本
+    uint32_t headerSize; // 头部大小
+    uint32_t headerCRC32; // 头部CRC32校验
+    uint32_t reserved; // 保留字段
+    uint64_t currentLBA; // 当前LBA
+    uint64_t backupLBA; // 备份LBA
+    uint64_t firstUsableLBA; // 第一个可用LBA
+    uint64_t lastUsableLBA; // 最后一个可用LBA
+    uint8_t diskGUID[16]; // 磁盘GUID
+    uint64_t partitionEntryLBA; // 分区条目LBA
+    uint32_t numberOfPartitionEntries; // 分区条目数量
+    uint32_t sizeOfPartitionEntry; // 分区条目大小
+    uint32_t partitionEntryArrayCRC32; // 分区表CRC32
+};
+
+#pragma pack(pop)
+
+void readGPT(const std::string& device) {
+    std::ifstream disk(device, std::ios::binary);
+    if (!disk.is_open()) {
+        std::cerr << "无法打开设备 " << device << std::endl;
+        return;
+    }
+
+    // 定位到GPT头部
+    disk.seekg(512); // GPT头通常在LBA 1
+    GPTHeader gptHeader;
+    disk.read(reinterpret_cast<char*>(&gptHeader), sizeof(GPTHeader));
+
+    // 检查签名
+    if (gptHeader.signature != 0x5452415020494645) { // "EFI PART"的十六进制表示
+        std::cerr << "该设备没有GPT分区表。" << std::endl;
+        return;
+    }
+
+    std::cout << "GPT Header Information:" << std::endl;
+    std::cout << "Signature: " << std::hex << gptHeader.signature << std::dec << std::endl;
+    std::cout << "Revision: " << gptHeader.revision << std::endl;
+    std::cout << "Header Size: " << gptHeader.headerSize << std::endl;
+    std::cout << "Number of Partition Entries: " << gptHeader.numberOfPartitionEntries << std::endl;
+    std::cout << "Size of Each Partition Entry: " << gptHeader.sizeOfPartitionEntry << std::endl;
+
+    // 读取分区条目
+    uint64_t partitionEntryOffset = gptHeader.partitionEntryLBA * 512; // 每个扇区512字节
+    disk.seekg(partitionEntryOffset);
+
+    std::vector<char> partitionEntries(gptHeader.numberOfPartitionEntries * gptHeader.sizeOfPartitionEntry);
+    disk.read(partitionEntries.data(), partitionEntries.size());
+
+    std::cout << "Partition Entries:" << std::endl;
+    for (uint32_t i = 0; i < gptHeader.numberOfPartitionEntries; ++i) {
+        // 这里可以解析每个分区条目
+        // 此处代码省略，您可以根据需要进一步解析每个条目
+        std::cout << "Partition " << i + 1 << " entry read." << std::endl;
+    }
+
+    disk.close();
+}
+
+int main() {
+    std::string device;
+    std::cout << "请输入设备路径（例如 /dev/sda）：";
+    std::cin >> device;
+
+    readGPT(device);
+
+    return 0;
+}
+```
 
 
 # EFI Boot menu
