@@ -28,6 +28,7 @@ see [Summary](SUMMARY.md)
   * [020\. 显卡到AI芯片\-\-之一](Notes/001-modern-computing/020-modern-gpu.md)
   * [021\. 显卡到AI芯片\-\-之二](Notes/001-modern-computing/021-modern-gpu2.md)
   * [022\. 显卡到AI芯片\-\-之三](Notes/001-modern-computing/022-modern-gpu-3.md)
+  * [023\. Memory/Storage子系统](Notes/001-modern-computing/023-memory.md)
 
 
 ## android  [index](./Notes/002-android/index.md)
