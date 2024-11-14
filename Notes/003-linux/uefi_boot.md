@@ -148,7 +148,9 @@ EFI支持启动多个OS，一方面EFI探测硬盘的时候发现新的包含可
 另一方面EFI在一个叫做NVRAM（这个词的含议比它字面意思复杂多了）的地方保存一个引导顺序列表，这个是非易失的，就是说关闭重启后它还在，但是它不在硬盘里。
 一般来说是在spi flash里，就是存UEFI本身的那个存储设备上。
 
-在linux下，可以用efibootmgr来查看和修改。这个列表。
+在linux下，可以用efibootmgr来查看和修改这个列表。efibootmgr的源代码在[这里]（https://github.dev/rhboot/efibootmgr/blob/main/src/efibootmgr.c）：
+
+    efibootmgr主要是调用libefivar来实现其功能的, libefivar的代码在[这里](https://github.dev/rhboot/efivar/blob/main/src/efivar.c)
 
 ```bash
 ➜  ~ efibootmgr
@@ -330,3 +332,82 @@ description—This field describes the entry. It's not used by fallback.efi; it 
 
 
 
+## libefivar
+
+libefivar 是一个用于访问和管理 UEFI（统一可扩展固件接口）环境中的变量的库。它提供了一个简单的 API，使开发人员能够在 Linux 系统上与 UEFI 变量进行交互。这些变量通常用于存储系统引导和硬件配置的信息。
+
+### 主要功能
+
+1. 读取和写入 UEFI 变量：
+libefivar 允许应用程序读取和写入 UEFI 变量，包括其名称、值和数据类型。
+2. 列出变量：
+可以列出所有可用的 UEFI 变量，便于管理和查看系统状态。
+3. 支持多种数据类型：
+UEFI 变量可以存储不同类型的数据，例如字节数组、字符串等，libefivar 提供了对这些类型的支持。
+4. 安全性：
+变量的读写可以受到访问控制，libefivar 提供的方法考虑了这些安全性。
+
+### 使用场景
+
+引导管理：可以用于开发引导加载程序，管理引导选项。
+硬件配置：存储和读取硬件相关的设置。
+系统信息：获取关于系统的状态和配置的信息。
+
+### 安装
+
+在大多数 Linux 发行版中，您可以通过包管理器安装 libefivar：
+
+```bash
+
+sudo apt-get install libefivar1 libefivar-dev  # Debian/Ubuntu
+sudo dnf install libefivar libefivar-devel     # Fedora
+```
+
+### 示例代码
+以下是一个简单的示例，展示如何使用 libefivar 读取 UEFI 变量：
+
+```c
+#include <efivar.h>
+#include <stdio.h>
+
+int main() {
+    struct efi_variable *var;
+    size_t size;
+    int ret;
+
+    ret = efi_get_variable(L"BootOrder", NULL, &size, NULL);
+    if (ret < 0) {
+        perror("Failed to get variable size");
+        return 1;
+    }
+
+    var = malloc(size);
+    if (!var) {
+        perror("Failed to allocate memory");
+        return 1;
+    }
+
+    ret = efi_get_variable(L"BootOrder", var, &size, NULL);
+    if (ret < 0) {
+        perror("Failed to get variable");
+        free(var);
+        return 1;
+    }
+
+    printf("BootOrder variable size: %zu\n", size);
+    // 处理变量数据...
+
+    free(var);
+    return 0;
+}
+```
+
+### 文档和资源
+官方文档：可以在 libefivar GitHub 页面 查找文档和指南。
+相关项目：libefivar 通常与其他 UEFI 相关项目（如 systemd-boot 和 grub）一起使用。
+### 总结
+libefivar 是一个强大的库，允许开发者在 Linux 系统上与 UEFI 变量进行交互，适用于引导管理、硬件配置等多种场景。通过简单的 API，开发者可以轻松实现对 UEFI 变量的读取和修改。
+
+## grub.efi
+
+grub.efi代码在：https://github.com/jiazhang0/grub-efi/blob/master/efi/efimain.c
