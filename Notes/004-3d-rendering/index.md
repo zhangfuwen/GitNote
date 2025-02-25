@@ -13,3 +13,5 @@ has_children: true
 [GLES](gles/index.md)
 
 [其他](others/index.md)
+
+[基于物理的渲染](基于物理的渲染.md)
