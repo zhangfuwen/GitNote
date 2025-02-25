@@ -1,3 +1,4 @@
+原始链接：[原始链接](https://www.kernel.org/doc/html/next/scheduler/sched-ext.html)
 # Extensible Scheduler Class[](https://www.kernel.org/doc/html/next/scheduler/sched-ext.html#extensible-scheduler-class "Permalink to this heading")
 
 sched_ext is a scheduler class whose behavior can be defined by a set of BPF programs - the BPF scheduler.
