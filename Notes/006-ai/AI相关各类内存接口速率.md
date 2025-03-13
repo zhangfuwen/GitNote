@@ -41,6 +41,7 @@ DDR3用于PC和服务器架构。
 
 # LPDDR
 
+![LPDDR5/5X spec](assets/JESD209-5C.pdf)
 
 #  GDDR
 
