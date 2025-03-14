@@ -44,6 +44,31 @@ SFT
 
 DPO
 
+## Apple Intelligence Foundation Models
+
+https://machinelearning.apple.com/research/introducing-apple-foundation-models
+
+![](assets/AppleIntelligenceFoundationModels_2407.21075v1.pdf)
+
+![](assets/Pasted%20image%2020250314101343.png)
+AFM-on-device模型参数量2.58B（0.15B embedding)，推理速度是`0.6 ms per prompt token`，30 token/s without token speculation。
+
+优化点：
+
+1. Shared input/output embedding
+2. GQA: 24 query, 8 kv heads
+3. LoRA adpater on-the-fly，rank 16的adapter大小在10MB量级。
+4. 量化：4比特、2比特混合量化，总体小于4bits， 3.7bpw。GPTQ、AWQ。
+5. Accuracy recovery adapter
+
+Device model用于：
+1. 便签中写作、校对、总结等场景。
+2. 邮件、短信、通知的优先级+紧急程度判断
+3. 邮件总结、回复、语气调整
+
+![](assets/Pasted%20image%2020250314104200.png)
+
+
 
 
 ## DeepSeek
