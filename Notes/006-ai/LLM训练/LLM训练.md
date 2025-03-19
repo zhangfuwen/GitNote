@@ -81,6 +81,9 @@ https://arxiv.org/abs/2501.12948
 
 ![](assets/2501.12948v1.pdf)
 
+论文要求：
+1. 只使用RL来强化自身能力，这是self-evolution，不需要人类给正确答案。少量cold start 数据（几千条）有帮助。
+2. 大的模型能过RL学习到的知识，小的模型(32B)无法通过RL学到，所以蒸馏更有用。
 ![](assets/Pasted%20image%2020250313142917.png)
 
 https://arxiv.org/abs/2402.03300
