@@ -171,10 +171,12 @@ First data block:         0
 - **解释**：块组描述符表包含了每个块组的详细信息，如块位图的位置、inode 位图的位置、inode 表的起始块等。文件系统通过读取块组描述符表，能够快速定位到每个块组的关键信息，从而进行文件和目录的管理。
 
 综上所述，在你提供的超级块信息所对应的 ext2 文件系统中，块组描述符表位于块 1。 
-
+### 5. Group descriptor的结构
 ```cpp
 /*  
- * Structure of a blocks group descriptor */struct Ext2GroupDesc {  
+ * Structure of a blocks group descriptor
+ */
+ struct Ext2GroupDesc {  
     uint32_t bg_block_bitmap;      /* Blocks bitmap block */  
     uint32_t bg_inode_bitmap;      /* Inodes bitmap block */  
     uint32_t bg_inode_table;       /* Inodes table block */  
