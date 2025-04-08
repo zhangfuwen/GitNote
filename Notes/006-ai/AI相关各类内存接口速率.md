@@ -187,3 +187,11 @@ PCIe 5.0一个link最大支持32个lane，带宽为`32*32/8 = 128GB/s`。
 ![](https://developer.qcloudimg.com/http-save/yehe-7659610/91e527e1413711e2fb23882ac0c75335.png)
 
 从单条lane的速率来看，NVLink整体比同一时期的PCIe的指标高1倍左右，而总带宽的优势更是明显，NVLink是PCIe总带宽的5倍左右。一直在超越，从未停止。
+
+
+# PIM
+
+![](assets/1-s2.0-S2773064622000160-main.pdf)
+## PIM MMU
+
+![](assets/2409.06204v1.pdf)
