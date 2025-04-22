@@ -31,6 +31,8 @@ kernel=C:\\Users\\uklar\\bzImage
 
 wsl --shutdown
 
+![](assets/Pasted%20image%2020250422180329.png)
+
 ## 测试
 
 hello.c 程序：
