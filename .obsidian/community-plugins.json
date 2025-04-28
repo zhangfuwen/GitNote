@@ -3,5 +3,6 @@
   "obsidian-plantuml",
   "code-styler",
   "execute-code",
-  "highlightr-plugin"
+  "highlightr-plugin",
+  "obsidian-auto-link-title"
 ]

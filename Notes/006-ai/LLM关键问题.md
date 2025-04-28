@@ -1,5 +1,5 @@
 
-## 关键问题
+## 推理引擎关键问题
 
 1. 内存容量
 	1. 权重
@@ -16,4 +16,12 @@
 	3. 预测性推理
 		1. 投机采样
 		2. 多头美杜莎
-		3. 
+		3. LookAHead  [GitHub - hao-ai-lab/LookaheadDecoding: \[ICML 2024\] Break the Sequential Dependency of LLM Inference Using Lookahead Decoding](https://github.com/hao-ai-lab/LookaheadDecoding)
+
+## 效果
+
+### 思考更长时间
+
+Think Twice
+
+[Think Longer](https://www.alphaxiv.org/abs/2503.23803)
