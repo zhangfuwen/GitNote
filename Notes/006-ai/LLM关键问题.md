@@ -13,7 +13,7 @@
 3. 内存带宽
 	1. decode阶段是访存密集型的，核心是如何加载一次权重，计算更多token
 	2. batching
-	3. 预测性推理
+	3. 预测性推理 [万字综述 10+ 种 LLM 投机采样推理加速方案 - 53AI-AI知识库\|大模型知识库\|大模型训练\|智能体开发](https://www.53ai.com/news/finetuning/2024071109285.html)
 		1. 投机采样
 		2. 多头美杜莎
 		3. LookAHead  [GitHub - hao-ai-lab/LookaheadDecoding: \[ICML 2024\] Break the Sequential Dependency of LLM Inference Using Lookahead Decoding](https://github.com/hao-ai-lab/LookaheadDecoding)
