@@ -1,3 +1,13 @@
+# LLM知识汇总
+# 数据格式
+
+## 浮点数
+
+fp32, 即常用的single precision floating point number，一个符号位，8个指数位，23个尾数位。
+fp16, 即half precision floating point number, 简称half float，一个符号位，5个指数位，10个尾数位。
+fp16的主要问题是指数位不够，从8降到5，表达的数值范围不够了。从1e-127~1e+128，降到了1e-15~1e+16.
+tf32，即tensor float 32，由nVidia提出，一个符号位，8个指数位，10个尾数位。指数位个数与fp32相同，表达的数值范围相同。尾数减少了，精度不如fp32，但与fp16是一样的。共使用19个比特。
+bf16，即brain float 16，由Google Brain团队提出，一个符号位，8个指数位，7个尾数位。指数位个数与fp32相同，表达的数值范围相同，尾数更少了，精度更差了，不如fp16，但AI计算能容忍。共使用16比特。
 
 # 模型结构
 
@@ -117,7 +127,135 @@ RMS Norm（Root Mean Square Normalization）即均方根归一化，是一种归
 
 
 
-MHA
+### MHA
+
+多头与不多头不同之处在于，每个k*q都会产生一个seq_len * seq_len的矩阵。如果没有多头的话，只有一个seq_len * seq_len的矩阵。
+
+```plantuml
+@startuml
+skinparam sequence {
+    ArrowColor #0079BF
+    LifeLineBorderColor #0079BF
+    LifeLineBackgroundColor #E0F2FF
+    ParticipantBorderColor #0079BF
+    ParticipantBackgroundColor #E0F2FF
+    ArrowThickness 2
+}
+skinparam backgroundColor #F5F5F5
+skinparam title "多头注意力机制（Multi-Head Attention）流程图"
+
+
+actor "输入序列 (Query, Key, Value)" as input_seq
+rectangle "线性变换层" as linear_layer {
+    component "Query 线性变换" as query_linear
+    component "Key 线性变换" as key_linear
+    component "Value 线性变换" as value_linear
+}
+rectangle "多头拆分" as split_heads {
+    component "拆分 Query" as split_query
+    component "拆分 Key" as split_key
+    component "拆分 Value" as split_value
+}
+rectangle "注意力计算" as attention_calculation {
+    component "计算 Query 和 Key 的点积" as dot_product
+    component "缩放操作" as scale
+    component "Softmax 归一化" as softmax_op
+    component "与 Value 相乘并求和" as multiply_sum
+}
+rectangle "多头合并" as merge_heads {
+    component "合并多头结果" as merge_result
+}
+rectangle "最终线性变换" as final_linear_layer {
+    component "最终线性变换" as final_linear
+}
+actor "输出序列" as output_seq
+
+input_seq --> query_linear : Query
+input_seq --> key_linear : Key
+input_seq --> value_linear : Value
+
+query_linear --> split_query : 变换后的 Query
+key_linear --> split_key : 变换后的 Key
+value_linear --> split_value : 变换后的 Value
+
+split_query --> dot_product : 多头 Query
+split_key --> dot_product : 多头 Key
+
+dot_product --> scale : 点积结果
+scale --> softmax_op : 缩放后的分数
+softmax_op --> multiply_sum : 归一化分数
+split_value --> multiply_sum : 多头 Value
+multiply_sum --> merge_result : 多头加权结果
+
+merge_result --> final_linear : 合并后的结果
+final_linear --> output_seq : 输出
+
+@enduml
+```
+
+
+拆分过程：
+
+```plantuml
+@startuml
+skinparam sequence {
+    ArrowColor #0079BF
+    LifeLineBorderColor #0079BF
+    LifeLineBackgroundColor #E0F2FF
+    ParticipantBorderColor #0079BF
+    ParticipantBackgroundColor #E0F2FF
+    ArrowThickness 2
+}
+skinparam backgroundColor #F5F5F5
+skinparam title "多头注意力机制中拆分与合并过程 (dim=4096, heads=8)"
+
+
+actor "线性变换后的 Query [batch_size, seq_length, 4096]" as query_transformed
+actor "线性变换后的 Key [batch_size, seq_length, 4096]" as key_transformed
+actor "线性变换后的 Value [batch_size, seq_length, 4096]" as value_transformed
+
+rectangle "拆分操作" as split_operation {
+    component "拆分 Query 为 8 个头" as split_query
+    component "拆分 Key 为 8 个头" as split_key
+    component "拆分 Value 为 8 个头" as split_value
+}
+
+actor "8 个头的 Query [batch_size, seq_length, 8, 512]" as multi_head_query
+actor "8 个头的 Key [batch_size, seq_length, 8, 512]" as multi_head_key
+actor "8 个头的 Value [batch_size, seq_length, 8, 512]" as multi_head_value
+
+rectangle "注意力计算" as attention_calculation {
+    component "每个头计算注意力" as attn_calc
+}
+
+actor "8 个头的输出 [batch_size, seq_length, 8, 512]" as multi_head_output
+
+rectangle "合并操作" as merge_operation {
+    component "合并 8 个头的输出" as merge_output
+}
+
+actor "合并后的输出 [batch_size, seq_length, 4096]" as final_output
+
+query_transformed --> split_query : 线性变换后的 Query
+split_query --> multi_head_query : 8 个头的 Query
+
+key_transformed --> split_key : 线性变换后的 Key
+split_key --> multi_head_key : 8 个头的 Key
+
+value_transformed --> split_value : 线性变换后的 Value
+split_value --> multi_head_value : 8 个头的 Value
+
+multi_head_query --> attn_calc : 8 个头的 Query
+multi_head_key --> attn_calc : 8 个头的 Key
+multi_head_value --> attn_calc : 8 个头的 Value
+
+attn_calc --> multi_head_output : 8 个头的输出
+
+multi_head_output --> merge_output : 8 个头的输出
+merge_output --> final_output : 合并后的输出
+
+@enduml
+```
 
 MQA
 
@@ -127,6 +265,70 @@ MLA
 
 ![](assets/Pasted%20image%2020250313144307.png)
 
+## FFN
+
+在Transformer架构里，前馈神经网络（FFN）有时会采用门控机制，像GLU（Gated Linear Unit）这种形式，此时会涉及到`gate`、`up`、`down`矩阵。接下来我会详细说明计算过程，并且借助mermaid为你绘制计算流程示意图。
+
+### 计算过程
+假设输入为向量 \(x\)，其维度是 \(d_{model}\)。FFN里的门控机制一般包含以下计算步骤：
+1. **线性变换**：对输入 \(x\) 分别做三次线性变换，得到 `gate`、`up`、`down` 矩阵的中间结果。这里会用到三个不同的权重矩阵 \(W_{gate}\)、\(W_{up}\) 和 \(W_{down}\)，以及对应的偏置向量 \(b_{gate}\)、\(b_{up}\) 和 \(b_{down}\)。
+    - \(gate = \text{Linear}_{gate}(x)=W_{gate}x + b_{gate}\)
+    - \(up = \text{Linear}_{up}(x)=W_{up}x + b_{up}\)
+    - \(down = \text{Linear}_{down}(x)=W_{down}x + b_{down}\)
+2. **门控操作**：使用激活函数（例如Sigmoid）对 `gate` 进行处理，然后和 `up` 逐元素相乘，这一过程起到了门控的作用，能够控制信息的流通。
+    - \(gated = \sigma(gate)\odot up\)
+    其中，\(\sigma\) 代表激活函数，\(\odot\) 表示逐元素相乘。
+3. **最终输出**：把门控操作的结果和 `down` 相加，就得到了FFN的最终输出 \(y\)。
+    - \(y = \text{ReLU}(gated + down)\)
+
+### 示意图
+此图展示了带有门控机制的FFN的计算流程：
+1. 输入 \(x\) 经过线性变换得到 `gate`、`up`、`down`。
+2. `gate` 经过Sigmoid激活后和 `up` 逐元素相乘，得到 `gated`。
+3. `gated` 和 `down` 相加，再经过ReLU激活，最终得到输出 \(y\)。 
+```plantuml
+@startuml
+skinparam monochrome true
+skinparam backgroundColor #EEEEEE
+skinparam sequence {
+    ArrowColor DeepSkyBlue
+    LifeLineBorderColor DeepSkyBlue
+    LifeLineBackgroundColor #A9DCDF
+    ParticipantBorderColor DeepSkyBlue
+    ParticipantBackgroundColor #E5F6FF
+}
+
+actor "输入 x" as input
+rectangle "线性变换" as linear {
+    component "gate = W_gate * x + b_gate" as gate
+    component "up = W_up * x + b_up" as up
+    component "down = W_down * x + b_down" as down
+}
+rectangle "门控操作" as gate_op {
+    component "Sigmoid激活" as sigmoid
+    component "逐元素相乘" as mul
+    component "gated = σ(gate) ⊙ up" as gated
+}
+rectangle "最终输出" as final {
+    component "相加" as add
+    component "ReLU激活" as relu
+    component "输出 y" as output
+}
+
+input --> gate : 线性变换
+input --> up : 线性变换
+input --> down : 线性变换
+gate --> sigmoid : Sigmoid激活
+sigmoid --> mul : σ(gate)
+up --> mul : up
+mul --> gated : gated
+gated --> add : gated
+down --> add : down
+add --> relu : gated + down
+relu --> output : ReLU激活
+
+@enduml
+```
 ## MoE
 
 
