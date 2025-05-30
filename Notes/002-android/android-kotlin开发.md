@@ -1,3 +1,15 @@
+# Android Kotlin开发
+
+
+# Gradle
+
+gradle版本8.2
+kotlin version:
+
+```kotlin
+id("org.jetbrains.kotlin.android") version "2.1.20" apply false
+```
+
 # kotlin
 
 # kotlin show preview 
