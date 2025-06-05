@@ -1,5 +1,15 @@
 # Android Kotlin开发
 
+## Logcat
+
+ adb logcat -v color,threadtime -s MyTAG:D
+ `adb logcat -s`等价于`adb logcat *:S`，即所有tag为Silent。
+
+
+## am start
+
+
+
 
 # Gradle
 
