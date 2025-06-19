@@ -366,9 +366,9 @@ call quickui#menu#install("&Option", [
     vim.g.quickui_show_tip = 1
     
     -- 定义TermExit函数
-    vim.api.nvim_create_function('TermExit', function(args)
+    vim.api.nvim_create_user_command('TermExit', function(args)
         vim.notify("terminal exit code: " .. args[1])
-    end)
+    end, {})
     
     -- 定义上下文菜单
     vim.g.context_menu_k = {
