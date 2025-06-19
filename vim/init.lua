@@ -135,7 +135,7 @@ vim.opt.backspace = 'indent,eol,start'
 vim.opt.cursorline = true
 
 -- 颜色主题
-if vim.fn.empty(vim.fn.glob("~/.config/nvim/pack/packer/start/papercolor-theme/colors/PaperColor.vim")) == 0 then
+if vim.fn.empty(vim.fn.stdpath('data').."/pack/packer/start/papercolor-theme/colors/PaperColor.vim") == 0 then
     vim.cmd('colo PaperColor')
 end
 
@@ -212,13 +212,13 @@ vim.opt.number = true
 vim.opt.autoread = true
 vim.opt.showmatch = true
 vim.opt.laststatus = 2
-vim.opt.t_Co = 256
+--vim.opt.t_Co = 256
 vim.opt.completeopt = 'menu,menuone'
 vim.opt.background = 'light'
 vim.opt.wildmenu = true
 
 -- 4. QuickMenu设置（需要vim-quickui插件支持）
-if vim.fn.empty(vim.fn.glob("~/.config/nvim/pack/packer/start/quickui.vim/README.md")) == 0 then
+if vim.fn.empty(vim.fn.stdpath('data').."/pack/packer/start/quickui.vim/README.md") == 0 then
     -- 清除所有菜单
     vim.cmd('call quickui#menu#reset()')
     
@@ -229,7 +229,8 @@ if vim.fn.empty(vim.fn.glob("~/.config/nvim/pack/packer/start/quickui.vim/README
         \ ["Search &In This File\tts", 'silent! FindAllHere' ],
         \ ["--", '' ],
         \ ["E&xit\tAlt+x", 'echo 6' ],
-        \ ]])
+        \])
+        ]])
     
     -- 安装View菜单
     vim.cmd([[call quickui#menu#install('&View', [
@@ -239,7 +240,8 @@ if vim.fn.empty(vim.fn.glob("~/.config/nvim/pack/packer/start/quickui.vim/README
         \ ["&Close all fold here\tzC", 'normal zC'],
         \ ["Open all fold\tzM", 'normal zM'],
         \ ["Close all fold\tzR", 'normal zR'],
-        \ ]])
+        \])
+        ]])
     
     -- 安装Quickfix菜单
     vim.cmd([[call quickui#menu#install('&Quickfix', [
@@ -251,7 +253,8 @@ if vim.fn.empty(vim.fn.glob("~/.config/nvim/pack/packer/start/quickui.vim/README
         \ ["&Last\t clast", 'clast' ],
         \ ["Olde&r\t colder", 'colder' ],
         \ ["Ne&wer\t cnewer", 'cnewer' ],
-        \ ]])
+        \])
+        ]])
     
     -- 安装LeaderF菜单
     vim.cmd([[call quickui#menu#install('Leader&f', [
@@ -263,7 +266,89 @@ if vim.fn.empty(vim.fn.glob("~/.config/nvim/pack/packer/start/quickui.vim/README
         \ ["Grep search &recall", 'LeaderfRgRecall' ],
         \ ["F&unction\t function", 'Leaderf function' ],
         \ ["&Buffers", 'Leaderf buffer' ],
-        \ ]])
+        \])
+        ]])
+    vim.cmd([[
+call quickui#menu#install('&Locationlist', [
+        \ [ "&Open\t lopen", 'lopen' ],
+        \ [ "&Close\t lclose", 'lcl' ],
+        \ [ "&Next\t lnext", 'lnext' ],
+        \ [ "&Prev\t lprev", 'lprev' ],
+        \ [ "&First\t lfirst", 'lfirst' ],
+        \ [ "&Last\t llast", 'llast' ],
+        \ [ "Olde&r\t lolder", 'lolder' ],
+        \ [ "Ne&wer\t lnewer", 'lnewer' ],
+        \ ])
+
+call quickui#menu#install('&Coc', [
+        \ [ "List &diagnostics\t ", 'CocList diagnostics' ],
+        \ [ "List &extentions\t ", 'CocList extentions' ],
+        \ [ "List &commands\t ", 'CocList commands' ],
+        \ [ "List &outline\t ", 'CocList outline' ],
+        \ [ "List &symbols\t ", 'CocList symbols' ],
+        \ [ "List &resume\t ", 'CocListResume' ],
+        \ [ "&Next\t ", 'CocNext' ],
+        \ [ "&Prev\t ", 'CocPrev' ],
+        \ [ "For&mat", "Format" ],
+        \ [ "Fo&ld", "Fold" ],
+        \ [ "Rearra&ge imports ", "OR" ],
+        \ [ "Ren&ame", "<Plug>(coc-rename)" ],
+        \ ])
+
+let g:cmake_compile_commands=1
+let g:cmake_compile_commands_link='.'
+call quickui#menu#install('&CMake', [
+        \ ['&Generate','CMake'],
+        \ ['&Build','CMakeBuild'],
+        \ ['&Test','CTest'],
+        \ ['&CTest!','CTest!'],
+        \ ['&Info','CMakeInfo'],
+        \ ['&Select Target', 'call Prompt_targets()'],
+        \ ['Select Build T&ype', 'call Prompt_buildType()'],
+        \ ['&Run','call Run_target()'],
+        \ ['R&un!','CMakeRun!'],
+        \ ['C&lean','CMakeClean'],
+        \ ['Res&et','CMakeReset'],
+        \ ['Reset&Relo&ad','CMakeResetAndReload' ],
+        \ ])
+
+call quickui#menu#install('&Preview', [
+        \ [ "&Close\t pc", 'pc' ],
+        \ [ "&Search\t ps", 'ps' ],
+        \ [ "&Edit\t ped", 'ped' ],
+        \ [ "&Jump\t ptjump", 'ptjump' ],
+        \ [ "&Tag\t ptag", 'ptag' ],
+        \ ])
+
+call quickui#menu#install('&Git', [
+        \ [ "&Status\t G", 'G' ],
+        \ [ "&Llog\t Gllog", 'Gllog' ],
+        \ [ "&Clog\t Gclog", 'Gclog' ],
+        \ ])
+
+call quickui#menu#install('P&ython', [
+        \ [ "&Run this file with python3", ":exec '!python3' shellescape(@%, 1)" ],
+        \ ])
+
+" list
+call quickui#menu#install('&List', [
+        \ [ "&Buffers", "call quickui#tools#list_buffer('e')" ],
+        \ [ "&Functions", "call quickui#tools#list_function()" ],
+        \ ])
+" items containing tips, tips will display in the cmdline
+call quickui#menu#install('&Open', [
+        \ [ '&Terminal', "call quickui#terminal#open('bash', {'title':'terminal'})", 'help 1' ],
+        \ ])
+"            \ [ '&Terminal', "call quickui#terminal#open('bash', {'w':60, 'h':8, 'callback':'TermExit', 'title':'terminal'})", 'help 1' ],
+
+" script inside %{...} will be evaluated and expanded in the string
+call quickui#menu#install("&Option", [
+        \ ['Set &Spell %{&spell? "Off":"On"}', 'set spell!'],
+        \ ['Set &Cursor Line %{&cursorline? "Off":"On"}', 'set cursorline!'],
+        \ ['Set &Paste %{&paste? "Off":"On"}', 'set paste!'],
+        \ ])
+
+    ]])
     
     -- 注册HELP菜单
     vim.cmd([[call quickui#menu#install('H&elp', [
@@ -273,7 +358,8 @@ if vim.fn.empty(vim.fn.glob("~/.config/nvim/pack/packer/start/quickui.vim/README
         \ ["&Tutorial", 'help tutor', ''],
         \ ['&Quick Reference', 'help quickref', ''],
         \ ['&Summary', 'help summary', ''],
-        \ ], 10000)]])
+        \ ], 10000)
+        ]])
     
     -- 映射快捷键
     vim.keymap.set('n', 'to', ':call quickui#menu#open()<CR>')
@@ -288,12 +374,12 @@ if vim.fn.empty(vim.fn.glob("~/.config/nvim/pack/packer/start/quickui.vim/README
     vim.g.context_menu_k = {
         ["&Help Keyword\t\\ch"] = 'echo expand("<cword>")',
         ["&Signature\t\\cs"] = 'echo 101',
-        ["-"],
+        ["-"] = "",
         ["Find in &File\t\\cx"] = 'exec "/" . expand("<cword>")',
         ["Find in &Project\t\\cp"] = 'exec "vimgrep " . expand("<cword>") . "*"',
         ["Find in &Defintion\t\\cd"] = 'YcmCompleter GotoDefinition',
         ["Search &References\t\\cr"] = 'YcmCompleter GoToReferences',
-        ["-"],
+        ["-"] = "",
         ["&Documentation\t\\cm"] = 'exec "PyDoc " . expand("<cword>")',
     }
     
@@ -307,18 +393,18 @@ if vim.fn.empty(vim.fn.glob("~/.config/nvim/pack/packer/start/quickui.vim/README
         ["&Toggle stage/unstage\t-"] = 'exec "normal -"',
         ["Unstage &Everything\tU"] = 'exec "normal U"',
         ["D&iscard change\tX"] = 'exec "normal X"',
-        ["--"],
+        ["--"]='',
         ["Inline &Diff\t="] = 'exec "normal ="',
         ["Diff Split\tdd"] = 'exec "normal dd"',
         ["Diff Horizontal\tdh"] = 'exec "normal dh"',
         ["Diff &Vertical\tdv"] = 'exec "normal dv"',
-        ["--"],
-        ["&Open File\t<CR>"] = 'exec "normal \<cr>"',
+        ["--"]='',
+        ["&Open File\t<CR>"] = 'exec "normal o<cr>"',
         ["Open in New Split\to"] = 'exec "normal o"',
         ["Open in New Vsplit\tgO"] = 'exec "normal gO"',
         ["Open in New Tab\tO"] = 'exec "normal O"',
         ["Open in &Preview\tp"] = 'exec "normal p"',
-        ["--"],
+        ["--"]='',
         ["&0. Commit"] = 'Git commit',
         ["&1. Push"] = 'Git push',
         ["&2. Pull"] = 'Git pull',
@@ -361,16 +447,16 @@ vim.keymap.set('n', '<C-_>', '<leader>c<space>')
 vim.keymap.set('n', '<F3>', ':call quickui#tools#preview_tag(\'\')<cr>')
 
 -- 6. CMake相关函数
-local cmake4vim = require('cmake4vim')
+--local cmake4vim = require('cmake4vim')
 
-function Prompt_targets()
-    local target_list = cmake4vim.GetAllTargets()
-    local submenu = {}
-    for _, target in ipairs(target_list) do
-        table.insert(submenu, {target, 'CMakeSelectTarget ' .. target})
-    end
-    vim.fn['quickui#listbox#open'](submenu, {title = 'Select target'})
-end
+--function Prompt_targets()
+--    local target_list = vim.fn.cmake4vim#GetAllTargets()
+--    local submenu = {}
+--    for _, target in ipairs(target_list) do
+--        table.insert(submenu, {target, 'CMakeSelectTarget ' .. target})
+--    end
+--    vim.fn['quickui#listbox#open'](submenu, {title = 'Select target'})
+--end
 
 function Prompt_buildType()
     local build_type_dict = require('utils.cmake').getCMakeVariants()
@@ -397,7 +483,7 @@ if vim.fn.has("gui_running") == 0 then
     vim.cmd('source $VIMRUNTIME/menu.vim')
     vim.opt.wildmenu = true
     vim.opt.cpoptions:remove('<')
-    vim.opt.wildcharm = '<C-Z>'
+--    vim.opt.wildcharm = '<C-Z>'
     vim.keymap.set('n', '<F4>', ':emenu <C-Z><CR>')
 end
 
@@ -409,7 +495,7 @@ vim.g.ale_lint_delay = 500
 vim.g.ale_echo_msg_format = '[%linter%] %code: %%s'
 vim.g.ale_lint_on_text_changed = 'normal'
 vim.g.ale_lint_on_insert_leave = 1
-vim.g.airline#extensions#ale#enabled = 1
+--vim.g.airline#extensions#ale#enabled = 1
 
 vim.g.ale_c_gcc_options = '-Wall -O2 -std=c99'
 vim.g.ale_cpp_gcc_options = '-Wall -O2 -std=c++14'
