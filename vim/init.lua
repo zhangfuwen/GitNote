@@ -1,4 +1,3 @@
--- init.lua: 完整的Neovim配置文件
 -- 整合基础设置与插件管理
 
 -- 0. 环境检测与基础设置
@@ -133,6 +132,7 @@ vim.opt.filetype = 'on'
 vim.opt.syntax = 'enable'
 vim.opt.backspace = 'indent,eol,start'
 vim.opt.cursorline = true
+--vim.opt.mousemodel=extend
 
 -- 颜色主题
 if vim.fn.empty(vim.fn.stdpath('data').."/pack/packer/start/papercolor-theme/colors/PaperColor.vim") == 0 then
@@ -221,7 +221,7 @@ vim.opt.wildmenu = true
 if vim.fn.empty(vim.fn.stdpath('data').."/pack/packer/start/quickui.vim/README.md") == 0 then
     -- 清除所有菜单
     vim.cmd('call quickui#menu#reset()')
-    
+
     -- 安装菜单（保留Vimscript调用格式）
     vim.g.quickui_border_style = 2
     vim.cmd([[call quickui#menu#install('&Find', [
@@ -231,7 +231,7 @@ if vim.fn.empty(vim.fn.stdpath('data').."/pack/packer/start/quickui.vim/README.m
         \ ["E&xit\tAlt+x", 'echo 6' ],
         \])
         ]])
-    
+
     -- 安装View菜单
     vim.cmd([[call quickui#menu#install('&View', [
         \ ["Open one fold here\tzo", 'normal zo'],
@@ -242,7 +242,7 @@ if vim.fn.empty(vim.fn.stdpath('data').."/pack/packer/start/quickui.vim/README.m
         \ ["Close all fold\tzR", 'normal zR'],
         \])
         ]])
-    
+
     -- 安装Quickfix菜单
     vim.cmd([[call quickui#menu#install('&Quickfix', [
         \ ["&Open\t copen", 'copen' ],
@@ -255,7 +255,7 @@ if vim.fn.empty(vim.fn.stdpath('data').."/pack/packer/start/quickui.vim/README.m
         \ ["Ne&wer\t cnewer", 'cnewer' ],
         \])
         ]])
-    
+
     -- 安装LeaderF菜单
     vim.cmd([[call quickui#menu#install('Leader&f', [
         \ ["&File\t file", 'Leaderf file' ],
@@ -349,7 +349,7 @@ call quickui#menu#install("&Option", [
         \ ])
 
     ]])
-    
+
     -- 注册HELP菜单
     vim.cmd([[call quickui#menu#install('H&elp', [
         \ ["&Cheatsheet", 'help index', ''],
@@ -360,11 +360,11 @@ call quickui#menu#install("&Option", [
         \ ['&Summary', 'help summary', ''],
         \ ], 10000)
         ]])
-    
+
     -- 映射快捷键
     vim.keymap.set('n', 'to', ':call quickui#menu#open()<CR>')
     vim.g.quickui_show_tip = 1
-    
+
     -- 定义TermExit函数
     vim.api.nvim_create_user_command('TermExit', function(args)
         vim.notify("terminal exit code: " .. args[1])
@@ -382,10 +382,10 @@ call quickui#menu#install("&Option", [
         ["-"] = "",
         ["&Documentation\t\\cm"] = 'exec "PyDoc " . expand("<cword>")',
     }
-    
+
     -- 映射空格键显示上下文菜单
     vim.keymap.set('n', '<space>', ':call quickui#tools#clever_context("k", g:context_menu_k, {})<cr>', {silent = true})
-    
+
     -- Git上下文菜单
     vim.g.context_menu_git = {
         ["&Stage (add)\ts"] = 'exec "normal s"',
@@ -409,7 +409,7 @@ call quickui#menu#install("&Option", [
         ["&1. Push"] = 'Git push',
         ["&2. Pull"] = 'Git pull',
     }
-    
+
     -- 设置fugitive文件类型的映射
     local setup_fugitive = function()
         vim.keymap.set('n', '<space>', ':call quickui#tools#clever_context("g", g:context_menu_git, {})<cr>', {silent = true, buffer = true})
@@ -525,4 +525,17 @@ let g:Lf_WindowPosition = 'popup'
 " 初始化CMake4Vim设置
 let g:cmake_compile_commands = 1
 let g:cmake_compile_commands_link = '.'
+]])
+
+
+
+-- init.lua
+
+vim.cmd([[
+    nnoremenu PopUp.SplitRight :vsplit term://zsh \| :normal i<CR><CR>
+    nnoremenu PopUp.SplitDown :split term://zsh \| :normal i<CR><CR>
+    nnoremenu PopUp.SplitLeft :vertical leftabove vsplit term://zsh \| :normal i <CR>
+    nnoremenu PopUp.SplitUp :leftabove split term://zsh \| :normal i <CR>
+    nnoremenu PopUp.TempTerminal :call quickui#terminal#open('bash', {'w':80, 'h':32, 'callback':'', 'title':'terminal'})<CR>
+    nnoremenu PopUp.Close\ Terminal :bdelete!<CR>
 ]])
