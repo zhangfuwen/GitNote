@@ -342,44 +342,134 @@ make_rootfs_busybox() {
     mkdir -p "$BASE_DIR/rootfs-busybox"
     ROOTFS_DIR="$BASE_DIR/rootfs-busybox"
     
-    # Check if busybox is installed or build it
-    if ! command -v busybox &> /dev/null; then
-        echo -e "${YELLOW}Busybox not found, building from source...${NC}"
-        build_busybox "$BUSYBOX_VERSION"
-        if [ $? -ne 0 ]; then
-            echo -e "${RED}Failed to build busybox!${NC}"
-            return 1
-        fi
+    # Download busybox if not already downloaded
+    build_busybox
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}Failed to download busybox!${NC}"
+        return 1
     fi
     
     # Clean previous rootfs
     rm -rf "$ROOTFS_DIR"/*
     
     # Create basic rootfs structure
-    mkdir -p "$ROOTFS_DIR"{bin,sbin,etc,lib,lib64,dev,proc,sys,home,root,tmp,var}
+    for dir in bin sbin etc lib lib64 dev proc sys home root tmp var; do
+        mkdir -p "$ROOTFS_DIR/$dir"
+    done
     
     # Install busybox
-    BUSYBOX_BINARY="$BASE_DIR/src/busybox/busybox"
-    if [ -f "$BUSYBOX_BINARY" ]; then
-        cp "$BUSYBOX_BINARY" "$ROOTFS_DIR/bin/"
-    else
-        cp "$(which busybox)" "$ROOTFS_DIR/bin/"
+    BUSYBOX_BINARY="$BASE_DIR/bin/busybox/busybox"
+    if [ ! -f "$BUSYBOX_BINARY" ]; then
+        echo -e "${RED}Busybox binary not found at $BUSYBOX_BINARY${NC}"
+        return 1
+    fi
+    
+    # Copy and set permissions with error checking
+    echo -e "${YELLOW}Copying busybox binary...${NC}"
+    if ! cp "$BUSYBOX_BINARY" "$ROOTFS_DIR/bin/busybox"; then
+        echo -e "${RED}Failed to copy busybox binary${NC}"
+        return 1
+    fi
+    
+    if ! chmod 755 "$ROOTFS_DIR/bin/busybox"; then
+        echo -e "${RED}Failed to set busybox permissions${NC}"
+        return 1
     fi
     
     # Create symlinks for busybox commands
-    cd "$ROOTFS_DIR/bin" || return 1
-    ln -s busybox sh
-    for cmd in $(busybox --list); do
-        ln -s busybox "$cmd"
+    echo -e "${YELLOW}Creating busybox symlinks...${NC}"
+    if ! cd "$ROOTFS_DIR/bin"; then
+        echo -e "${RED}Failed to access bin directory${NC}"
+        return 1
+    fi
+    
+    # Create essential symlinks first
+    for cmd in sh init; do
+        if ! ln -sf busybox "$cmd"; then
+            echo -e "${RED}Failed to create symlink for $cmd${NC}"
+            return 1
+        fi
     done
     
+    # Create symlinks for all busybox commands
+    if ! "$ROOTFS_DIR/bin/busybox" --list > /dev/null 2>&1; then
+        echo -e "${RED}Failed to list busybox commands${NC}"
+        return 1
+    fi
+    
+    "$ROOTFS_DIR/bin/busybox" --list | while read -r cmd; do
+        if ! ln -sf busybox "$cmd"; then
+            echo -e "${RED}Failed to create symlink for $cmd${NC}"
+            continue
+        fi
+    done
+
+    # Verify busybox installation
+    verify_busybox_installation() {
+        local rootfs_dir="$1"
+        local failed=0
+
+        # Check busybox binary
+        if [ ! -x "$rootfs_dir/bin/busybox" ]; then
+            echo -e "${RED}Busybox binary is not executable${NC}"
+            return 1
+        fi
+
+        # Check essential symlinks
+        for cmd in sh init mount ls cp chmod; do
+            if [ ! -L "$rootfs_dir/bin/$cmd" ]; then
+                echo -e "${RED}Missing essential symlink: $cmd${NC}"
+                failed=1
+            fi
+        done
+
+        # Test basic busybox functionality
+        if ! "$rootfs_dir/bin/busybox" --help >/dev/null 2>&1; then
+            echo -e "${RED}Basic busybox functionality test failed${NC}"
+            failed=1
+        fi
+
+        return $failed
+    }
+
+    # Run busybox verification
+    echo -e "${YELLOW}Verifying busybox installation...${NC}"
+    if ! verify_busybox_installation "$ROOTFS_DIR"; then
+        echo -e "${RED}Busybox installation verification failed!${NC}"
+        return 1
+    fi
+    echo -e "${GREEN}Busybox installation verified successfully!${NC}"
+    
     # Create necessary files
+    # Create essential system configuration files
+    echo "localhost" > "$ROOTFS_DIR/etc/hostname"
+
     cat > "$ROOTFS_DIR/etc/fstab" << EOF
-proc            /proc           proc    defaults        0 0
-sysfs           /sys            sysfs   defaults        0 0
-devtmpfs        /dev            devtmpfs mode=0755     0 0
-tmpfs           /dev/shm        tmpfs   defaults        0 0
-devpts          /dev/pts        devpts  gid=5,mode=620  0 0
+proc            /proc           proc        defaults            0 0
+sysfs           /sys            sysfs       defaults            0 0
+devtmpfs        /dev            devtmpfs    mode=0755,nosuid    0 0
+tmpfs           /dev/shm        tmpfs       mode=1777,nosuid    0 0
+devpts          /dev/pts        devpts      mode=0620,gid=5     0 0
+EOF
+
+    # Create minimal passwd and group files
+    cat > "$ROOTFS_DIR/etc/passwd" << EOF
+root:x:0:0:root:/root:/bin/sh
+EOF
+
+    cat > "$ROOTFS_DIR/etc/group" << EOF
+root:x:0:
+tty:x:5:
+EOF
+
+    # Create /etc/profile for environment setup
+    cat > "$ROOTFS_DIR/etc/profile" << EOF
+# Set up environment variables
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
+TERM=linux
+HOSTNAME=\$(cat /etc/hostname)
+PS1='[\u@\h \W]\$ '
+export PATH TERM HOSTNAME PS1
 EOF
     
     cat > "$ROOTFS_DIR/etc/inittab" << EOF
@@ -391,77 +481,226 @@ EOF
 EOF
     
     mkdir -p "$ROOTFS_DIR/etc/init.d"
-    cat > "$ROOTFS_DIR/etc/init.d/rcS" << EOF
+    # Create init script
+    cat > "$ROOTFS_DIR/init" << EOF
 #!/bin/sh
-mount -a
-mkdir -p /dev/pts
-mount -t devpts devpts /dev/pts
+
+# Mount essential filesystems
+mount -t proc none /proc
+mount -t sysfs none /sys
+mount -t devtmpfs none /dev
+
+# Create and mount additional filesystems
+mkdir -p /dev/pts /dev/shm
+mount -t devpts none /dev/pts
+mount -t tmpfs none /dev/shm
+
 echo "Starting $ARCH rootfs..."
+
+# Start system initialization
 exec /sbin/init
 EOF
-    chmod +x "$ROOTFS_DIR/etc/init.d/rcS"
+    chmod 755 "$ROOTFS_DIR/init"
+
+    # Create rcS script
+    cat > "$ROOTFS_DIR/etc/init.d/rcS" << EOF
+#!/bin/sh
+
+# System initialization
+echo "Initializing system..."
+
+# Set up hostname
+hostname localhost
+
+# Start basic services
+/bin/mount -a
+/bin/hostname -F /etc/hostname
+
+echo "System initialization complete."
+EOF
+    chmod 755 "$ROOTFS_DIR/etc/init.d/rcS"
     
-    echo -e "${GREEN}Rootfs created with busybox successfully!${NC}"
-    echo -e "${GREEN}Rootfs located at: $ROOTFS_DIR${NC}"
-    return 0
+    # Verify rootfs structure and permissions
+    verify_rootfs_structure() {
+        local dir="$1"
+        local failed=0
+
+        # Check essential directories
+        for d in bin sbin etc lib dev proc sys tmp var root; do
+            if [ ! -d "$dir/$d" ]; then
+                echo -e "${RED}Missing directory: $d${NC}"
+                failed=1
+            fi
+        done
+
+        # Check essential files
+        for f in bin/busybox etc/fstab etc/inittab etc/init.d/rcS init; do
+            if [ ! -f "$dir/$f" ]; then
+                echo -e "${RED}Missing file: $f${NC}"
+                failed=1
+            fi
+        done
+
+        # Check permissions
+        if [ ! -x "$dir/bin/busybox" ]; then
+            echo -e "${RED}Busybox is not executable${NC}"
+            failed=1
+        fi
+        if [ ! -x "$dir/init" ]; then
+            echo -e "${RED}Init is not executable${NC}"
+            failed=1
+        fi
+
+        return $failed
+    }
+
+    # Run verification
+    if verify_rootfs_structure "$ROOTFS_DIR"; then
+        echo -e "${GREEN}Rootfs created with busybox successfully!${NC}"
+        echo -e "${GREEN}Rootfs located at: $ROOTFS_DIR${NC}"
+        return 0
+    else
+        echo -e "${RED}Rootfs verification failed!${NC}"
+        return 1
+    fi
 }
 
-# Function: Build busybox from source
+# Function: Download pre-built busybox binary
 build_busybox() {
-    local VERSION="$1"
-    local BUSYBOX_ARCHIVE="busybox-$VERSION.tar.bz2"
-    local BUSYBOX_URL="https://busybox.net/downloads/$BUSYBOX_ARCHIVE"
-    local BUSYBOX_SRC_DIR="$BASE_DIR/src/busybox"
+    local VERSION="1.21.1"
+    local BUSYBOX_URL="https://busybox.net/downloads/binaries/$VERSION"
+    local BUSYBOX_BIN_DIR="$BASE_DIR/bin/busybox"
     
-    echo -e "${YELLOW}Building busybox version $VERSION...${NC}"
+    echo -e "${YELLOW}Downloading pre-built busybox version $VERSION...${NC}"
     
-    # Create source directory if it doesn't exist
-    mkdir -p "$BASE_DIR/src"
+    # Create binary directory if it doesn't exist
+    mkdir -p "$BUSYBOX_BIN_DIR"
     
-    cd "$BASE_DIR/src" || { echo -e "${RED}Failed to access source directory!${NC}"; return 1; }
+    cd "$BUSYBOX_BIN_DIR" || { echo -e "${RED}Failed to access binary directory!${NC}"; return 1; }
     
-    # Download busybox archive
-    if [ ! -f "$BUSYBOX_ARCHIVE" ]; then
+    # Determine binary name based on architecture
+    local BINARY_NAME
+    case "$ARCH" in
+        x86)
+            BINARY_NAME="busybox-i686"
+            ;;
+        x86_64)
+            BINARY_NAME="busybox-x86_64"
+            ;;
+        arm32)
+            BINARY_NAME="busybox-armv6l"
+            ;;
+        aarch64)
+            echo -e "${RED}Pre-built binary not available for aarch64. Please use compilation method instead.${NC}"
+            return 1
+            ;;
+        *)
+            echo -e "${RED}Unsupported architecture: $ARCH${NC}"
+            return 1
+            ;;
+    esac
+    
+    # Download busybox binary
+    if [ ! -f "$BINARY_NAME" ]; then
         if command -v wget &> /dev/null; then
-            wget -c "$BUSYBOX_URL"
+            wget -c "$BUSYBOX_URL/$BINARY_NAME"
         else
-            curl -L -O "$BUSYBOX_URL"
+            curl -L -o "$BINARY_NAME" "$BUSYBOX_URL/$BINARY_NAME"
         fi
         
         if [ $? -ne 0 ]; then
-            echo -e "${RED}Failed to download busybox!${NC}"
+            echo -e "${RED}Failed to download busybox binary!${NC}"
             return 1
         fi
     fi
     
-    # Extract busybox source
-    if [ -d "$BUSYBOX_SRC_DIR" ]; then
-        rm -rf "$BUSYBOX_SRC_DIR"
-    fi
+    # Make binary executable
+    chmod +x "$BINARY_NAME"
     
-    tar -xjf "$BUSYBOX_ARCHIVE"
-    mv "busybox-$VERSION" "$BUSYBOX_SRC_DIR"
+    # Create symlink to standard name
+    ln -sf "$BINARY_NAME" busybox
     
-    # Set architecture and build busybox
-    cd "$BUSYBOX_SRC_DIR" || return 1
+    echo -e "${GREEN}Successfully downloaded pre-built busybox binary!${NC}"
+    return 0
+    # Enable CBS traffic control instead
+    sed -i 's/# CONFIG_TC_CBS is not set/CONFIG_TC_CBS=y/' .config
     
+    # Verify and adjust busybox configuration
+    verify_busybox_config() {
+        local config_file="$1"
+        
+        # Check if config file exists
+        if [ ! -f "$config_file" ]; then
+            echo -e "${RED}Config file not found: $config_file${NC}"
+            return 1
+        fi
+        
+        # Essential features check
+        local required_configs=(
+            "CONFIG_STATIC=y"
+            "# CONFIG_TC_CBQ is not set"
+            "CONFIG_TC_CBS=y"
+            "CONFIG_FEATURE_MOUNT_HELPERS=y"
+            "CONFIG_FEATURE_MOUNT_VERBOSE=y"
+        )
+        
+        for config in "${required_configs[@]}"; do
+            if ! grep -q "^$config" "$config_file"; then
+                echo -e "${YELLOW}Adjusting config: $config${NC}"
+                if [[ "$config" == *"=y"* ]]; then
+                    sed -i "s/^.*${config%=*}.*$/$config/" "$config_file"
+                else
+                    echo "$config" >> "$config_file"
+                fi
+            fi
+        done
+        
+        return 0
+    }
+    
+    # Enable static linking
+    sed -i 's/^.*CONFIG_STATIC.*$/CONFIG_STATIC=y/' .config
+    
+    # Verify and adjust configuration
+    verify_busybox_config ".config" || return 1
+    
+    # Build with architecture and static linking
+    build_log="$BASE_DIR/build/busybox_build.log"
+    mkdir -p "$(dirname "$build_log")"
+    
+    echo -e "${YELLOW}Building busybox with configuration...${NC}"
     case "$ARCH" in
         x86)
-            make defconfig
+            make -j$(nproc) ARCH=i386 CROSS_COMPILE= CONFIG_STATIC=y V=1 2>&1 | tee "$build_log"
             ;;
         x86_64)
-            make defconfig
+            make -j$(nproc) ARCH=x86_64 CROSS_COMPILE= CONFIG_STATIC=y V=1 2>&1 | tee "$build_log"
             ;;
         arm32)
-            make arm_defconfig
+            make -j$(nproc) ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- CONFIG_STATIC=y V=1 2>&1 | tee "$build_log"
             ;;
         aarch64)
-            make arm64_defconfig
+            make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CONFIG_STATIC=y V=1 2>&1 | tee "$build_log"
             ;;
     esac
     
-    make -j$(nproc)
-    make install
+    # Check build status
+    if [ ${PIPESTATUS[0]} -ne 0 ]; then
+        echo -e "${RED}Busybox build failed! Check build log at: $build_log${NC}"
+        return 1
+    fi
+    
+    # Verify binary
+    if [ ! -f "busybox" ]; then
+        echo -e "${RED}Busybox binary not found after build!${NC}"
+        return 1
+    fi
+    
+    # Test basic functionality
+    if ! ./busybox --help >/dev/null 2>&1; then
+        echo -e "${RED}Built busybox binary is not functional!${NC}"
+        return 1
+    fi
     
     echo -e "${GREEN}Busybox built successfully!${NC}"
     return 0
