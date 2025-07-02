@@ -332,6 +332,116 @@ EOF
     echo -e "${GREEN}Rootfs located at: $ROOTFS_DIR${NC}"
     return 0
 }
+verify_busybox_installation() {
+    local rootfs_dir="$1"
+    local failed=0
+
+    # Check busybox binary
+    if [ ! -x "$rootfs_dir/bin/busybox" ]; then
+        echo -e "${RED}Busybox binary not found or not executable${NC}"
+        return 1
+    fi
+
+    # Test busybox functionality
+    "$rootfs_dir/bin/busybox" --help >/dev/null 2>&1 || {
+        echo -e "${RED}Busybox binary test failed${NC}"
+        failed=1
+    }
+
+    # Verify essential symlinks
+    for cmd in sh init mount ls cp chmod; do
+        if [ ! -L "$rootfs_dir/bin/$cmd" ] || [ ! -e "$rootfs_dir/bin/$cmd" ]; then
+            echo -e "${RED}Missing or broken symlink: /bin/$cmd${NC}"
+            failed=1
+        fi
+    done
+
+    # Verify /sbin/init symlink specifically
+    if [ ! -L "$rootfs_dir/sbin/init" ] || [ ! -e "$rootfs_dir/sbin/init" ]; then
+        echo -e "${RED}Missing or broken symlink: /sbin/init${NC}"
+        failed=1
+    fi
+
+    return $failed
+}
+# # Verify busybox installation
+# verify_busybox_installation() {
+#     local rootfs_dir="$1"
+#     local failed=0
+
+#     # Check busybox binary
+#     if [ ! -x "$rootfs_dir/bin/busybox" ]; then
+#         echo -e "${RED}Busybox binary is not executable${NC}"
+#         return 1
+#     fi
+
+#     # Check essential symlinks in /bin
+#     for cmd in sh init mount ls cp chmod; do
+#         if [ ! -L "$rootfs_dir/bin/$cmd" ] || [ ! -e "$rootfs_dir/bin/$cmd" ]; then
+#             echo -e "${RED}Missing or broken symlink in /bin: $cmd${NC}"
+#             failed=1
+#         fi
+#     done
+
+#     # Check /sbin/init symlink specifically
+#     if [ ! -L "$rootfs_dir/sbin/init" ] || [ ! -e "$rootfs_dir/sbin/init" ]; then
+#         echo -e "${RED}Missing or broken symlink: /sbin/init${NC}"
+#         failed=1
+#     fi
+
+#     # Verify /sbin/init points to busybox
+#     if [ "$(readlink "$rootfs_dir/sbin/init")" != "../bin/busybox" ]; then
+#         echo -e "${RED}/sbin/init symlink points to wrong target${NC}"
+#         failed=1
+#     fi
+
+#     # Test basic busybox functionality
+#     if ! "$rootfs_dir/bin/busybox" --help >/dev/null 2>&1; then
+#         echo -e "${RED}Basic busybox functionality test failed${NC}"
+#         failed=1
+#     fi
+
+#     return $failed
+# }
+
+# Function: Verify rootfs structure
+verify_rootfs_structure() {
+    local ROOTFS_DIR="$1"
+    local failed=0
+
+    # Check if rootfs directory exists
+    if [ ! -d "$ROOTFS_DIR" ]; then
+        echo -e "${RED}Rootfs directory not found: $ROOTFS_DIR${NC}"
+        return 1
+    fi
+
+    # Check essential directories
+    local essential_dirs=("bin" "sbin" "etc" "proc" "sys" "dev" "tmp" "root" "var")
+    for dir in "${essential_dirs[@]}"; do
+        if [ ! -d "$ROOTFS_DIR/$dir" ]; then
+            echo -e "${RED}Missing essential directory: $dir${NC}"
+            failed=1
+        fi
+    done
+
+    # Check essential files
+    if [ ! -f "$ROOTFS_DIR/init" ]; then
+        echo -e "${RED}Missing init script${NC}"
+        failed=1
+    fi
+
+    if [ ! -f "$ROOTFS_DIR/etc/inittab" ]; then
+        echo -e "${RED}Missing /etc/inittab${NC}"
+        failed=1
+    fi
+
+    if [ ! -f "$ROOTFS_DIR/etc/init.d/rcS" ]; then
+        echo -e "${RED}Missing /etc/init.d/rcS${NC}"
+        failed=1
+    fi
+
+    return $failed
+}
 
 # Function: Create rootfs with busybox
 make_rootfs_busybox() {
@@ -390,6 +500,20 @@ make_rootfs_busybox() {
             return 1
         fi
     done
+
+    # Create /sbin/init symlink
+    cd "$ROOTFS_DIR/sbin" || {
+        echo -e "${RED}Failed to access sbin directory${NC}"
+        return 1
+    }
+    if ! ln -sf ../bin/busybox init; then
+        echo -e "${RED}Failed to create /sbin/init symlink${NC}"
+        return 1
+    fi
+    cd "$ROOTFS_DIR/bin" || {
+        echo -e "${RED}Failed to return to bin directory${NC}"
+        return 1
+    }
     
     # Create symlinks for all busybox commands
     if ! "$ROOTFS_DIR/bin/busybox" --list > /dev/null 2>&1; then
@@ -404,33 +528,6 @@ make_rootfs_busybox() {
         fi
     done
 
-    # Verify busybox installation
-    verify_busybox_installation() {
-        local rootfs_dir="$1"
-        local failed=0
-
-        # Check busybox binary
-        if [ ! -x "$rootfs_dir/bin/busybox" ]; then
-            echo -e "${RED}Busybox binary is not executable${NC}"
-            return 1
-        fi
-
-        # Check essential symlinks
-        for cmd in sh init mount ls cp chmod; do
-            if [ ! -L "$rootfs_dir/bin/$cmd" ]; then
-                echo -e "${RED}Missing essential symlink: $cmd${NC}"
-                failed=1
-            fi
-        done
-
-        # Test basic busybox functionality
-        if ! "$rootfs_dir/bin/busybox" --help >/dev/null 2>&1; then
-            echo -e "${RED}Basic busybox functionality test failed${NC}"
-            failed=1
-        fi
-
-        return $failed
-    }
 
     # Run busybox verification
     echo -e "${YELLOW}Verifying busybox installation...${NC}"
@@ -497,6 +594,10 @@ mount -t tmpfs none /dev/shm
 
 echo "Starting $ARCH rootfs..."
 
+# Ensure /sbin exists and busybox init is available
+mkdir -p /sbin
+ln -sf /bin/busybox /sbin/init
+
 # Start system initialization
 exec /sbin/init
 EOF
@@ -520,42 +621,7 @@ echo "System initialization complete."
 EOF
     chmod 755 "$ROOTFS_DIR/etc/init.d/rcS"
     
-    # Verify rootfs structure and permissions
-    verify_rootfs_structure() {
-        local dir="$1"
-        local failed=0
-
-        # Check essential directories
-        for d in bin sbin etc lib dev proc sys tmp var root; do
-            if [ ! -d "$dir/$d" ]; then
-                echo -e "${RED}Missing directory: $d${NC}"
-                failed=1
-            fi
-        done
-
-        # Check essential files
-        for f in bin/busybox etc/fstab etc/inittab etc/init.d/rcS init; do
-            if [ ! -f "$dir/$f" ]; then
-                echo -e "${RED}Missing file: $f${NC}"
-                failed=1
-            fi
-        done
-
-        # Check permissions
-        if [ ! -x "$dir/bin/busybox" ]; then
-            echo -e "${RED}Busybox is not executable${NC}"
-            failed=1
-        fi
-        if [ ! -x "$dir/init" ]; then
-            echo -e "${RED}Init is not executable${NC}"
-            failed=1
-        fi
-
-        return $failed
-    }
-
-    # Run verification
-    if verify_rootfs_structure "$ROOTFS_DIR"; then
+    if verify_rootfs_structure "$ROOTFS_DIR" && verify_busybox_installation "$ROOTFS_DIR"; then
         echo -e "${GREEN}Rootfs created with busybox successfully!${NC}"
         echo -e "${GREEN}Rootfs located at: $ROOTFS_DIR${NC}"
         return 0
