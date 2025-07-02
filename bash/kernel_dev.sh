@@ -970,16 +970,35 @@ run_kernel() {
         return 1
     fi
     
-    # Verify rootfs exists
-    if [ -d "$BASE_DIR/rootfs-debootstrap" ]; then
-        ROOTFS_DIR="$BASE_DIR/rootfs-debootstrap"
-    elif [ -d "$BASE_DIR/rootfs-busybox" ]; then
-        ROOTFS_DIR="$BASE_DIR/rootfs-busybox"
-    elif [ -d "$BASE_DIR/rootfs-download" ]; then
-        ROOTFS_DIR="$BASE_DIR/rootfs-download"
-    else
-        echo -e "${RED}Rootfs not found! Please create it first.${NC}"
+    # Find available rootfs directories
+    declare -a ROOTFS_DIRS=()
+    for dir in "$BASE_DIR/rootfs-debootstrap" "$BASE_DIR/rootfs-busybox" "$BASE_DIR/rootfs-download"; do
+        if [ -d "$dir" ]; then
+            ROOTFS_DIRS+=("$dir")
+        fi
+    done
+
+    # Check if any rootfs exists
+    if [ ${#ROOTFS_DIRS[@]} -eq 0 ]; then
+        echo -e "${RED}No rootfs found! Please create one first.${NC}"
         return 1
+    fi
+
+    # If only one rootfs exists, use it directly
+    if [ ${#ROOTFS_DIRS[@]} -eq 1 ]; then
+        ROOTFS_DIR="${ROOTFS_DIRS[0]}"
+        echo -e "${GREEN}Using rootfs: $(basename "$ROOTFS_DIR")${NC}"
+    else
+        # If multiple rootfs exist, let user select
+        echo -e "${YELLOW}Multiple rootfs found. Please select one:${NC}"
+        select ROOTFS_DIR in "${ROOTFS_DIRS[@]}"; do
+            if [ -n "$ROOTFS_DIR" ]; then
+                echo -e "${GREEN}Selected rootfs: $(basename "$ROOTFS_DIR")${NC}"
+                break
+            else
+                echo -e "${RED}Invalid selection. Please try again.${NC}"
+            fi
+        done
     fi
     
     echo -e "${YELLOW}Running kernel for $ARCH with ${MEMORY_SIZE} memory...${NC}"
