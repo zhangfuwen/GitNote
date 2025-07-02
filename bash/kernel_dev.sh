@@ -294,6 +294,20 @@ make_rootfs_debootstrap() {
     
     # Create necessary system files
     mkdir -p "$ROOTFS_DIR/etc/init.d"
+    
+    # Create init script
+    cat > "$ROOTFS_DIR/init" << EOF
+#!/bin/sh
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs none /dev
+mkdir -p /dev/pts /dev/shm
+mount -t devpts devpts /dev/pts
+mount -t tmpfs tmpfs /dev/shm
+echo "Mounting root filesystem..."
+exec /sbin/init
+EOF
+    chmod +x "$ROOTFS_DIR/init"
     cat > "$ROOTFS_DIR/etc/inittab" << EOF
 ::sysinit:/etc/init.d/rcS
 ::respawn:/sbin/getty -L tty1 9600
@@ -304,7 +318,9 @@ EOF
     
     cat > "$ROOTFS_DIR/etc/init.d/rcS" << EOF
 #!/bin/sh
-mount -a
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev
 mkdir -p /dev/pts
 mount -t devpts devpts /dev/pts
 echo "Starting $ARCH rootfs..."
@@ -361,7 +377,9 @@ make_rootfs_busybox() {
     cat > "$ROOTFS_DIR/etc/fstab" << EOF
 proc            /proc           proc    defaults        0 0
 sysfs           /sys            sysfs   defaults        0 0
-devtmpfs        /dev            devtmpfs mode=0755,size=1024M 0 0
+devtmpfs        /dev            devtmpfs mode=0755     0 0
+tmpfs           /dev/shm        tmpfs   defaults        0 0
+devpts          /dev/pts        devpts  gid=5,mode=620  0 0
 EOF
     
     cat > "$ROOTFS_DIR/etc/inittab" << EOF
@@ -704,6 +722,8 @@ EOF
 
 # Function: Run kernel
 run_kernel() {
+    local MEMORY_SIZE="${1:-512M}"
+    
     # Verify kernel exists
     KERNEL_IMAGE="$BASE_DIR/build/kernel-$ARCH"
     if [ ! -f "$KERNEL_IMAGE" ]; then
@@ -723,7 +743,7 @@ run_kernel() {
         return 1
     fi
     
-    echo -e "${YELLOW}Running kernel for $ARCH...${NC}"
+    echo -e "${YELLOW}Running kernel for $ARCH with ${MEMORY_SIZE} memory...${NC}"
     
     # Create rootfs image (example using cpio)
     cd "$ROOTFS_DIR" || return 1
@@ -756,9 +776,9 @@ run_kernel() {
         -machine "$MACHINE_TYPE" \
         -kernel "$KERNEL_IMAGE" \
         -initrd "$BASE_DIR/build/rootfs-$ARCH.cpio.gz" \
-        -m 512M \
+        -m "$MEMORY_SIZE" \
         -nographic \
-        -append "root=/initrd console=ttyS0"
+        -append "console=ttyS0"
     set +x
     
     echo -e "${GREEN}Kernel execution completed!${NC}"
@@ -868,7 +888,7 @@ show_help() {
     echo "  --make-rootfs METHOD     Create rootfs (debootstrap, busybox, download)"
     echo "  --build-module DIR       Build kernel module in DIR"
     echo "  --install-module MOD     Install module to rootfs"
-    echo "  --run-kernel             Run kernel in QEMU"
+    echo "  --run-kernel [MEM]       Run kernel in QEMU (default memory: 512M)"
     echo "  --help                   Display this help message"
     echo ""
     echo "Examples:"
@@ -876,7 +896,8 @@ show_help() {
     echo "  ./kernel_dev.sh --download-kernel 6.1.0"
     echo "  ./kernel_dev.sh --make-rootfs busybox"
     echo "  ./kernel_dev.sh --make-rootfs debootstrap bullseye"
-    echo "  ./kernel_dev.sh --run-kernel"
+    echo "  ./kernel_dev.sh --run-kernel
+  ./kernel_dev.sh --run-kernel 1G"
     echo "  ./kernel_dev.sh --init x86_64"
     echo "  ./kernel_dev.sh --init arm32 6.1.0 debootstrap bullseye"
     echo "  ./kernel_dev.sh --init aarch64 5.15.0 download full"
@@ -938,7 +959,11 @@ case "$1" in
         install_module "$2"
         ;;
     --run-kernel)
-        run_kernel
+        if [ $# -ge 2 ]; then
+            run_kernel "$2"
+        else
+            run_kernel
+        fi
         ;;
     --help)
         show_help
