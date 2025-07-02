@@ -440,6 +440,15 @@ verify_rootfs_structure() {
         failed=1
     fi
 
+    # Check essential symlinks
+    local essential_symlinks=("/bin/getty" "/sbin/getty" "/bin/init" "/sbin/init")
+    for symlink in "${essential_symlinks[@]}"; do
+        if [ ! -L "$ROOTFS_DIR$symlink" ]; then
+            echo -e "${RED}Missing symlink: $symlink${NC}"
+            failed=1
+        fi
+    done
+
     return $failed
 }
 
@@ -494,12 +503,26 @@ make_rootfs_busybox() {
     fi
     
     # Create essential symlinks first
-    for cmd in sh init; do
+    for cmd in sh init getty; do
         if ! ln -sf busybox "$cmd"; then
             echo -e "${RED}Failed to create symlink for $cmd${NC}"
             return 1
         fi
     done
+
+    # Create getty in sbin
+    cd "$ROOTFS_DIR/sbin" || {
+        echo -e "${RED}Failed to access sbin directory${NC}"
+        return 1
+    }
+    if ! ln -sf ../bin/busybox getty; then
+        echo -e "${RED}Failed to create /sbin/getty symlink${NC}"
+        return 1
+    fi
+    cd "$ROOTFS_DIR/bin" || {
+        echo -e "${RED}Failed to return to bin directory${NC}"
+        return 1
+    }
 
     # Create /sbin/init symlink
     cd "$ROOTFS_DIR/sbin" || {
@@ -1102,7 +1125,7 @@ run_kernel() {
         -initrd "$BASE_DIR/build/rootfs-$ARCH.cpio.gz" \
         -m "$MEMORY_SIZE" \
         -nographic \
-        -append "console=ttyS0"
+        -append "console=ttyS0 init=/bin/sh"
     set +x
     
     echo -e "${GREEN}Kernel execution completed!${NC}"
