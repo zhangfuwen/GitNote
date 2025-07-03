@@ -310,10 +310,7 @@ EOF
     chmod +x "$ROOTFS_DIR/init"
     cat > "$ROOTFS_DIR/etc/inittab" << EOF
 ::sysinit:/etc/init.d/rcS
-::respawn:/sbin/getty -L tty1 9600
-::respawn:/sbin/getty -L tty2 9600
-::respawn:/sbin/getty -L tty3 9600
-::respawn:/sbin/getty -L tty4 9600
+::askfirst:-/bin/sh
 EOF
     
     cat > "$ROOTFS_DIR/etc/init.d/rcS" << EOF
@@ -324,7 +321,7 @@ mount -t devtmpfs devtmpfs /dev
 mkdir -p /dev/pts
 mount -t devpts devpts /dev/pts
 echo "Starting $ARCH rootfs..."
-exec /sbin/init
+#exec /sbin/init
 EOF
     chmod +x "$ROOTFS_DIR/etc/init.d/rcS"
     
@@ -576,6 +573,9 @@ EOF
     cat > "$ROOTFS_DIR/etc/passwd" << EOF
 root:x:0:0:root:/root:/bin/sh
 EOF
+    # Set root to no password
+    echo 'root::0:0:99999:7:::' > $ROOTFS_DIR/etc/shadow
+    chmod 600 $ROOTFS_DIR/etc/shadow
 
     cat > "$ROOTFS_DIR/etc/group" << EOF
 root:x:0:
@@ -1124,7 +1124,7 @@ run_kernel() {
         -kernel "$KERNEL_IMAGE" \
         -initrd "$BASE_DIR/build/rootfs-$ARCH.cpio.gz" \
         -m "$MEMORY_SIZE" \
-        -append "console=ttyS0 init=/bin/sh"
+        -append "console=ttyS0"
     set +x
     
     echo -e "${GREEN}Kernel execution completed!${NC}"
