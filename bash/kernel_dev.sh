@@ -144,10 +144,17 @@ build_kernel() {
             ;;
     esac
     
-    # Assume we have a config file; adjust as needed
+    # Configure kernel with necessary features
     if [ ! -f ".config" ]; then
         echo -e "${YELLOW}No kernel config found, using default for $ARCH...${NC}"
         make "$ARCH_PARAM"_defconfig
+        # Enable 9P filesystem support for folder sharing
+        echo "CONFIG_9P_FS=y" >> .config
+        echo "CONFIG_9P_FS_POSIX_ACL=y" >> .config
+        echo "CONFIG_NET_9P=y" >> .config
+        echo "CONFIG_NET_9P_VIRTIO=y" >> .config
+        # Ensure configuration is consistent
+        make olddefconfig ARCH="$ARCH_PARAM"
     fi
     
     # Build kernel
@@ -1051,6 +1058,28 @@ EOF
 # Function: Run kernel
 run_kernel() {
     local MEMORY_SIZE="${1:-512M}"
+    local SHARE_DIR="${2:-}"
+
+    # Check if 9P filesystem support is enabled in kernel config when sharing directory
+    if [ -n "$SHARE_DIR" ]; then
+        if ! grep -q "CONFIG_9P_FS=y" "$BASE_DIR/src/kernel/.config"; then
+            echo -e "${RED}Error: 9P filesystem support is not enabled in kernel!${NC}"
+            echo -e "${YELLOW}Please enable the following kernel configs:${NC}"
+            echo -e "${YELLOW}- CONFIG_9P_FS=y         (9P filesystem support)${NC}"
+            echo -e "${YELLOW}- CONFIG_9P_FS_POSIX_ACL=y (9P POSIX Access Control Lists)${NC}"
+            echo -e "${YELLOW}- CONFIG_NET_9P=y        (9P network protocol support)${NC}"
+            echo -e "${YELLOW}- CONFIG_NET_9P_VIRTIO=y  (9P virtio transport)${NC}"
+            return 1
+        fi
+    fi
+    
+    # Create mount point in rootfs for shared directory
+    if [ -n "$SHARE_DIR" ]; then
+        if [ ! -d "$SHARE_DIR" ]; then
+            echo -e "${RED}Shared directory $SHARE_DIR does not exist!${NC}"
+            return 1
+        fi
+    fi
     
     # Verify kernel exists
     KERNEL_IMAGE="$BASE_DIR/build/kernel-$ARCH"
@@ -1089,12 +1118,30 @@ run_kernel() {
             fi
         done
     fi
+    # Create mount point in rootfs
+    mkdir -p "$ROOTFS_DIR/mnt/host"
+    echo -e "${RED}To mount shared directory in guest OS, run:${NC}"
+    echo -e "${RED}mount -t 9p -o trans=virtio,version=9p2000.L hostshare /mnt/host${NC}"
     
     echo -e "${YELLOW}Running kernel for $ARCH with ${MEMORY_SIZE} memory...${NC}"
     
     # Create rootfs image (example using cpio)
     cd "$ROOTFS_DIR" || return 1
+    
+    # Temporarily copy kernel modules if they exist
+    if [ -d "$BASE_DIR/build/modules" ] && [ -n "$(ls -A "$BASE_DIR/build/modules")" ]; then
+        echo -e "${YELLOW}Copying kernel modules to rootfs...${NC}"
+        mkdir -p lib/modules
+        cp "$BASE_DIR/build/modules"/* lib/modules/
+    fi
+    
+    # Create cpio archive
     find . | cpio -o -H newc > "$BASE_DIR/build/rootfs-$ARCH.cpio.gz"
+    
+    # Clean up temporary module copies
+    if [ -d "lib/modules" ]; then
+        rm -rf lib/modules/*
+    fi
     
     # Determine QEMU machine type based on architecture
     case "$ARCH" in
@@ -1119,12 +1166,23 @@ run_kernel() {
     # Use QEMU to run the kernel (example)
     echo -e "${YELLOW}Starting QEMU with $MACHINE_TYPE machine...${NC}"
     set -x
-    qemu-system-"$ARCH" \
-        -machine "$MACHINE_TYPE" \
-        -kernel "$KERNEL_IMAGE" \
-        -initrd "$BASE_DIR/build/rootfs-$ARCH.cpio.gz" \
-        -m "$MEMORY_SIZE" \
+    QEMU_ARGS=(
+        -machine "$MACHINE_TYPE"
+        -kernel "$KERNEL_IMAGE"
+        -initrd "$BASE_DIR/build/rootfs-$ARCH.cpio.gz"
+        -m "$MEMORY_SIZE"
         -append "console=ttyS0"
+    )
+
+    # Add virtio-9p device if share directory is specified
+    if [ -n "$SHARE_DIR" ]; then
+        QEMU_ARGS+=(
+            -device "virtio-9p-pci,fsdev=host_share,mount_tag=hostshare"
+            -fsdev "local,security_model=mapped-xattr,path=$SHARE_DIR,id=host_share"
+        )
+    fi
+
+    qemu-system-"$ARCH" "${QEMU_ARGS[@]}"
     set +x
     
     echo -e "${GREEN}Kernel execution completed!${NC}"
@@ -1211,7 +1269,21 @@ init_environment() {
     if [ ! -f "$BASE_DIR/build/rootfs-$ARCH.cpio.gz" ]; then
         echo -e "${YELLOW}Creating rootfs image...${NC}"
         cd "$ROOTFS_DIR" || return 1
+        
+        # Temporarily copy kernel modules if they exist
+        if [ -d "$BASE_DIR/build/modules" ] && [ -n "$(ls -A "$BASE_DIR/build/modules")" ]; then
+            echo -e "${YELLOW}Copying kernel modules to rootfs...${NC}"
+            mkdir -p lib/modules
+            cp "$BASE_DIR/build/modules"/* lib/modules/
+        fi
+        
+        # Create cpio archive
         find . | cpio -o -H newc > "$BASE_DIR/build/rootfs-$ARCH.cpio.gz"
+        
+        # Clean up temporary module copies
+        if [ -d "lib/modules" ]; then
+            rm -rf lib/modules/*
+        fi
     fi
     
     # Provide command to run the kernel
@@ -1234,7 +1306,7 @@ show_help() {
     echo "  --make-rootfs METHOD     Create rootfs (debootstrap, busybox, download)"
     echo "  --build-module DIR       Build kernel module in DIR"
     echo "  --install-module MOD     Install module to rootfs"
-    echo "  --run-kernel [MEM]       Run kernel in QEMU (default memory: 512M)"
+    echo "  --run-kernel [MEM] [DIR]  Run kernel in QEMU (default memory: 512M, optional shared directory)"
     echo "  --help                   Display this help message"
     echo ""
     echo "Examples:"
@@ -1243,7 +1315,8 @@ show_help() {
     echo "  ./kernel_dev.sh --make-rootfs busybox"
     echo "  ./kernel_dev.sh --make-rootfs debootstrap bullseye"
     echo "  ./kernel_dev.sh --run-kernel
-  ./kernel_dev.sh --run-kernel 1G"
+  ./kernel_dev.sh --run-kernel 1G
+  ./kernel_dev.sh --run-kernel 512M /path/to/share"
     echo "  ./kernel_dev.sh --init x86_64"
     echo "  ./kernel_dev.sh --init arm32 6.1.0 debootstrap bullseye"
     echo "  ./kernel_dev.sh --init aarch64 5.15.0 download full"
@@ -1305,11 +1378,22 @@ case "$1" in
         install_module "$2"
         ;;
     --run-kernel)
-        if [ $# -ge 2 ]; then
-            run_kernel "$2"
-        else
-            run_kernel
-        fi
+        case $# in
+            1)
+                run_kernel
+                ;;
+            2)
+                run_kernel "$2"
+                ;;
+            3)
+                run_kernel "$2" "$3"
+                ;;
+            *)
+                echo -e "${RED}Too many arguments for --run-kernel!${NC}"
+                show_help
+                exit 1
+                ;;
+        esac
         ;;
     --help)
         show_help
