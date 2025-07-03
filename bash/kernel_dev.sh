@@ -1124,7 +1124,6 @@ run_kernel() {
         -kernel "$KERNEL_IMAGE" \
         -initrd "$BASE_DIR/build/rootfs-$ARCH.cpio.gz" \
         -m "$MEMORY_SIZE" \
-        -nographic \
         -append "console=ttyS0 init=/bin/sh"
     set +x
     
