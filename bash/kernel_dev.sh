@@ -951,15 +951,15 @@ build_module() {
     echo -e "${YELLOW}Building kernel module in $MODULE_DIR for $ARCH...${NC}"
     
     # Create modules directory if it doesn't exist
-    mkdir -p "$BASE_DIR/modules"
+#    mkdir -p "$BASE_DIR/modules"
     
     # Check if module directory exists
-    if [ ! -d "$BASE_DIR/modules/$MODULE_DIR" ]; then
+    if [ ! -d "$MODULE_DIR" ]; then
         echo -e "${RED}Module directory not found!${NC}"
         return 1
     fi
     
-    cd "$BASE_DIR/modules/$MODULE_DIR" || return 1
+    cd "$MODULE_DIR" || return 1
     
     # Assume we have a Makefile; adjust as needed
     if [ ! -f "Makefile" ]; then
