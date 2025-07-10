@@ -1175,7 +1175,9 @@ run_kernel() {
         -kernel "$KERNEL_IMAGE"
         -initrd "$BASE_DIR/build/rootfs-$ARCH.cpio.gz"
         -m "$MEMORY_SIZE"
+        -serial stdio
         -append "console=ttyS0"
+        #-append "console=tty0"
     )
 
     # Add virtio-9p device if share directory is specified
