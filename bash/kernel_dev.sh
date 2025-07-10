@@ -991,18 +991,22 @@ build_module() {
     esac
     
     # Build the module
-    make -C "$BASE_DIR/src/kernel" M="$PWD" modules ARCH="$ARCH_PARAM"
+    make -C "$BASE_DIR/src/kernel" M="$PWD" modules ARCH="$ARCH_PARAM" 
     if [ $? -ne 0 ]; then
         echo -e "${RED}Module build failed!${NC}"
         return 1
     fi
     
     # Copy module to build directory
-    MODULE_NAME=$(basename "$(find . -name '*.ko' 2>/dev/null | head -n 1)")
+    MODULE_NAME="$(find . -name '*.ko' 2>/dev/null)"
     if [ -n "$MODULE_NAME" ]; then
-        cp "$MODULE_NAME" "$BASE_DIR/build/modules/"
+        set -x
+        find . -name '*.ko' -exec cp {} "$BASE_DIR/build/modules" \;
+        set +x
         echo -e "${GREEN}Kernel module $MODULE_NAME built successfully!${NC}"
+        make -C "$BASE_DIR/src/kernel" M="$PWD" clean ARCH="$ARCH_PARAM" 
     else
+        make -C "$BASE_DIR/src/kernel" M="$PWD" clean ARCH="$ARCH_PARAM" 
         echo -e "${RED}No module found after build!${NC}"
         return 1
     fi
