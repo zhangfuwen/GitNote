@@ -25,6 +25,14 @@ end
 require('packer').startup(function(use)
     -- 插件管理器自身
     use 'wbthomason/packer.nvim'
+    use {
+        'neovim/nvim-lspconfig',             -- LSP 配置核心
+--        commit = "e8b727d0f71c7efe405494535676fcfb2185f8fd", -- v1.0.0 tag
+        requires = {
+            'williamboman/mason.nvim',         -- Mason 核心
+            'williamboman/mason-lspconfig.nvim'-- 桥接 mason 和 lspconfig
+        }
+    }
     
     -- 1.2 Appearance
     use 'vim-airline/vim-airline'
@@ -60,9 +68,10 @@ require('packer').startup(function(use)
     use 'sgur/vim-textobj-parameter'
     
     -- 1.7 Async lint engine
-    use 'w0rp/ale'
+    --ll::use 'w0rp/ale'
     
     -- 1.8 Auto completion
+    use 'ibhagwan/fzf-lua'
     if vim.fn.has('python3') == 1 then
         use { 'neoclide/coc.nvim', branch = 'release' }
         use 'scrooloose/nerdcommenter'
@@ -169,7 +178,7 @@ vim.opt.sidescrolloff = 7
 -- 3.5 编码设置
 vim.opt.helplang = 'cn'
 vim.opt.encoding = 'utf-8'
-vim.opt.termencoding = 'utf-8'
+--vim.opt.termencoding = 'utf-8'
 vim.opt.fileencodings = 'utf-8,ucs-bom,cp936,gb18030,latin1'
 vim.opt.fileencoding = 'utf-8'
 vim.opt.fileformat = 'unix'
@@ -257,10 +266,12 @@ if vim.fn.empty(vim.fn.stdpath('data').."/pack/packer/start/quickui.vim/README.m
         ]])
 
     -- 安装LeaderF菜单
-    vim.cmd([[call quickui#menu#install('Leader&f', [
+    vim.cmd([[call quickui#menu#install('&Find', [
         \ ["&File\t file", 'Leaderf file' ],
+        \ ["&Symbols", 'FzfLua lsp_workspace_symbols' ],
+        \ ["Fzf refs", 'FzfLua lsp_references' ],
         \ ["&Tag\t tag", 'Leaderf tag' ],
-        \ ["&Snippet\t snippet", 'Leaderf snippet' ],
+        \ ["S&nippet\t snippet", 'Leaderf snippet' ],
         \ ["&Grep\t search", 'Leaderf rg' ],
         \ ["Rg &Interactive", 'LeaderfRgInteractive' ],
         \ ["Grep search &recall", 'LeaderfRgRecall' ],
@@ -351,7 +362,8 @@ call quickui#menu#install("&Option", [
     ]])
 
     -- 注册HELP菜单
-    vim.cmd([[call quickui#menu#install('H&elp', [
+    vim.cmd([[call quickui#menu#install('&Help', [
+        \ ["Settings", 'e ~/.config/nvim/init.lua' ],
         \ ["&Cheatsheet", 'help index', ''],
         \ ['T&ips', 'help tips', ''],
         \ ['--',''],
@@ -435,10 +447,10 @@ vim.keymap.set('n', 'tv', ':PreviewTag<CR>')
 -- easy motion映射
 vim.keymap.set({'n', 'x'}, '<Leader>f', '<Plug>(easymotion-bd-f)')
 vim.keymap.set('n', '<Leader>f', '<Plug>(easymotion-overwin-f)')
-vim.keymap.set('n', 's', '<Plug>(easymotion-overwin-f2)')
+--vim.keymap.set('n', 's', '<Plug>(easymotion-overwin-f2)')
 vim.keymap.set({'n', 'x'}, '<C-L>', '<Plug>(easymotion-bd-jk)')
 vim.keymap.set('n', '<C-L>', '<Plug>(easymotion-overwin-line)')
-vim.keymap.set({'n', 'x'}, '<C-L>u', '<Plug>(easymotion-bd-w)')
+--vim.keymap.set({'n', 'x'}, '<C-L>u', '<Plug>(easymotion-bd-w)')
 vim.keymap.set('n', '<C-L>u', '<Plug>(easymotion-overwin-w)')
 
 -- F6键映射
@@ -539,3 +551,10 @@ vim.cmd([[
     nnoremenu PopUp.TempTerminal :call quickui#terminal#open('bash', {'w':80, 'h':32, 'callback':'', 'title':'terminal'})<CR>
     nnoremenu PopUp.Close\ Terminal :bdelete!<CR>
 ]])
+
+
+require("mason").setup()
+require("mason-lspconfig").setup({
+  ensure_installed = { "clangd" }, 
+})
+
