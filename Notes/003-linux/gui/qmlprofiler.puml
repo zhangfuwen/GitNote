@@ -1,0 +1,213 @@
+@startuml
+
+title: qml profiler
+
+class QJSEnginePrivate {
+    addToDebugServer(QJSEngine *q)
+}
+
+QJSEnginePrivate <|-- QQmlEnginePrivate
+QQmlEnginePrivate::profiler *-> QQmlProfiler
+class QQmlEnginePrivate {
+    profiler : QQmlProfiler
+}
+
+class QJSEngine {
+    evaluate(program, fileName, lineNumber)
+    newObject()
+    newArray(length)
+    newQObject(QObject *o)
+    newQMetaObject()
+}
+
+QJSEngine <|-- QQmlEngine
+class QQmlEngine {
+    rootContext();
+    setImageProvider();
+    setUrlInterpreter()
+    createContextForObject()
+    setObjectOwnership()
+}
+
+QQmlProfilerDefinitions <|-- QQmlAbstractProfilerAdaptor
+QQmlProfilerDefinitions <|-- QQmlProfiler
+QQmlProfilerDefinitions <|-- QQmlProfilerHelper
+QQmlProfilerHelper <|-- QQmlBindingProfiler
+QQmlProfilerHelper <|-- QQmlHandlingSignalProfiler
+QQmlProfilerHelper <|-- QQmlCompilingProfiler
+QQmlProfilerHelper <|-- QQmlVmeProfiler
+QQmlProfilerHelper <|-- QQmlObjectCreationProfiler
+QQmlProfilerHelper <|-- QQmlObjectCompletionProfiler
+
+QQmlBindingProfiler::profiler *-> QQmlProfiler
+QQmlHandlingSignalProfiler::profiler *-> QQmlProfiler
+QQmlCompilingProfiler::profiler *-> QQmlProfiler
+QQmlVmeProfiler::profiler *-> QQmlProfiler
+QQmlObjectCreationProfiler::profiler *-> QQmlProfiler
+QQmlObjectCompletionProfiler::profiler *-> QQmlProfiler
+
+class QQmlAbstractProfilerAdaptor {
+    startProfiling(features)
+    stopProfiling()
+    reportData(bool trackLocations)
+    startService(QQmlProfilerService service)
+    sendMessages()
+}
+
+class QQmlProfiler {
+    startBinding(binding, function)
+    startCompiling()
+    startHandlingSignal()
+    startCreating()
+    m_data
+}
+
+class QQmlMemoryProfiler
+show QQmlBindingProfiler
+remove QQmlHandlingSignalProfiler
+show QQmlCompilingProfiler
+remove QQmlVmeProfiler
+remove QQmlObjectCreationProfiler
+remove QQmlObjectCompletionProfiler
+@enduml
+
+@startuml
+
+title: new profiler
+class QQmlDebugService
+QQmlDebugService <|-- QQmlProfilerService
+QQmlDebugService <|-- QQmlEngineDebugService
+QQmlDebugService <|-- QQmlNativeDebugService
+QQmlDebugService <|-- QQmlInspectorService
+QQmlDebugService <|-- QQmlDebugMessageService
+QQmlDebugService <|-- QQmlEngineControlService
+@enduml
+
+
+
+@startuml
+package qml/debugger {
+    class QQmlProfilerService {
+        * dataReady (profilerAdapter)
+    }
+    class QQmlAbstractProfilerAdaptor {
+        * startProfiling ()
+        * stopProfiling ()
+        * reportData ()
+        * receiveData(data)
+        + profilingEnabled () signal
+        + profilingDisabled () signal
+        + dataRequested () signal
+    }
+    QQmlAbstractProfilerAdaptor::reportData "emits"..> QQmlAbstractProfilerAdaptor::dataRequested
+    class QQmlProfiler {
+        * startBinding()
+        * startCreating()
+        * startCompiling()
+        * startProfiling()
+        * stopProfiling()
+        * reportData()
+        + dataReady(data) signal
+    }
+    note left of QQmlProfiler: startBinding等不是虛函數
+    QQmlAbstractProfilerAdaptor::dataRequested "connects to"..> QQmlProfiler::reportData
+    QQmlBindingProfiler "startBinding()"..> QQmlProfiler
+    QQmlCreateProfiler "startCreating()"..> QQmlProfiler
+    QQmlCompileProfiler "startCompiling()"..> QQmlProfiler
+}
+package plugins/qmltooling/qmldbg_profiler {
+note "Adapter创建 一个profiler\n并setProfiler到engine,typeloader" as Na
+    class QQmlProfilerAdapter
+    class QV4ProfilerAdapter
+    class QQmlProfilerService {
+        m_globalProfilers
+        m_engineProfilers
+    }
+    class QQmlProfilerServiceImpl {
+        flush ()
+        ---
+        dataReady (profilerAdapter)
+        sendMessages() emit messageToClient
+    }
+    QQmlProfilerServiceImpl::sendMessages .> QQmlProfilerAdapter::sendMessages
+    QQmlProfilerServiceImpl --|> QQmlProfilerService
+    QQmlProfilerServiceImpl::flush .> QQmlProfilerAdapter::reportData
+}
+package qml/qml {
+    class QQmlTypeLoader  {
+        m_profiler: QQmlProfiler
+    }
+    QQmlTypeLoader::m_profiler "link" ..> QQmlProfiler
+
+    class QQmlEngine {
+        private() : QQmlEnginePrivate
+    }
+    QJSEngine <|-- QQmlEngine
+    QQmlEngine .. QQmlEnginePrivate
+}
+QQmlProfilerAdapter --|> QQmlAbstractProfilerAdaptor
+QV4ProfilerAdapter --|> QQmlAbstractProfilerAdaptor
+QQmlProfilerAdapter::QQmlProfilerAdapter "setProfiler(new QQmlProfiler)"--> QQmlTypeLoader
+QQmlProfilerAdapter::receiveData ..> QQmlProfilerService::dataReady
+
+package QV4 <<qml/jsruntime>>{
+    note top of Profiling : "functionCall 只有两个地方"
+    class ExecutionEngine {
+        profiler()
+        setProfiler(Profiling::Profiler)
+        publicEngine: QJSEngine
+        m_qmlEngine: QQmlEngine
+    }
+    package Profiling {
+        class Profiler {
+            trackAlloc()
+            trackDealloc()
+            startProfiling()
+            stopProfiling()
+            reportData()
+            m_data QVector<FunctionCall>
+            m_memory_data
+        }
+        FunctionCallProfiler "stores to " ..> Profiler::m_data
+    }
+}
+
+
+ExecutionEngine::publicEngine ..> QJSEngine
+ExecutionEngine::m_qmlEngine ..> QQmlEngine
+ExecutionEngine "uses" .> Profiler
+
+
+
+class QQmlAbstractProfilerAdaptor  {
+    startProfiling()
+    stopProfiling()
+    reportData()
+}
+class QQmlProfilerAdapter {
+    data []
+    sendMessages (out msg)
+    QQmlProfilerAdapter()
+    startProfiling()
+    stopProfiling()
+    receiveData(data)
+    reportData()
+}
+class QV4ProfilerAdapter {
+    startProfiling()
+    stopProfiling()
+    reportData()
+}
+
+
+
+class QQmlEnginePrivate {
+    profiler : QQmlProfiler
+}
+QQmlEnginePrivate::profiler "has" ..> QQmlProfiler
+class QQmlProfiler
+class QQmlBindingProfiler {
+    QQmlBinderProfiler(profiler,..)
+}
+
+@enduml
