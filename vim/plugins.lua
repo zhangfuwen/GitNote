@@ -1,27 +1,27 @@
 -- ~/.config/nvim/lua/plugins.lua
-quickui_menu_cmds = [[
+
+function setup_quickui_menu()
+    vim.cmd [[
 call quickui#menu#reset()
 call quickui#menu#install('&Find', [
 \ ["Switch &Header/Source\tta", 'FSHere'],
-\ ["Search &In This File\tts", 'silent! FindAllHere' ],
 \ ["--", '' ],
-\ ["&Find", 'FzfLua lines' ],
-\ ["&Find in files", 'Leaderf file' ],
-\ ["&Symbols", 'FzfLua lsp_workspace_symbols' ],
-\ ["Fzf refs", 'FzfLua lsp_references' ],
-\ ["&Tag\t tag", 'Leaderf tag' ],
-\ ["S&nippet\t snippet", 'Leaderf snippet' ],
-\ ["&Grep\t search", 'Leaderf rg' ],
-\ ["Rg &Interactive", 'LeaderfRgInteractive' ],
-\ ["Grep search &recall", 'LeaderfRgRecall' ],
-\ ["F&unction\t function", 'Leaderf function' ],
-\ ["&Buffers", 'Leaderf buffer' ],
+\ ["&Global search", 'FzfLua global' ],
+\ ["&Search in buffer", 'FzfLua blines' ],
+\ ["&Search in all buffer", 'FzfLua lines' ],
+\ ["&Search in folder(live_grep)", 'FzfLua live_grep' ],
+\ ["--", '' ],
+\ ["Find &Files", 'FzfLua files' ],
+\ ["Find &Symbols", 'FzfLua lsp_live_workspace_symbols' ],
+\ ["Find &References", 'FzfLua lsp_references' ],
+\ ["--", '' ],
 \ ["E&xit\tAlt+x", 'echo 6' ],
 \])
 call quickui#menu#install('&Code', [
-\ ["Format file", ':lua vim.lsp.buf.format()'],
-\ ["Comment lines", ':lua vim.lsp.buf.execute_command({ command = "editor.action.commentLine" })'],
+\ ["&Format file", ':lua vim.lsp.buf.format()'],
+\ ["&Comment lines", ':lua vim.lsp.buf.execute_command({ command = "editor.action.commentLine" })'],
 \ ["Cod all fold\tzR", 'normal zR'],
+\ ["Generate &Doxygen comment", ':Dox'],
 \])
 call quickui#menu#install('&View', [
 \ ["Open one fold here\tzo", 'normal zo'],
@@ -55,7 +55,8 @@ call quickui#menu#install('&Locationlist', [
 
 let g:cmake_compile_commands=1
 let g:cmake_compile_commands_link='.'
-call quickui#menu#install('&CMake', [
+call quickui#menu#install('&Tools', [
+\ ["----------\tCMake\t--------", '' ],
 \ ['&Generate','CMake'],
 \ ['&Build','CMakeBuild'],
 \ ['&Test','CTest'],
@@ -68,40 +69,46 @@ call quickui#menu#install('&CMake', [
 \ ['C&lean','CMakeClean'],
 \ ['Res&et','CMakeReset'],
 \ ['Reset&Relo&ad','CMakeResetAndReload' ],
-\ ])
-
-call quickui#menu#install('&Preview', [
-\ [ "&Close\t pc", 'pc' ],
-\ [ "&Search\t ps", 'ps' ],
-\ [ "&Edit\t ped", 'ped' ],
-\ [ "&Jump\t ptjump", 'ptjump' ],
-\ [ "&Tag\t ptag", 'ptag' ],
-\ ])
-
-call quickui#menu#install('&Git', [
+\ ["--------Git\t-----------", '' ],
 \ [ "&Status\t G", 'G' ],
 \ [ "&Llog\t Gllog", 'Gllog' ],
 \ [ "&Clog\t Gclog", 'Gclog' ],
+\ ["-------Terminal\t-------", '' ],
+\ [ '&Terminal', "call quickui#terminal#open('bash', {'title':'terminal'})", 'help 1' ],
+\ ["-------LLM\t-------", '' ],
+\ [ "&Chat", "LLMSessionToggle"],
+\ [ "&ExplainCode", "LLMSelectedTextHandler 'explain the code'"],
+\ ["-------Plantuml\t-------", '' ],
+\ ["&PlantumlOpen", 'PlantumlOpen' ],
 \ ])
 
 call quickui#menu#install('&Run', [
-\ [ "&Run this file with python3", ":exec '!python3' shellescape(@%, 1)" ],
-\ [ "&Run this file with bash", ":exec '!bash' shellescape(@%, 1)" ],
+\ [ "Run this file with &python3", ":exec '!python3' shellescape(@%, 1)" ],
+\ [ "Run this file with &bash", ":exec '!bash' shellescape(@%, 1)" ],
+\ [ "Run codeblock(markdown)", ":call org#main#runCodeBlock()" ],
+\ [ "Run language(all blocks)", ":call org#main#runLanguage()" ],
 \ ])
 
 " list
-call quickui#menu#install('&List', [
-\ [ "&Buffers", "call quickui#tools#list_buffer('e')" ],
+call quickui#menu#install('&Navigate', [
 \ [ "&Functions", "call quickui#tools#list_function()" ],
+\ [ "Buffer Tags", "FzfLua btags" ],
+\ [ "&Buffers", "call quickui#tools#list_buffer('e')" ],
+\ [ "&Tabs", "FzfLua tabs" ],
+\ [ "&Marks", "FzfLua marks" ],
+\ [ "&Jumps", "FzfLua jumps" ],
+\ [ "&Changes", "FzfLua changes" ],
+\ [ "Next change", "normal! g," ],
+\ [ "Prev change", "normal! g;" ],
+\ [ "Next jump", "normal! <c-o>" ],
+\ [ "Prev jump", "normal! <c-i>" ],
 \ ])
-" items containing tips, tips will display in the cmdline
-call quickui#menu#install('&Terminal', [
-\ [ '&Terminal', "call quickui#terminal#open('bash', {'title':'terminal'})", 'help 1' ],
-\ ])
-"            \ [ '&Terminal', "call quickui#terminal#open('bash', {'w':60, 'h':8, 'callback':'TermExit', 'title':'terminal'})", 'help 1' ],
 
+" items containing tips, tips will display in the cmdline
 " script inside %{...} will be evaluated and expanded in the string
 call quickui#menu#install("&Option", [
+\ ["&Commands", "FzfLua commands" ],
+\ ['&Colorschemes', 'FzfLua colorschemes'],
 \ ['Set &Spell %{&spell? "Off":"On"}', 'set spell!'],
 \ ['Set &Cursor Line %{&cursorline? "Off":"On"}', 'set cursorline!'],
 \ ['Set &Paste %{&paste? "Off":"On"}', 'set paste!'],
@@ -109,10 +116,11 @@ call quickui#menu#install("&Option", [
 
 
 call quickui#menu#install('&Help', [
-\ ["Edit init.lua", 'e ~/.config/nvim/init.lua' ],
-\ ["Edit plugins.lua", 'e ~/.config/nvim/lua/plugins.lua' ],
-\ ["&Lazy", 'Lazy', ''],
-\ ["&Mason", 'Mason', ''],
+\ ["Edit &init.lua", 'e ~/.config/nvim/init.lua' ],
+\ ["Edit &plugins.lua", 'e ~/.config/nvim/lua/plugins.lua' ],
+\ ["&Lazy(plugin store)", 'Lazy', ''],
+\ ["&Mason(lsp store)", 'Mason', ''],
+\ ["&Keymaps", 'FzfLua keymaps', ''],
 \ ["&Cheatsheet", 'help index', ''],
 \ ['T&ips', 'help tips', ''],
 \ ['--',''],
@@ -122,6 +130,8 @@ call quickui#menu#install('&Help', [
 \ ], 10000)
 
 ]]
+end
+
 return {
     ----------------------------------------------------------------------
     -- 🧩 PLUGIN MANAGER
@@ -161,43 +171,57 @@ return {
     { "itchyny/vim-cursorword",           event = "BufReadPre" },
     { "octol/vim-cpp-enhanced-highlight", ft = "cpp" },
     { "Yggdroot/indentLine",              event = "BufReadPre" },
+    { -- it is a colorscheme, with better cousor line color
+        'folke/tokyonight.nvim',
+        lazy = false,
+        priority = 1000,
+        opts = {
+            -- your options
+        },
+        config = function(_, opts)
+            require('tokyonight').setup(opts)
+            vim.cmd("highlight CursorLine guibg=#1e2129 ctermbg=238")
+        end,
+    },
 
     ----------------------------------------------------------------------
     -- 📁 FILE & PROJECT MANAGEMENT
     ----------------------------------------------------------------------
     {
-        "scrooloose/nerdtree",
-        cmd = "NERDTreeToggle",
-        keys = { { "<leader>n", "<cmd>NERDTreeToggle<cr>", desc = "Toggle NERDTree" } },
+        'preservim/nerdtree',
+        dependencies = {
+            'tiagofumo/vim-nerdtree-syntax-highlight',
+        },
+        config = function()
+            -- Load NerdTree
+            vim.g.NERDTreeShowHidden = 1
+            vim.g.NERDTreeAutoCenter = 1
+            vim.g.NERDTreeQuitOnOpen = 1
+        end,
+        keys = { { "tf", "<cmd>NERDTreeToggle<cr>", desc = "Toggle NERDTree" } },
     },
     {
-        "tiagofumo/vim-nerdtree-syntax-highlight",
-        ft = "nerdtree",
-        opts = {},
+        'tiagofumo/vim-nerdtree-syntax-highlight',
     },
     {
         "majutsushi/tagbar",
         cmd = "TagbarToggle",
-        keys = { { "tb", ":TagbarToggle", desc = "Toggle Tagbar" } },
+        keys = { { "tb", ":TagbarToggle<CR>", desc = "Toggle Tagbar" } },
+        keys = { { "tl", ":TagbarToggle<CR>", desc = "Toggle Tagbar" } },
     },
 
     ----------------------------------------------------------------------
     -- 🔍 SEARCH & FIND
     ----------------------------------------------------------------------
     {
-        "Yggdroot/LeaderF",
-        build = "./install.sh",
-        cmd = "Leaderf",
-        keys = { { "<leader>f", "<cmd>Leaderf<cr>", desc = "LeaderF" } },
-    },
-    {
         "skywind3000/vim-quickui",
         event = "VeryLazy",
         config = function()
             vim.g.quickui_border_style = 2
-            vim.keymap.set('n', 'to', ':call quickui#menu#open()<CR>')
+            vim.keymap.set('n', 'tt', ':call quickui#menu#open()<CR>')
             vim.g.quickui_show_tip = 1
-            vim.cmd(quickui_menu_cmds)
+            setup_quickui_menu()
+            --            vim.cmd(quickui_menu_cmds)
         end,
     },
     {
@@ -205,33 +229,73 @@ return {
         event = "VeryLazy",
     },
     -- {
-        -- "dyng/ctrlsf.vim",
-        -- cmd = "CtrlSF",
-        -- keys = { { "<leader>fs", "<cmd>CtrlSF ", desc = "Search in files" } },
+    -- "dyng/ctrlsf.vim",
+    -- cmd = "CtrlSF",
+    -- keys = { { "<leader>fs", "<cmd>CtrlSF ", desc = "Search in files" } },
     -- },
 
     ----------------------------------------------------------------------
     -- 🛠 TEXT OBJECTS & EDITING
     ----------------------------------------------------------------------
-    { "kana/vim-textobj-user",      event = "VeryLazy" },
+    --    { "kana/vim-textobj-user",      event = "VeryLazy" },
     --  { "kana/vim-textobj-indent",        event = "VeryLazy" },
     --  { "kana/vim-textobj-syntax",        event = "VeryLazy" },
-    {
-        "kana/vim-textobj-function",
-        ft = { "c", "cpp", "vim", "java" },
-    },
-    { "sgur/vim-textobj-parameter", ft = { "c", "cpp", "go", "rust" } },
+    --    {
+    --        "kana/vim-textobj-function",
+    --        ft = { "c", "cpp", "vim", "java" },
+    --    },
+    --   { "sgur/vim-textobj-parameter", ft = { "c", "cpp", "go", "rust" } },
 
     ----------------------------------------------------------------------
     -- 💬 COMMENTS & AUTO-CLOSING
     ----------------------------------------------------------------------
     -- { "scrooloose/nerdcommenter",   event = "BufReadPre" },
     {
-        "Townk/vim-autoclose",
-        event = "InsertEnter",
-        --    keys = { { "(", "()", mode = "i" }, { "[", "[]", mode = "i" }, { "\"", "\"\"", mode = "i" } },
+        'numToStr/comment.nvim',
+        event = 'VeryLazy',
+        opts = {
+            -- Optional: customize behavior
+            marker = {
+                inline = '',
+                block = '█',
+            },
+            toggler = {
+                line = 'gc',
+                block = 'gb',
+            },
+            mappings = {
+                basic = true,
+                extra = true,
+            },
+        },
     },
+    {
+        'windwp/nvim-autopairs',
+        event = 'InsertEnter',
+        opts = {
+            check_ts = true,                    -- Use treesitter to avoid closing in comments/strings
+            disable_filetype = { "TelescopePrompt", "spectre_panel" },
+            ignored_next_char = [=[[%w%.%s]]=], -- Don't auto-close after these chars
+            fast_wrap = {
+                map = "<M-e>",
+                chars = { "{", "[", "(", '"', "'" },
+                pattern = [=[[%(%[%{%"%']]=],
+                end_key = "e",
+                keys = "qwertyuiopzxcvbnm",
+                check_comma = true,
+                search_namespace = "nvim_autopairs_search",
+            },
+        },
+        config = function(_, opts)
+            local autopairs = require("nvim-autopairs")
+            autopairs.setup(opts)
 
+            -- Auto setup for LSP
+            local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+            local cmp = require("cmp")
+            cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({ map_char = { tex = "" } }))
+        end,
+    },
     ----------------------------------------------------------------------
     -- 📄 DOXYGEN & DOCUMENTATION
     ----------------------------------------------------------------------
@@ -251,6 +315,14 @@ return {
         keys = {
             { "<leader>j", "<Plug>(easymotion-j)", mode = "n" },
             { "<leader>k", "<Plug>(easymotion-k)", mode = "n" },
+
+            --vim.keymap.set({ 'n', 'x' }, '<Leader>f', '<Plug>(easymotion-bd-f)')
+            --vim.keymap.set('n', '<Leader>f', '<Plug>(easymotion-overwin-f)')
+            --vim.keymap.set('n', 's', '<Plug>(easymotion-overwin-f2)')
+            --vim.keymap.set({ 'n', 'x' }, '<C-L>', '<Plug>(easymotion-bd-jk)')
+            --vim.keymap.set('n', '<C-L>', '<Plug>(easymotion-overwin-line)')
+            --vim.keymap.set({'n', 'x'}, '<C-L>u', '<Plug>(easymotion-bd-w)')
+            --vim.keymap.set('n', '<C-L>u', '<Plug>(easymotion-overwin-w)')
         },
     },
     {
@@ -263,6 +335,7 @@ return {
     ----------------------------------------------------------------------
     {
         "L3MON4D3/LuaSnip",
+        version = "v2.*",
         event = "InsertEnter",
         dependencies = {
             "saadparwaiz1/cmp_luasnip",
@@ -275,10 +348,9 @@ return {
         config = function(_, opts)
             require("luasnip").setup(opts)
             require("luasnip.loaders.from_vscode").lazy_load()
+            require("luasnip.loaders.from_snipmate").lazy_load()
         end,
     },
-    { "zhangfuwen/vim-snippets", after = "LuaSnip" },
-    { "SirVer/ultisnips",        ft = { "c", "cpp", "python" } },
 
     ----------------------------------------------------------------------
     -- 🔍 FZF & COMPLETION
@@ -297,8 +369,18 @@ return {
             "L3MON4D3/LuaSnip",
             "saadparwaiz1/cmp_luasnip",
         },
+        opts = function()
+            local cmp = require("cmp")
+            return {
+                -- Enable auto-selection of first item
+                completion = {
+                    completeopt = "menuone,noinsert",
+                },
+            }
+        end,
         config = function()
             local cmp = require("cmp")
+            local luasnip = require("luasnip")
             cmp.setup({
                 snippet = {
                     expand = function(args)
@@ -306,8 +388,45 @@ return {
                     end,
                 },
                 mapping = cmp.mapping.preset.insert({
+
                     ["<C-Space>"] = cmp.mapping.complete(),
+                    ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+                    ["<C-f>"] = cmp.mapping.scroll_docs(4),
                     ["<CR>"] = cmp.mapping.confirm({ select = false }),
+                    ["<Tab>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.select_next_item()
+                        elseif luasnip.expand_or_jumpable() then
+                            luasnip.expand_or_jump()
+                        -- elseif has_words_before() then
+                        --     cmp.complete()
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
+                    ["<S-Tab>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.select_prev_item()
+                        elseif luasnip.jumpable(-1) then
+                            luasnip.jump(-1)
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
+                    -- ["<Tab>"] = cmp.mapping(function(fallback)
+                    --     if cmp.visible() then
+                    --         cmp.select_next_item()
+                    --     else
+                    --         fallback()
+                    --     end
+                    -- end, { "i", "s" }),
+                    -- ["<S-Tab>"] = cmp.mapping(function(fallback)
+                    --     if cmp.visible() then
+                    --         cmp.select_prev_item()
+                    --     else
+                    --         fallback()
+                    --     end
+                    -- end, { "i", "s" }),
                 }),
                 sources = cmp.config.sources({
                     { name = "nvim_lsp" },
@@ -322,22 +441,28 @@ return {
     ----------------------------------------------------------------------
     -- 🐞 GIT & VCS
     ----------------------------------------------------------------------
-    { "airblade/vim-gitgutter",           event = "BufReadPre" },
-    { "tpope/vim-fugitive",               cmd = { "Git", "G" } },
-    { "will133/vim-dirdiff",              cmd = "DirDiff" },
-    { "gregsexton/gitv",                  cmd = "Gitv" },
+    { "airblade/vim-gitgutter", event = "BufReadPre" },
+    { "tpope/vim-fugitive",     cmd = { "Git", "G" } },
+    { "will133/vim-dirdiff",    cmd = "DirDiff" },
+    { "gregsexton/gitv",        cmd = "Gitv" },
 
     ----------------------------------------------------------------------
     -- 🧱 BUILD / PROJECT TOOLS
     ----------------------------------------------------------------------
-    { "ilyachur/cmake4vim",               ft = "cmake" },
+    { "ilyachur/cmake4vim",     ft = "cmake" },
 
     ----------------------------------------------------------------------
     -- 🌿 PLANTUML PREVIEW
     ----------------------------------------------------------------------
-    { "tyru/open-browser.vim",            cmd = "OpenBrowser" },
-    { "aklt/plantuml-syntax",             ft = "plantuml" },
-    { "weirongxu/plantuml-previewer.vim", ft = "plantuml" },
+    { "tyru/open-browser.vim",  cmd = "OpenBrowser" },
+    { "aklt/plantuml-syntax",   ft = "plantuml" },
+    {
+        "weirongxu/plantuml-previewer.vim",
+        ft = "plantuml",
+        dependencies = {
+            "tyru/open-browser.vim"
+        }
+    },
 
     ----------------------------------------------------------------------
     -- 🤖 LLM: Chat with Qwen
@@ -348,15 +473,97 @@ return {
             "nvim-lua/plenary.nvim",
             "MunifTanjim/nui.nvim",
         },
+        cmd = { "LLMSessionToggle", "LLMSelectedTextHandler", "LLMAppHandler" },
         keys = {
             { "<leader>ac", "<cmd>LLMSessionToggle<cr>", mode = "n", desc = "Toggle LLM Chat" },
+            { "<leader>ae", mode = "v", "<cmd>LLMSelectedTextHandler 请解释下面这段代码<cr>", desc = "explain code(LLM)" },
+            { "<leader>ts", mode = "x", "<cmd>LLMSelectedTextHandler 英译汉<cr>", desc = "translate(LLM)" },
+            { "<leader>ar", mode = "n", "<cmd>LLMAppHandler BashRunner<cr>", desc = "bash runner" },
         },
         config = function()
-            require("llm").setup({
-                model = "qwen-max",
-                url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation",
+            local llm = require("llm")
+            local tools = require("llm.tools")
+            print(vim.inspect(llm))
+            llm.setup({
+                model = "qwen3-30b-a3b-instruct-2507",
+                url = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
                 api_type = "openai",
                 -- api_key = os.getenv("DASHSCOPE_API_KEY"), -- Uncomment if using env var
+                app_handler = {
+                    BashRunner = {
+                        handler = tools.qa_handler,
+                        prompt = [[Write a suitable bash script and run it through CodeRunner]],
+                        opts = {
+                            model = "qwen3-30b-a3b-instruct-2507",
+                            url = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+                            api_type = "openai",
+                            max_tokens = 4096,
+                            enable_thinking = false,
+
+                            component_width = "60%",
+                            component_height = "50%",
+                            query = {
+                                title = "  CodeRunner ",
+                                hl = { link = "Define" },
+                            },
+                            input_box_opts = {
+                                size = "15%",
+                                win_options = {
+                                    winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+                                },
+                            },
+                            preview_box_opts = {
+                                size = "85%",
+                                win_options = {
+                                    winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+                                },
+                            },
+                            functions_tbl = {
+                                CodeRunner = function(code)
+                                    print("try running code")
+                                    local filepath = "/tmp/script.sh"
+
+                                    -- Print the code suggested by llm
+                                    vim.notify(
+                                        string.format("CodeRunner running...\n```bash\n%s\n```", code),
+                                        vim.log.levels.INFO,
+                                        { title = "llm: CodeRunner" }
+                                    )
+
+                                    local file = io.open(filepath, "w")
+                                    if file then
+                                        file:write(code)
+                                        file:close()
+                                        local script_result = vim.system({ "bash", filepath }, { text = true }):wait()
+                                        os.remove(filepath)
+                                        return script_result.stdout
+                                    else
+                                        return ""
+                                    end
+                                end,
+                            },
+                            schema = {
+                                {
+                                    type = "function",
+                                    ["function"] = {
+                                        name = "CodeRunner",
+                                        description = "Bash code interpreter",
+                                        parameters = {
+                                            properties = {
+                                                code = {
+                                                    type = "string",
+                                                    description = "bash code",
+                                                },
+                                            },
+                                            required = { "code" },
+                                            type = "object",
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             })
         end,
     },
@@ -367,6 +574,32 @@ return {
     {
         "ludovicchabant/vim-gutentags",
         ft = { "c", "cpp", "java", "go", "python" },
+    },
+
+    {
+        "Kurama622/markdown-org",
+        ft = "markdown",
+        config = function()
+            vim.g.language_path = {
+                python = "python",
+                python3 = "python3",
+                go = "go",
+                c = "gcc -Wall",
+                cpp = "g++ -std=c++17 -Wall",
+                bash = "bash",
+                ["c++"] = "g++ -std=c++17 -Wall",
+            }
+            return {
+                default_quick_keys = 0,
+                vim.api.nvim_set_var("org#style#border", 2),
+                vim.api.nvim_set_var("org#style#bordercolor", "FloatBorder"),
+                vim.api.nvim_set_var("org#style#color", "String"),
+            }
+        end,
+        keys = {
+            { "<leader>mr", "<cmd>call org#main#runCodeBlock()<cr>" },
+            { "<leader>ml", "<cmd>call org#main#runLanguage()<cr>" },
+        },
     },
 
     {
@@ -400,5 +633,6 @@ return {
                 })
             end,
         },
-    }
+    },
+
 }
