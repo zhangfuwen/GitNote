@@ -4,5 +4,11 @@
   "code-styler",
   "execute-code",
   "highlightr-plugin",
-  "obsidian-auto-link-title"
+  "obsidian-auto-link-title",
+  "dataview",
+  "table-editor-obsidian",
+  "copilot",
+  "recent-files-obsidian",
+  "obsidian-tasks-plugin",
+  "homepage"
 ]

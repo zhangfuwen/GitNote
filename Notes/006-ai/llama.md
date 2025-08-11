@@ -36,11 +36,14 @@ model_size可选值：7B,13B,30B,65B。其中7B模型大概14GB以内，13B模�
 可以通过量化的方式把模型降到原来的四分之一大小。
 
 下载完的目录结构：
+
+```
 ✅ pyllama_data/tokenizer.model
 ✅ pyllama_data/tokenizer_checklist.chk
 ✅ pyllama_data/7B/consolidated.00.pth
 ✅ pyllama_data/7B/params.json
 ✅ pyllama_data/7B/checklist.chk
+```
 
 模型权重文件是有格式的，这种方式下载到的是pytorch格式的，需要传换成ggml格式才能用：
 
