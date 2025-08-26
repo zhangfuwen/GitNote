@@ -6,7 +6,7 @@
 
 ### The Llama 3 Herd of Models
 
-![](assets/468347782_9231729823505907_4580471254289036098_n.pdf)
+[PDF: The Llama 3 Herd of Models](assets/468347782_9231729823505907_4580471254289036098_n.pdf)
 
 #### pretrainin
 
@@ -23,7 +23,7 @@ DPO
 
 https://machinelearning.apple.com/research/introducing-apple-foundation-models
 
-![](assets/AppleIntelligenceFoundationModels_2407.21075v1.pdf)
+[PDF: Apple Intelligence Foundation Language Models](assets/AppleIntelligenceFoundationModels_2407.21075v1.pdf)
 
 ![](assets/Pasted%20image%2020250314101343.png)
 AFM-on-device模型参数量2.58B（0.15B embedding)，推理速度是`0.6 ms per prompt token`，30 token/s without token speculation。
@@ -54,7 +54,7 @@ Device model用于：
 https://arxiv.org/abs/2501.12948
 
 
-![](assets/2501.12948v1.pdf)
+[PDF: DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning](assets/2501.12948v1.pdf)
 
 论文要求：
 1. 只使用RL来强化自身能力，这是self-evolution，不需要人类给正确答案。少量cold start 数据（几千条）有帮助。
@@ -73,8 +73,7 @@ https://arxiv.org/abs/2402.03300
 
 ![](assets/Pasted%20image%2020250313143107.png)
 
-# 推理
 
 
-# Agent
+
 

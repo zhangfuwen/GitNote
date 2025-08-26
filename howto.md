@@ -11,7 +11,36 @@ text: |
 
 ---
 
+## Obsidian style callout
+
+> [!info]  This is a callout
+> This is the content
+
+the code is like:
+
+```markdown
+> [!info] This is a callout
+> This is the content
+```
+
+all callouts are:
+
+```
+info, 
+tip,
+error,  danger, 
+warning, caution, attention
+question, help, faq
+success, check, done
+tip, hint, important
+todo
+abstract, summary, tldr
+note
+example, 
+failure, fail, missing,  
+```
 # toast cards
+
 
 {% raw %}
 

@@ -4,10 +4,10 @@ see [Summary](SUMMARY.md)
 
 ## AI
 
-* [AI基础概念](Notes/006-ai/000_AI_basic_concepts.md)
-* [GPU&内存等硬件性能](Notes/006-ai/001_gpu_and_memory_performance.md)
-* [006_llama_dot_cpp](Notes/006-ai/006_llama_dot_cpp.md)
-* [高通](Notes/006-ai/004_NPU_development.md)
+* [AI基础概念](Notes/006-ai/001_AI_basic_concepts.md)
+* [GPU&内存等硬件性能](Notes/006-ai/101_gpu_and_memory_performance.md)
+* [206_llama_dot_cpp](Notes/006-ai/206_llama_dot_cpp.md)
+* [高通](Notes/006-ai/204_NPU_development.md)
 
 
 ## linux

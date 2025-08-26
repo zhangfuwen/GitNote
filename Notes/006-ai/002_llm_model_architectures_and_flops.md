@@ -140,7 +140,7 @@ merge_output --> final_output : 合并后的输出
 
 #### MLA
 
-![](LLM训练/assets/Pasted%20image%2020250313144307.png)
+![](assets/Pasted%20image%2020250313144307.png)
 
 ### Normalization
 
