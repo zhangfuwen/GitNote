@@ -4,8 +4,10 @@ see [Summary](SUMMARY.md)
 
 ## AI
 
-* [llama](./Notes/006-ai/llama.md)
-* [高通](./Notes/006-ai/qualcomm.md)
+* [AI基础概念](Notes/006-ai/000_AI_basic_concepts.md)
+* [GPU&内存等硬件性能](Notes/006-ai/001_gpu_and_memory_performance.md)
+* [006_llama_dot_cpp](Notes/006-ai/006_llama_dot_cpp.md)
+* [高通](Notes/006-ai/004_NPU_development.md)
 
 
 ## linux

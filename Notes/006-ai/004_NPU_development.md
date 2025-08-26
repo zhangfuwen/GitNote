@@ -1,6 +1,12 @@
 ---
 title: 高通DSP编程笔记
+titles:
+  - NPU编程
+tags:
+  - NPU
+  - programming
 ---
+
 # qualcomm dsp
 
 SDK position:
@@ -64,7 +70,7 @@ Shared object library that needs to be linked with the user space system applica
 Shared object library that needs to be linked with the user space system application invoking the remote procedure call. This library interfaces with the kernel driver to initiate the remote invocation to cDSP This is applicable only for Android P system applications
 
 
-![img.png](img.png)
+![img.png](assets/img.png)
 
 Error: Error : Emulation hexagonv5 is deprecated in this version of the toolchain
 

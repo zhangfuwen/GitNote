@@ -2,6 +2,13 @@
 title: AI入门： CNN-Yolo-Tensor分别是什么含义
 ---
 
+## floating point values
+
+fp32, 即常用的single precision floating point number，一个符号位，8个指数位，23个尾数位。
+fp16, 即half precision floating point number, 简称half float，一个符号位，5个指数位，10个尾数位。
+fp16的主要问题是指数位不够，从8降到5，表达的数值范围不够了。从1e-127~1e+128，降到了1e-15~1e+16.
+tf32，即tensor float 32，由nVidia提出，一个符号位，8个指数位，10个尾数位。指数位个数与fp32相同，表达的数值范围相同。尾数减少了，精度不如fp32，但与fp16是一样的。共使用19个比特。
+bf16，即brain float 16，由Google Brain团队提出，一个符号位，8个指数位，7个尾数位。指数位个数与fp32相同，表达的数值范围相同，尾数更少了，精度更差了，不如fp16，但AI计算能容忍。共使用16比特。
 ## Yolo
 
 1. 一般这模型分三个部分，backbone, head, anchors。backbone是核心部分，用于识别图像的特征。head根据这些特征对图片进行分类。anchors没懂。
