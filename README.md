@@ -4,11 +4,17 @@ see [Summary](SUMMARY.md)
 
 ## AI
 
-* [AI基础概念](Notes/006-ai/001_AI_basic_concepts.md)
-* [GPU&内存等硬件性能](Notes/006-ai/101_gpu_and_memory_performance.md)
-* [206_llama_dot_cpp](Notes/006-ai/206_llama_dot_cpp.md)
-* [高通](Notes/006-ai/204_NPU_development.md)
-
+* [000. AI 个人思考（稿纸）](/mnt/c/Users/刘涛/Documents/Code/GitNote/Notes/006-ai/000_AI_thoughts.md)
+* [001. AI基础概念](/mnt/c/Users/刘涛/Documents/Code/GitNote/Notes/006-ai/001_AI_basic_concepts.md)
+* [002. LLM的模型架构和资源需求](/mnt/c/Users/刘涛/Documents/Code/GitNote/Notes/006-ai/002_llm_arch_and_resource_requirements.md)
+* [003. LLM 训练技巧](/mnt/c/Users/刘涛/Documents/Code/GitNote/Notes/006-ai/003_LLM_training.md)
+* [005. Agentic 工作流程](/mnt/c/Users/刘涛/Documents/Code/GitNote/Notes/006-ai/005_Agentic_workflow.md)
+* [101. GPU和内存硬件参数](/mnt/c/Users/刘涛/Documents/Code/GitNote/Notes/006-ai/101_gpu_and_memory_performance.md)
+* [201. AI 编程技巧](/mnt/c/Users/刘涛/Documents/Code/GitNote/Notes/006-ai/201_coding_tricks.md)
+* [204. 高通NPU编程](/mnt/c/Users/刘涛/Documents/Code/GitNote/Notes/006-ai/204_NPU_development.md)
+* [205. CUDA 学习](/mnt/c/Users/刘涛/Documents/Code/GitNote/Notes/006-ai/205_cuda.md)
+* [206. 用llama.cpp跑LLM](/mnt/c/Users/刘涛/Documents/Code/GitNote/Notes/006-ai/206_llama_dot_cpp.md)
+* [301. LLM Pretrain过程记录](/mnt/c/Users/刘涛/Documents/Code/GitNote/Notes/006-ai/301_my_pretrain_history.md)
 
 ## linux
 
