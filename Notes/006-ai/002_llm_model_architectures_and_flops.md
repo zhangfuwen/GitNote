@@ -10317,6 +10317,5388 @@ Qwen3-30B-A3B-Instruct-2507 FLOPs:778.7 GFLOPS   MACs:389.33 GMACs   Params:30.5
 ```
 
 
+#### deepseek-vl-v2(16B-A)
+
+**总体：**
+
+| 总权重    | vision   | projector | language |     |
+| ------ | -------- | --------- | -------- | --- |
+| 16.15B | 428.23 M | 13.64 M   | 15.71 B  |     |
+**language:**
+
+共27层（0~26），第0层没有多专家：
+
+| total   | embeddings | layer 0 | layer 1~26 | lm head  |
+| ------- | ---------- | ------- | ---------- | -------- |
+| 15.71 B | 209.72 M   | 81.01 M | 584.85 M   | 209.72 M |
+**layer 0:**
+
+| total   | self_attn    | MLP           |
+| ------- | ------------ | ------------- |
+| 81.01 M | 13.76 M      | 67.24 M       |
+|         | Wq: 6.29M    | Gate: 22.41 M |
+|         | kv_a: 1.18 M | UP: 22.41 M   |
+|         | kv_b:2.1 M   | Down:22.41 M  |
+|         | Wo: 4.19M    |               |
+
+
+
+**layer 1~26:**
+
+self_attn与layer 0相同，MLP总参数量571.08 M， 64个专家，每个8.65 M，两个共享专家，每个也是8.65 M。
+即共66个专家。每次激活6 
+
+
+```
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Python version is above 3.10, patching the collections module.
+Add pad token = ['<｜▁pad▁｜>'] to the tokenizer
+<｜▁pad▁｜>:100002
+Add image token = ['<image>'] to the tokenizer
+<image>:100003
+Add grounding-related tokens = ['<|ref|>', '<|/ref|>', '<|det|>', '<|/det|>', '<|grounding|>'] to the tokenizer with input_ids
+<|ref|>:100004
+<|/ref|>:100005
+<|det|>:100006
+<|/det|>:100007
+<|grounding|>:100008
+Add chat tokens = ['<|User|>', '<|Assistant|>'] to the tokenizer with input_ids
+<|User|>:100009
+<|Assistant|>:100010
+
+
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]
+Loading checkpoint shards:  25%|██▌       | 1/4 [00:14<00:43, 14.58s/it]
+Loading checkpoint shards:  50%|█████     | 2/4 [00:30<00:30, 15.33s/it]
+Loading checkpoint shards:  75%|███████▌  | 3/4 [00:47<00:16, 16.30s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [01:01<00:00, 15.05s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [01:01<00:00, 15.26s/it]
+
+------------------------------------- Calculate Flops Results -------------------------------------
+Notations:
+number of parameters (Params), number of multiply-accumulate operations(MACs),
+number of floating-point operations (FLOPs), floating-point operations per second (FLOPS),
+fwd FLOPs (model forward propagation FLOPs), bwd FLOPs (model backward propagation FLOPs),
+default model backpropagation takes 2.00 times as much computation as forward propagation.
+
+Total Training Params:                                                  16.15 B 
+fwd MACs:                                                               317.84 GMACs
+fwd FLOPs:                                                              642.98 GFLOPS
+fwd+bwd MACs:                                                           953.53 GMACs
+fwd+bwd FLOPs:                                                          1.93 TFLOPS
+
+-------------------------------- Detailed Calculated FLOPs Results --------------------------------
+Each module caculated is listed after its name in the following order: 
+params, percentage of total params, MACs, percentage of total MACs, FLOPS, percentage of total FLOPs
+
+Note: 1. A module can have torch.nn.module or torch.nn.functional to compute logits (e.g. CrossEntropyLoss). 
+ They are not counted as submodules in calflops and not to be printed out. However they make up the difference between a parent's MACs and the sum of its submodules'.
+2. Number of floating-point operations is a theoretical estimation, thus FLOPS computed using that could be larger than the maximum system throughput.
+
+DeepseekVLV2ForCausalLM(
+  16.15 B = 100% Params, 317.84 GMACs = 100% MACs, 642.98 GFLOPS = 100% FLOPs
+  (vision): VisionTransformer(
+    428.23 M = 2.65% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+    (patch_embed): PatchEmbed(
+      678.53 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+      (proj): Conv2d(678.53 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, 3, 1152, kernel_size=(14, 14), stride=(14, 14))
+      (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+    )
+    (pos_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+    (patch_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+    (norm_pre): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+    (blocks): Sequential(
+      411.47 M = 2.55% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+      (0): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (1): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (2): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (3): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (4): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (5): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (6): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (7): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (8): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (9): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (10): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (11): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (12): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (13): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (14): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (15): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (16): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (17): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (18): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (19): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (20): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (21): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (22): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (23): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (24): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (25): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+      (26): Block(
+        15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (norm1): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          5.31 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (qkv): Linear(3.98 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=3456, bias=True)
+          (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (attn_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+          (proj_drop): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (ls1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path1): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (norm2): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+        (mlp): Mlp(
+          9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+          (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+          (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='tanh')
+          (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+          (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+          (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        )
+        (ls2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (drop_path2): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      )
+    )
+    (norm): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+    (attn_pool): AttentionPoolLatent(
+      15.24 M = 0.09% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+      (q): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+      (kv): Linear(2.66 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=2304, bias=True)
+      (q_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      (k_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+      (proj): Linear(1.33 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=1152, bias=True)
+      (proj_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+      (norm): LayerNorm(2.3 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, (1152,), eps=1e-06, elementwise_affine=True)
+      (mlp): Mlp(
+        9.92 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+        (fc1): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1152, out_features=4304, bias=True)
+        (act): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='none')
+        (drop1): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+        (norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        (fc2): Linear(4.96 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4304, out_features=1152, bias=True)
+        (drop2): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+      )
+    )
+    (fc_norm): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+    (head_drop): Dropout(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, p=0.0, inplace=False)
+    (head): Identity(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+  )
+  (projector): MlpProjector(
+    13.64 M = 0.08% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+    (layers): Sequential(
+      13.64 M = 0.08% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+      (0): Linear(9.44 M = 0.06% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=4608, out_features=2048, bias=True)
+      (1): GELU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, approximate='none')
+      (2): Linear(4.2 M = 0.03% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=2048, bias=True)
+    )
+  )
+  (language): DeepseekV2ForCausalLM(
+    15.71 B = 97.26% Params, 317.84 GMACs = 100% MACs, 642.98 GFLOPS = 100% FLOPs
+    (model): DeepseekV2Model(
+      15.5 B = 95.97% Params, 291 GMACs = 91.55% MACs, 589.29 GFLOPS = 91.65% FLOPs
+      (embed_tokens): Embedding(209.72 M = 1.3% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, 102400, 2048)
+      (layers): ModuleList(
+        (0): DeepseekV2DecoderLayer(
+          81.01 M = 0.5% Params, 10.52 GMACs = 3.31% MACs, 21.31 GFLOPS = 3.31% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MLP(
+            67.24 M = 0.42% Params, 8.61 GMACs = 2.71% MACs, 17.21 GFLOPS = 2.68% FLOPs
+            (gate_proj): Linear(22.41 M = 0.14% Params, 2.87 GMACs = 0.9% MACs, 5.74 GFLOPS = 0.89% FLOPs, in_features=2048, out_features=10944, bias=False)
+            (up_proj): Linear(22.41 M = 0.14% Params, 2.87 GMACs = 0.9% MACs, 5.74 GFLOPS = 0.89% FLOPs, in_features=2048, out_features=10944, bias=False)
+            (down_proj): Linear(22.41 M = 0.14% Params, 2.87 GMACs = 0.9% MACs, 5.74 GFLOPS = 0.89% FLOPs, in_features=10944, out_features=2048, bias=False)
+            (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.4 MFLOPS = 0% FLOPs)
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (1): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-6): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (7): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (8-12): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (13): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (14): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (15): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (16-25): 10 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (26): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (27-30): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (31): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (32-42): 11 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (43): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (44): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (45): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (46-50): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (51): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (52-56): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (57): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (58-59): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (60): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (61-63): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (2): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (1-2): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (3): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (4-7): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (8): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (9-13): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (14): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (15-26): 12 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (27): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (28-34): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (35): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (36-41): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (42): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (43-45): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (46): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (47-49): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (50): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (51-52): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (53): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (54-56): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (57): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (58-62): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (63): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (3): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-4): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (5): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (6): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (7): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (8-10): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (11): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (12-13): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (14-15): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (16-32): 17 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (33): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (34-46): 13 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (47): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (48): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (49-53): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (54): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (55-57): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (58): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (59-61): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (62): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (63): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (4): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-1): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (2): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (3-13): 11 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (14): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (15-17): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (18): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (19-20): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (21): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (22-24): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (25-26): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (27-28): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (29): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (30-32): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (33): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (34): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (35-36): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (37): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (38-48): 11 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (49): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (50-58): 9 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (59): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (60-63): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (5): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-8): 9 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (9): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (10-14): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (15): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (16-17): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (18): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (19): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (20): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (21-37): 17 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (38-39): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (40): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (41): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (42-46): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (47): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (48-51): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (52): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (53): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (54-55): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (56-62): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (63): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (6): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-12): 13 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (13): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (14-16): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (17): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (18-20): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (21-22): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (23-31): 9 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (32): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (33-36): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (37): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (38): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (39): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (40): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (41): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (42-45): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (46): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (47): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (48-54): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (55-56): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (57-63): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (7): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-7): 8 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (8): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (9-15): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (16): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (17): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (18): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (19-27): 9 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (28): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (29-30): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (31): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (32-37): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (38): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (39-40): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (41): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (42): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (43-44): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (45): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (46): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (47-49): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (50): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (51-57): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (58): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (59-63): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (8): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-7): 8 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (8): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (9-10): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (11): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (12): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (13): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (14-29): 16 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (30): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (31-32): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (33): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (34-38): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (39): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (40-46): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (47): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (48-49): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (50): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (51): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (52): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (53): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (54): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (55-62): 8 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (63): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (9): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (1-9): 9 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (10): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (11): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (12): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (13): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (14-16): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (17): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (18-21): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (22): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (23-26): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (27): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (28-31): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (32): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (33-44): 12 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (45): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (46-49): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (50): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (51-62): 12 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (63): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (10): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-8): 9 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (9): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (10): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (11-12): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (13): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (14-18): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (19): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (20-21): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (22): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (23-24): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (25): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (26): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (27): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (28): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (29-40): 12 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (41): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (42-54): 13 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (55): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (56-58): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (59): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (60-63): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (11): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-2): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (3): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (4): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (5-10): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (11): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (12-16): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (17-18): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (19-28): 10 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (29-30): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (31-33): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (34): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (35-39): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (40): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (41-42): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (43): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (44-48): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (49): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (50-60): 11 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (61): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (62-63): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (12): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-3): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (4-5): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (6-11): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (12): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (13-17): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (18): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (19-22): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (23): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (24-27): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (28-29): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (30-39): 10 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (40): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (41-46): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (47): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (48-58): 11 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (59): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (60): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (61): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (62): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (63): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (13): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-5): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (6): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (7-13): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (14): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (15): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (16): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (17): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (18-23): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (24): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (25-28): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (29): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (30-44): 15 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (45): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (46): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (47): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (48): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (49-53): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (54): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (55-57): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (58): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (59-63): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (14): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (1-6): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (7): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (8-12): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (13): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (14-18): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (19): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (20-21): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (22-23): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (24-27): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (28): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (29-30): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (31): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (32-45): 14 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (46): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (47): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (48): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (49-50): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (51): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (52): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (53): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (54-63): 10 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (15): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (1-4): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (5): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (6-13): 8 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (14): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (15-19): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (20): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (21-22): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (23-24): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (25): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (26): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (27): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (28): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (29): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (30): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (31-42): 12 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (43): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (44-46): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (47): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (48-54): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (55): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (56-63): 8 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (16): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-8): 9 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (9): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (10): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (11-15): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (16): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (17-26): 10 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (27): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (28-29): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (30): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (31-32): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (33): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (34-36): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (37): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (38-39): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (40): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (41-46): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (47): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (48-50): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (51): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (52-62): 11 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (63): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (17): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (1-9): 9 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (10): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (11): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (12-25): 14 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (26): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (27): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (28-29): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (30-31): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (32): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (33-37): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (38): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (39-40): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (41): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (42-58): 17 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (59): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (60-61): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (62): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (63): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (18): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-1): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (2): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (3-9): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (10): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (11-16): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (17-18): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (19-29): 11 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (30): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (31-42): 12 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (43): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (44-45): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (46): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (47-48): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (49): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (50-52): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (53): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (54-55): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (56): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (57): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (58): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (59): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (60-63): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (19): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (1): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (2-5): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (6): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (7): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (8): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (9-16): 8 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (17): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (18-21): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (22): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (23): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (24): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (25-41): 17 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (42): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (43): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (44): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (45-53): 9 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (54): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (55-57): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (58): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (59-63): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (20): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (1): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (2-14): 13 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (15): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (16-19): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (20-21): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (22-24): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (25): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (26-35): 10 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (36): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (37): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (38): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (39-42): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (43-44): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (45-54): 10 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (55): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (56): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (57-58): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (59): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (60-63): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (21): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (1): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (2-9): 8 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (10): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (11): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (12): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (13-14): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (15): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (16): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (17): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (18): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (19): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (20): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (21): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (22-27): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (28): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (29-41): 13 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (42): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (43-53): 11 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (54): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (55-63): 9 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (22): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-2): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (3): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (4-7): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (8): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (9-10): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (11): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (12-16): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (17): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (18-31): 14 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (32): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (33-49): 17 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (50): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (51): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (52-54): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (55): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (56-57): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (58): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (59): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (60): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (61-62): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (63): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (23): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (1-2): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (3): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (4-7): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (8): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (9): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (10-15): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (16): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (17-22): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (23): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (24-31): 8 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (32): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (33-44): 12 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (45): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (46): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (47): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (48-53): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (54-55): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (56): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (57): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (58-63): 6 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (24): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-4): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (5): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (6-7): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (8): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (9): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (10): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (11-23): 13 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (24): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (25-39): 15 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (40): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (41): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (42): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (43-46): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (47): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (48-49): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (50): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (51-60): 10 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (61): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (62-63): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (25): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (1): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (2): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (3-9): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (10): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (11): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (12-20): 9 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (21): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (22-35): 14 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (36): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (37): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (38-39): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (40-44): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (45): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (46): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (47): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (48): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (49-51): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (52): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (53-63): 11 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+        (26): DeepseekV2DecoderLayer(
+          584.85 M = 3.62% Params, 10.79 GMACs = 3.39% MACs, 21.85 GFLOPS = 3.4% FLOPs
+          (self_attn): DeepseekV2Attention(
+            13.76 M = 0.09% Params, 1.91 GMACs = 0.6% MACs, 4.09 GFLOPS = 0.64% FLOPs
+            (q_proj): Linear(6.29 M = 0.04% Params, 805.31 MMACs = 0.25% MACs, 1.61 GFLOPS = 0.25% FLOPs, in_features=2048, out_features=3072, bias=False)
+            (kv_a_proj_with_mqa): Linear(1.18 M = 0.01% Params, 150.99 MMACs = 0.05% MACs, 301.99 MFLOPS = 0.05% FLOPs, in_features=2048, out_features=576, bias=False)
+            (kv_a_layernorm): DeepseekV2RMSNorm(512 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+            (kv_b_proj): Linear(2.1 M = 0.01% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=512, out_features=4096, bias=False)
+            (o_proj): Linear(4.19 M = 0.03% Params, 536.87 MMACs = 0.17% MACs, 1.07 GFLOPS = 0.17% FLOPs, in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): DeepseekV2RotaryEmbedding(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          )
+          (mlp): DeepseekV2MoE(
+            571.08 M = 3.54% Params, 8.88 GMACs = 2.79% MACs, 17.75 GFLOPS = 2.76% FLOPs
+            (experts): ModuleList(
+              (0-2): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (3): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (4-8): 5 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (9): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (10-16): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (17): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (18-20): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (21): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (22-25): 4 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (26): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (27-29): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (30): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (31-33): 3 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (34): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 8.65 MMACs = 0% MACs, 17.3 MFLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 2.88 MMACs = 0% MACs, 5.77 MFLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 1.41 KFLOPS = 0% FLOPs)
+              )
+              (35-43): 9 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (44-45): 2 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.1 GMACs = 0.35% MACs, 2.2 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 366.22 MMACs = 0.12% MACs, 732.43 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 178.82 KFLOPS = 0% FLOPs)
+              )
+              (46-55): 10 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+              (56): DeepseekV2MLP(
+                8.65 M = 0.05% Params, 1.11 GMACs = 0.35% MACs, 2.21 GFLOPS = 0.34% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 369.1 MMACs = 0.12% MACs, 738.2 MFLOPS = 0.11% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 180.22 KFLOPS = 0% FLOPs)
+              )
+              (57-63): 7 x DeepseekV2MLP(
+                8.65 M = 0.05% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs
+                (gate_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (up_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=2048, out_features=1408, bias=False)
+                (down_proj): Linear(2.88 M = 0.02% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs, in_features=1408, out_features=2048, bias=False)
+                (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+              )
+            )
+            (gate): MoEGate(131.07 K = 0% Params, 16.78 MMACs = 0.01% MACs, 33.55 MFLOPS = 0.01% FLOPs)
+            (shared_experts): DeepseekV2MLP(
+              17.3 M = 0.11% Params, 2.21 GMACs = 0.7% MACs, 4.43 GFLOPS = 0.69% FLOPs
+              (gate_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (up_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2048, out_features=2816, bias=False)
+              (down_proj): Linear(5.77 M = 0.04% Params, 738.2 MMACs = 0.23% MACs, 1.48 GFLOPS = 0.23% FLOPs, in_features=2816, out_features=2048, bias=False)
+              (act_fn): SiLU(0 = 0% Params, 0 MACs = 0% MACs, 360.45 KFLOPS = 0% FLOPs)
+            )
+          )
+          (input_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+          (post_attention_layernorm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+        )
+      )
+      (norm): DeepseekV2RMSNorm(2.05 K = 0% Params, 0 MACs = 0% MACs, 0 FLOPS = 0% FLOPs)
+    )
+    (lm_head): Linear(209.72 M = 1.3% Params, 26.84 GMACs = 8.45% MACs, 53.69 GFLOPS = 8.35% FLOPs, in_features=2048, out_features=102400, bias=False)
+  )
+)
+---------------------------------------------------------------------------------------------------
+deepseek-vl2-small FLOPs:642.98 GFLOPS   MACs:317.84 GMACs   Params:16.15 B 
+
+
+```
 ### 3B模型/8 V100
 
 ```yaml
