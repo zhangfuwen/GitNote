@@ -1,3 +1,6 @@
+---
+title: CUDA 学习
+---
 # 入门
 
 其他文章：https://cuda-tutorial.readthedocs.io/en/latest/tutorials/tutorial01/

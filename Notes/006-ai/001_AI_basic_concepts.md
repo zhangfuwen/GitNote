@@ -1,5 +1,5 @@
 ---
-title: AI入门： CNN-Yolo-Tensor分别是什么含义
+title: AI基础概念
 ---
 
 ## floating point values

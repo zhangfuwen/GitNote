@@ -1,3 +1,6 @@
+---
+title: AI 编程技巧
+---
 
 ## jupyter notebook
 ### magic commands

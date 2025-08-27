@@ -1,0 +1,47 @@
+formulas:
+  Untitled: ""
+views:
+  - type: table
+    name: Table
+    filters:
+      and:
+        - file.ext == "md"
+        - '!file.folder.contains("Notes/004-3d-rendering/egl")'
+        - '!file.folder.contains("Notes/004-3d-rendering/gles")'
+        - '!file.folder.contains("Notes/004-3d-rendering/vulkan")'
+        - file.name != "index"
+        - file.name != "README"
+        - file.folder != "copilot-custom-prompts"
+    order:
+      - file.name
+      - title
+      - file.folder
+      - file.tags
+    sort:
+      - property: file.folder
+        direction: ASC
+    columnSize:
+      note.title: 216
+  - type: table
+    name: AI
+    filters:
+      and:
+        - file.folder.contains("Notes/006-ai")
+        - '!file.folder.endsWith("assets")'
+        - '!file.folder.endsWith("images")'
+        - file.ext == "md"
+        - file.name != "README"
+        - file.name != "index"
+        - and:
+            - file.folder.startsWith("Notes/006-ai")
+    order:
+      - title
+      - file.folder
+      - tags
+      - file.name
+    sort:
+      - property: file.folder
+        direction: ASC
+    columnSize:
+      note.title: 210
+      file.folder: 348

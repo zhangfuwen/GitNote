@@ -1,4 +1,6 @@
-# Cache
+---
+title: Cache
+---
 
 # Briding the gap
 

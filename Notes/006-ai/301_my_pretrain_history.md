@@ -3,6 +3,7 @@ tags:
   - pretrain
   - llm
   - python
+title: LLM Pretrain过程记录
 ---
 
 # my pretrain history

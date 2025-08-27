@@ -1,3 +1,12 @@
+---
+title: 80686与Pentium Pro处理器架构与技术创新
+tags:
+  - CPU架构
+  - SMP
+  - 缓存技术
+  - 指令级并行
+  - 计算机历史
+---
 # 80686-Pentium Pro
 
 # SMP对称多处理器

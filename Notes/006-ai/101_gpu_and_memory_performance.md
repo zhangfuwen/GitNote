@@ -1,5 +1,7 @@
+---
+title: GPU和内存硬件参数
+---
 
-呵呵，这个世界是一个巨大的草台班子。
 
 # Storage bandwidth of phones
 

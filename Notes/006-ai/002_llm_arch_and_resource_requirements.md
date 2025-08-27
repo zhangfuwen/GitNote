@@ -1,3 +1,6 @@
+---
+title: LLM的模型架构和资源需求
+---
 ## LLM concepts and architecture
 
 ### Attention is all you needs
@@ -10317,7 +10320,7 @@ Qwen3-30B-A3B-Instruct-2507 FLOPs:778.7 GFLOPS   MACs:389.33 GMACs   Params:30.5
 ```
 
 
-#### deepseek-vl-v2(16B-A)
+#### deepseek-vl-v2(16B-A2B)
 
 **总体：**
 
@@ -10346,7 +10349,15 @@ Qwen3-30B-A3B-Instruct-2507 FLOPs:778.7 GFLOPS   MACs:389.33 GMACs   Params:30.5
 **layer 1~26:**
 
 self_attn与layer 0相同，MLP总参数量571.08 M， 64个专家，每个8.65 M，两个共享专家，每个也是8.65 M。
-即共66个专家。每次激活6 
+即共66个专家。
+
+**activation:** 
+
+每次激活6个专家。一层共51.9M参数，26层共1.349B。
+layer 1~26的self_attn共0.358B.
+layer 0共0.081B。
+lm head: 0.2B。
+加一起共1.987B，差不多2B。
 
 
 ```

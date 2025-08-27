@@ -1,5 +1,5 @@
 ---
-title: llama.cpp运行Llama的模型的各种方法
+title: 用llama.cpp跑LLM
 tags:
   - llama_dot_cpp
   - NDK

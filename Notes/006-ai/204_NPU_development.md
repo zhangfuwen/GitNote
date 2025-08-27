@@ -1,5 +1,5 @@
 ---
-title: 高通DSP编程笔记
+title: 高通NPU编程
 titles:
   - NPU编程
 tags:

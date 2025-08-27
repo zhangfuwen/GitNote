@@ -1,4 +1,6 @@
-# Nandflash基础知识
+---
+title: Nandflash基础知识
+---
 
 ## 1. 封装
 
