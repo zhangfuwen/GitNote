@@ -1,3 +1,12 @@
+---
+title: 016. 8代x86微架构Intel Core
+tags:
+  - x86
+  - 微架构
+  - Intel
+  - 处理器设计
+  - 计算机体系结构
+---
 # 8代x86微架构Intel Core
 
 > Core微架构是一个由零设计起的处理器内部架构，但其有类似[Pentium M](https://zh.wikipedia.org/wiki/Pentium_M)的设计。它有14级[流水线](https://zh.wikipedia.org/wiki/流水线)（Pipeline），相比[NetBurst](https://zh.wikipedia.org/wiki/NetBurst)架构[Prescott](https://zh.wikipedia.org/wiki/奔腾4#Prescott)的31级，足足少了超过一半。另外，它的运行核心亦由[P6](https://zh.wikipedia.org/wiki/Intel_P6)、P6-M、及Netburst的一次可处理3个指令，增加至4个。本架构亦是一个双核心的设计，两个核心的L1缓存互相连接，分享的L2缓存。使用以上设计以达到最高性能功耗比（Performance per watt）。

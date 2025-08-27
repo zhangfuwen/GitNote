@@ -1,5 +1,6 @@
 formulas:
   Untitled: ""
+  Untitled 2: ""
 views:
   - type: table
     name: Table
@@ -45,3 +46,9 @@ views:
     columnSize:
       note.title: 210
       file.folder: 348
+  - type: cards
+    name: View
+    order:
+      - title
+      - file.folder
+      - formula.Untitled 2

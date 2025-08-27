@@ -1,5 +1,5 @@
 ---
-title: AI基础概念
+title: 001. AI基础概念
 ---
 
 ## floating point values

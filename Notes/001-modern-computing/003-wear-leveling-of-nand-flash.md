@@ -1,5 +1,5 @@
 ---
-title: Nandflash的磨损均衡(wear-leveling)
+title: 003. Nandflash的磨损均衡(wear-leveling)
 ---
 
 # 1. 磨损均衡的重要性

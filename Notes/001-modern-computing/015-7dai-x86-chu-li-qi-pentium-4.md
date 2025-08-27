@@ -1,3 +1,12 @@
+---
+title: 015. 7代x86处理器Pentium 4与Intel NetBurst架构
+tags:
+  - x86处理器
+  - Intel架构
+  - 计算机历史
+  - 处理器技术
+  - 硬件设计
+---
 # 7代x86处理器Pentium 4
 
 Pentium Pro之后的Pentium II， Pentium III都是基于P6架构，功能和架构上没有太大的改进，主要是工艺不断进步，主频也不断的提高，到Pentium III主频已经可以达到最大1.4GHz。另外值得一说的是Pentium已经有了MMX指令集，Pentium III增加SSE指令集。这些附加的指令集我们专门一篇文章集细述。

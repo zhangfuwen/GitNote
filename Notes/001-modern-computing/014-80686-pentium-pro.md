@@ -1,5 +1,5 @@
 ---
-title: 80686与Pentium Pro处理器架构与技术创新
+title: 014. 80686与Pentium Pro处理器架构与技术创新
 tags:
   - CPU架构
   - SMP
