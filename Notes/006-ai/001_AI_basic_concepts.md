@@ -120,23 +120,28 @@ title: 001. AI基础概念
 
 ## Tensor
 
-通常Tensor指四维矩阵，每个维度分别为[N,C,W,H]，即batch, channel, width, height。例如，在处理一批图像时，N可能表示同时处理的图像数量，比如32张图片；C表示颜色通道，如RGB图像的3个通道；W和H则分别表示图像的宽度和高度像素值，比如224x224。在CNN中，N表示batch，方便理解时可以认为它是1，就是说它实际是3维矩阵，但这仅适用于单样本处理场景，实际训练中batch通常大于1以提升效率和泛化能力。
+通常Tensor指四维矩阵，每个维度分别为`[N,C,W,H]`，即`batch`, `channel`, `width`,`height`。例如，在处理一批图像时，`N`表示同时处理的图像数量，比如32张图片；`C`表示颜色通道，如RGB图像的3个通道；`W`和`H`则分别表示图像的宽度和高度像素值，比如224x224。在CNN中，`N`表示`batch`，方便理解时可以认为它是1，就是说它实际是3维矩阵，但这仅适用于单样本处理场景，实际训练中`batch`通常大于1以提升效率和泛化能力。
 
-可以看到，这种表述很大程度上是为图像设计的，不适用于声音和LLM。对于声音数据，例如音频信号，通常使用一维或二维张量，如[batch, time_steps, frequency_bins]或[batch, channels, time]，其中时间步和频率箱取代了空间维度。对于LLM（大语言模型），输入往往是序列数据，张量结构可能为[batch, sequence_length, embedding_dim]，其中序列长度表示词元数量，嵌入维度捕获语义信息，完全没有空间维度的概念。因此，Tensor的维度定义需要根据具体应用灵活调整，而非局限于图像处理的传统框架。
+可以看到，这种表述很大程度上是为图像设计的，不适用于声音和LLM。对于声音数据，例如音频信号，通常使用一维或二维张量，如 \[`batch`, `time_steps`, `frequency_bins` \]或\[ `batch`, `channels`, `time` \]，其中时间步和频率箱取代了空间维度。对于LLM（大语言模型），输入往往是序列数据，张量结构可能为\[ `batch`, `sequence_length`, `embedding_dim` \]，其中序列长度表示词元数量，嵌入维度捕获语义信息，完全没有空间维度的概念。因此，Tensor的维度定义需要根据具体应用灵活调整，而非局限于图像处理的传统框架。
 
-在LLM（Large Language Model，大语言模型）场景中，输入和输出通常以序列化的张量形式处理。输入形状一般为[batch_size, sequence_length, hidden_dim]，其中batch_size表示批处理大小，sequence_length是文本序列的长度（如512或1024个token），hidden_dim代表每个token的嵌入维度（例如768或1024）。输出形状与输入一致，但可能通过线性层调整维度，例如在分类任务中输出[batch_size, sequence_length, vocab_size]的概率分布。
+在LLM（Large Language Model，大语言模型）场景中，输入和输出通常以序列化的张量形式处理。输入形状一般为\[ `batch_size`, `sequence_length`, `hidden_dim` \]，其中`batch_size`表示批处理大小，`sequence_length`是文本序列的长度（如512或1024个token），`hidden_dim`代表每个token的嵌入维度（例如768或1024）。输出形状与输入一致，但可能通过线性层调整维度，例如在分类任务中输出\[ `batch_size`, `sequence_length`, `vocab_size` \]的概率分布。
 
-矩阵运算（如线性变换）可通过卷积实现转换：例如，全连接层（矩阵乘法）可视为1x1卷积，其中卷积核的输入和输出通道数对应矩阵的维度。具体地，若有一个权重矩阵W of shape [output_dim, input_dim]，可重塑为卷积核形状[output_dim, input_dim, 1, 1]，从而对输入张量应用1x1卷积，等效于矩阵乘法。这利用了卷积的局部性和参数共享特性，但牺牲了全局连接性，适用于某些硬件优化。
+矩阵运算（如线性变换）可通过卷积实现转换：例如，全连接层（矩阵乘法）可视为1x1卷积，其中卷积核的输入和输出通道数对应矩阵的维度。具体地，若有一个权重矩阵W of shape \[ `output_dim`, `input_dim` \]，可重塑为卷积核形状\[ `output_dim`, `input_dim`, 1, 1 \]，从而对输入张量应用1x1卷积，等效于矩阵乘法。这利用了卷积的局部性和参数共享特性，但牺牲了全局连接性，适用于某些硬件优化。
 
-在LLM中，以下算子通常必须在HVX（Hexagon Vector eXtensions，高通的DSP向量加速单元）中计算以提升效率：
+在LLM中，以下算子通常必须在HVX（Hexagon Vector eXtensions，高通的DSP向量加速单元）中：
+
 1. **激活函数**：如ReLU、GELU或Sigmoid，HVX的向量指令能高效处理逐元素操作。
 2. **归一化层**：如LayerNorm，涉及均值、方差计算和缩放，HVX可优化这些统计操作。
 3. **元素级运算**：如残差连接中的加法或乘法，HVX的向量化支持高性能处理。
 
-这些算子在HVX中执行可降低CPU负载，提升能效比，尤其适合移动端或边缘设备部署。
+## CNN
 
 
-## Yolo
+![img_1.png](assets/img_1.png)
+
+每一个卷积层有Cin * Cout个卷积核，输出featuremap上\[ `c`,`w`,`h`\]上的值是$\sum\limits_{k=0}^{C_{in}} weight(j,k)*input(1,k)$，如果有bias，直接相加。j是输出`channel`号。k是输入`channel`号。`input`的形状\[ `N`,`C`,`W`,`H` \]分别为\[ 1, `Cin`, `Win`,  `Hin` \]，`weight`的形状为\[ `N`,`C`,`W`,`H`\]分别为\[`Cout`, `Cin`, 3,3\], 3是kernel size。
+
+### Yolo
 
 1. 一般这模型分三个部分，backbone, head, anchors。backbone是核心部分，用于识别图像的特征。head根据这些特征对图片进行分类。anchors没懂。
 2. yolov5的back bone是CSPDarknet-53, CSP先不解释。
@@ -360,9 +365,6 @@ class ResNet(nn.Module):
         torch.nn.Conv2d(in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, bias=True, padding_mode='zeros', device=None, dtype=None)
 ```
 
-![img_1.png](assets/img_1.png)
-
-每一个卷积层有Cin * Cout个卷积核，输出featuremap上[c,w,h]上的值是$\sum\limits_{k=0}^{C_{in}} weight(j,k)*input(1,k)$，如果有bias，直接相加。j是输出channel号。k是输入channel号。input的形状[ N,C,W,H]分别为[1, Cin, Win,  Hin]，weight的形状为[N,C,W,H]分别为[Cout, Cin, 3,3], 3是kernel size。
 
 5. 与Darknet并举的还是ResNet, 残差网络：
    残差网络也有一些常用的配置形式：
@@ -382,21 +384,13 @@ EfficientNet：EfficientNet是由谷歌的研究团队提出的一种基于自�
 ```python
 def _make_resblock(self, inplanes, planes, outplanes):
    return nn.Sequential(
-   nn.Conv2d(inplanes, planes, 1, 1, 0),
-   nn.BatchNorm2d(planes),
-   nn.LeakyReLU(0.1),
-   nn.Conv2d(planes, outplanes, 3, 1, 1),
-   nn.BatchNorm2d(outplanes),
-   nn.LeakyReLU(0.1),
+	   nn.Conv2d(inplanes, planes, 1, 1, 0),
+	   nn.BatchNorm2d(planes),
+	   nn.LeakyReLU(0.1),
+	   nn.Conv2d(planes, outplanes, 3, 1, 1),
+	   nn.BatchNorm2d(outplanes),
+	   nn.LeakyReLU(0.1),
    )
 ```
-
-
-
-## CNN
-
-![img_1.png](assets/img_1.png)
-
-每一个卷积层有Cin * Cout个卷积核，输出featuremap上[c,w,h]上的值是$\sum\limits_{k=0}^{C_{in}} weight(j,k)*input(1,k)$，如果有bias，直接相加。j是输出channel号。k是输入channel号。input的形状[ N,C,W,H]分别为[1, Cin, Win,  Hin]，weight的形状为[N,C,W,H]分别为[Cout, Cin, 3,3], 3是kernel size。
 
 
