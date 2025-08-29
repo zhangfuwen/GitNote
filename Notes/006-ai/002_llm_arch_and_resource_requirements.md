@@ -1,11 +1,11 @@
 ---
 title: 002. LLM的模型架构和资源需求
 ---
-## LLM concepts and architecture
+# LLM concepts and architecture
 
-### Attention is all you needs
 
-### Attention
+
+#### Attention
 
 #### MHA
 
