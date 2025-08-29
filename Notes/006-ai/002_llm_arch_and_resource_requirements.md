@@ -3,11 +3,11 @@ title: 002. LLM的模型架构和资源需求
 ---
 # LLM concepts and architecture
 
+## Attention is all you needs
 
+### Attention
 
-#### Attention
-
-#### MHA
+### MHA
 
 多头与不多头不同之处在于，每个k*q都会产生一个seq_len * seq_len的矩阵。如果没有多头的话，只有一个seq_len * seq_len的矩阵。
 
