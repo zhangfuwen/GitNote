@@ -91,41 +91,43 @@ https://images.nvidia.com/aem-dam/en-zz/Solutions/data-center/nvidia-ampere-arch
 | DDR5       | 2000MHz ~ 4000MHz | 4GT/s ~ 8GT/s       | 8          | 16           | x32+x8 ECC          | 64 GB/s                        |
 
 
-## DDR3
+### DDR3
 
+#### SPEC
 [jedec spec](assets/JESD79-3E.pdf)
 
 DDR3用于PC和服务器架构。
 一个Socket(CPU)可能有多个Memory Controller。一个Controller可以支持多个channel，通常就是dual channel。一个channel代表一个DIMM条。一个DIMM条可以有多个rank，通常是两个。每个rank是一组内存颗粒。一个channel上的所有内存颗粒共享数据总线，所以同一个channel上有多个rank并不会增加内存带宽，它的作用更多的是增加内存密度。
 每个内存颗粒都有一个CS#，即片选引脚。内存控制器能过将这个引脚置高来选择这个rank。
 所以对于DDR3来说，rank是一个外部概念，但它通过片选信号还支持这个外部概念。
-### Addressing
+#### Addressing
 
-![](assets/Pasted image 20240613120743.png)
+![](assets/Pasted%20image%2020240613120743.png)
 
-## DDR4 
+### DDR4 
 
+#### SPEC
 [jedec spec](assets/JESD79-4.pdf)
 
-### Addressing
+#### Addressing
 
-![](assets/Pasted image 20240613114903.png)
+![](assets/Pasted%20image%2020240613114903.png)
 
-# LPDDR
+### LPDDR
 
-![](assets/JEP166E.pdf)
+[JEP116E](assets/JEP166E.pdf)
 
-![LPDDR5/5X spec](assets/JESD209-5C.pdf)
+[LPDDR5/5X spec](assets/JESD209-5C.pdf)
 
 
 ## Wide IO  2
 
-![](assets/JESD229-2.pdf)
+[JESD229-2](assets/JESD229-2.pdf)
 
 
 #  GDDR
 
-![](assets/Pasted image 20240613174348.png)
+![](assets/Pasted%20image%2020240613174348.png)
 
 RTX 4090有24颗 GDDR6X芯片(16Gb density)，总容量48GB，
 
