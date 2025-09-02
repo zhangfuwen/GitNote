@@ -107,6 +107,7 @@ DDR3用于PC和服务器架构。
 ### DDR4 
 
 #### SPEC
+
 [jedec spec](assets/JESD79-4.pdf)
 
 #### Addressing
@@ -114,6 +115,7 @@ DDR3用于PC和服务器架构。
 ![](assets/Pasted%20image%2020240613114903.png)
 
 ### LPDDR
+
 
 [JEP116E](assets/JEP166E.pdf)
 
@@ -265,7 +267,7 @@ PCIe 5.0一个link最大支持32个lane，带宽为`32*32/8 = 128GB/s`。
 
 # PIM
 
-![](assets/1-s2.0-S2773064622000160-main.pdf)
+[A survey on processing-in-memory techniques: Advances and challenges](assets/1-s2.0-S2773064622000160-main.pdf)
 ## PIM MMU
 
-![](assets/2409.06204v1.pdf)
+[PIM-MMU: A Memory Management Unit for Accelerating Data Transfers in Commercial PIM Systems](assets/2409.06204v1.pdf)
