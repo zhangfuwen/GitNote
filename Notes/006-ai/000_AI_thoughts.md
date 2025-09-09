@@ -188,3 +188,140 @@ mp3_obj init_from_file(char *path) {}
 手机散热能力是70mA每度，即说每升高一度，可以散度70mA, 4V，即0.28W。
 假设空气导热系数是5$W/m^2K$，则手机表面积为 0.28/5 $m^2$ ， 即0.056 $m^2$ ，即5.6平方分米。即 2.36分米见方。显然我们的手机没有这么大，前后面都算上，可能就1.5分米见方，约2.25平方分米。所以这里的空气导热系是按10 $W/m^2K$ 算的？
 
+The difference between `ACaptureSessionOutput` and `ACameraOutputTarget` is fundamental to how the Android NDK Camera2 API structures its session and request hierarchy. Here's a clear breakdown:
+
+## ACaptureSessionOutput
+
+**Purpose**: Represents an output surface that's part of a camera session's configuration
+**Role**: Defines what outputs are available for the entire session
+**Scope**: Session-level configuration
+**Analogy**: Like adding a monitor to your computer setup
+
+```c
+// ACaptureSessionOutput is used when creating the session
+ACaptureSessionOutput* sessionOutput = nullptr;
+ACaptureSessionOutput_create(surface, &sessionOutput);
+
+// Added to session output container
+ACaptureSessionOutputContainer_add(outputContainer, sessionOutput);
+```
+
+## ACameraOutputTarget
+
+**Purpose**: Represents a specific output target for an individual capture request
+**Role**: Specifies where a particular request should send its data
+**Scope**: Request-level configuration
+**Analogy**: Like choosing which monitor to display on for a specific application
+
+```c
+// ACameraOutputTarget is used when creating capture requests
+ACameraOutputTarget* outputTarget = nullptr;
+ACameraOutputTarget_create(surface, &outputTarget);
+
+// Added to individual capture request
+ACameraRequest_addTarget(captureRequest, outputTarget);
+```
+
+## Key Differences Table
+
+| Aspect           | ACaptureSessionOutput    | ACameraOutputTarget          |
+| ---------------- | ------------------------ | ---------------------------- |
+| **Scope**        | Session-level            | Request-level                |
+| **Purpose**      | Define available outputs | Specify request destinations |
+| **When Created** | During session setup     | During request creation      |
+| **Lifetime**     | Tied to session duration | Tied to request duration     |
+| **Relationship** | "What outputs exist"     | "Where to send this capture" |
+
+## Practical Example
+
+```c
+// Session setup - defines ALL possible outputs
+ACaptureSessionOutputContainer* outputContainer;
+ACaptureSessionOutputContainer_create(&outputContainer);
+
+// Create session outputs (what surfaces are available)
+ACaptureSessionOutput* previewOutput;
+ACaptureSessionOutput* imageReaderOutput;
+ACaptureSessionOutput_create(previewSurface, &previewOutput);
+ACaptureSessionOutput_create(imageReaderSurface, &imageReaderOutput);
+
+// Add both to session container
+ACaptureSessionOutputContainer_add(outputContainer, previewOutput);
+ACaptureSessionOutputContainer_add(outputContainer, imageReaderOutput);
+
+// Create session with all available outputs
+ACameraDevice_createCaptureSession(cameraDevice, outputContainer, nullptr, &session);
+
+// Request setup - choose specific targets for THIS request
+ACameraOutputTarget* previewTarget;
+ACameraOutputTarget* imageReaderTarget;
+ACameraOutputTarget_create(previewSurface, &previewTarget);
+ACameraOutputTarget_create(imageReaderSurface, &imageReaderTarget);
+
+// Request 1: Send to preview only
+ACameraRequest* previewRequest;
+ACameraDevice_createCaptureRequest(device, TEMPLATE_PREVIEW, &previewRequest);
+ACameraRequest_addTarget(previewRequest, previewTarget); // Only preview
+
+// Request 2: Send to both preview and image reader
+ACameraRequest* captureRequest;
+ACameraDevice_createCaptureRequest(device, TEMPLATE_STILL_CAPTURE, &captureRequest);
+ACameraRequest_addTarget(captureRequest, previewTarget);    // Preview
+ACameraRequest_addTarget(captureRequest, imageReaderTarget); // ImageReader
+```
+
+## Why Two Different Types?
+
+1. **Separation of Concerns**: 
+   - Session defines what's possible
+   - Requests define what's used for each capture
+
+2. **Flexibility**: 
+   - Same session can handle different request configurations
+   - Multiple requests can use different combinations of available outputs
+
+3. **Performance**: 
+   - Session outputs are set up once
+   - Request targets can change dynamically
+
+## Memory Management
+
+```c
+// Session outputs freed when session is closed
+ACaptureSessionOutput_free(sessionOutput);
+
+// Request targets freed when no longer needed
+ACameraOutputTarget_free(outputTarget);
+```
+
+## Common Pattern
+
+```c
+// 1. Setup session with all possible outputs
+void setupSession() {
+    // Create session outputs for all surfaces
+    // Add to container
+    // Create session
+}
+
+// 2. For each capture request, choose specific targets
+void createRequest(ACameraDevice* device, ANativeWindow* targetSurface) {
+    ACameraOutputTarget* target;
+    ACameraOutputTarget_create(targetSurface, &target);
+    
+    ACameraRequest* request;
+    ACameraDevice_createCaptureRequest(device, TEMPLATE_PREVIEW, &request);
+    ACameraRequest_addTarget(request, target);
+    
+    // Use request...
+    ACameraOutputTarget_free(target);
+    ACameraRequest_free(request);
+}
+```
+
+## Key Takeaway
+
+- **`ACaptureSessionOutput`**: "Here are all the places we can send camera data"
+- **`ACameraOutputTarget`**: "For this particular photo, send it to these specific places"
+
+The session defines the available plumbing, while each request chooses which taps to turn on for that specific capture.
