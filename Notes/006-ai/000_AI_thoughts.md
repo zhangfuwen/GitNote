@@ -148,3 +148,34 @@ mp3_obj init_from_file(char *path) {}
 ```
 
 
+## 快捷键
+
+### 桌面级
+
+### 窗口级(wezterm)
+
+```lua
+{ key = 'p', mods = 'CTRL|SHIFT', action = act.ActivateCommandPalette },
+{ key = '?', mods = 'CTRL|SHIFT',action = act.ShowDebugOverlay },
+{ key = 'o', mods = 'CTRL|SHIFT', action = act.ShowLauncher },
+{ key = 'h', mods = 'CTRL|SHIFT', action = act.ActivateTabRelative(-1) }, 
+{ key = 'l', mods = 'CTRL|SHIFT', action = act.ActivateTabRelative(1)},
+{ key = '{', mods = 'CTRL|SHIFT', action = act.MoveTabRelative(-1) },
+{ key = '}', mods = 'CTRL|SHIFT', action = act.MoveTabRelative(1) },
+{ key = 'LeftArrow',mods = 'CTRL|SHIFT', action = act.ActivateTabRelative(-1) },
+{ key = 'RightArrow',mods = 'CTRL|SHIFT', action = act.ActivateTabRelative(1) },
+{ key = "_", mods = "CTRL|SHIFT", action=wezterm.action.SplitVertical({domain="CurrentPaneDomain"})},
+{ key = "|",mods = "CTRL|SHIFT", action=wezterm.action{SplitHorizontal={domain="CurrentPaneDomain"}}},
+{ key = "n", mods = "CTRL|SHIFT", action=wezterm.action{SpawnTab="CurrentPaneDomain"}},
+{ key = "z", mods = "CTRL|SHIFT", action="TogglePaneZoomState" },
+{ key = "Backspace", mods = "CTRL|SHIFT", action=wezterm.action{CloseCurrentPane={confirm=true}}},
+{ key = "Delete", mods = "CTRL|SHIFT", action=wezterm.action{CloseCurrentPane={confirm=false}}},
+{ key = "LeftArrow", mods = "CTRL", action=wezterm.action{ActivatePaneDirection="Left"}},
+{ key = "DownArrow", mods = "CTRL", action=wezterm.action{ActivatePaneDirection="Down"}},
+{ key = "UpArrow", mods = "CTRL", action=wezterm.action{ActivatePaneDirection="Up"}},
+{ key = "RightArrow", mods = "CTRL", action=wezterm.action{ActivatePaneDirection="Right"}},
+
+```
+
+### 应用级(neovim)
+
