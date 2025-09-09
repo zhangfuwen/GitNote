@@ -124,3 +124,27 @@ Think Twice
 企业的规章、制度是为了践行使命、愿景的。需要不断的强化使命、愿景。
 
 
+## 编程模式
+
+Typescript的编译器是全用函数实现的。
+
+应该每个类仅实现非常少的功能？
+用namespace使函数的查找更容易？oboe是这样的
+
+```cpp
+namespace mp3 {
+struct mp3_obj {
+	int n_chans;
+	int n_frames;
+	
+	int pos;
+	float *read_frame(int size);	
+};
+mp3_obj init_from_file(char *path) {}
+
+
+
+};
+```
+
+
