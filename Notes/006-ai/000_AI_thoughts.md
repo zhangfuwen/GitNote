@@ -190,12 +190,17 @@ mp3_obj init_from_file(char *path) {}
 ### shell级
 
 
-| 快捷键     | 应用   | 功能        | 备注  |
-| ------- | ---- | --------- | --- |
-| C-t     | fzf  | fzf查找文件   |     |
-| C-r     | fzf  | fzf查找历史命令 |     |
-| M-c     | fzf  | fzf查找文件夹  |     |
-| M-b/M-f | bash | 前后跳单词     |     |
+| 快捷键     | 应用   | 功能                    | 备注  |
+| ------- | ---- | --------------------- | --- |
+| C-t     | fzf  | fzf查找文件               |     |
+| C-r     | fzf  | fzf查找历史命令             |     |
+| M-c     | fzf  | fzf查找文件夹              |     |
+| M-b/M-f | bash | 前后跳单词                 |     |
+| C-W     | bash | kill word (backward)  |     |
+| Alt-D   | bash | kill word (forward)   |     |
+| C-U     | bash | kill to start of line |     |
+| C-K     | bash | kill to end of line   |     |
+|         |      |                       |     |
 
 
 ### 应用级(neovim)
