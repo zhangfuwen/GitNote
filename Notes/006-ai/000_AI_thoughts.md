@@ -225,6 +225,14 @@ mp3_obj init_from_file(char *path) {}
 | M-g | neovim | 搜索git_files                 |     |
 | M-t | neovim | 打开终端面板: repl                |     |
 
+
+## Linux command line tools
+
+
+| name | description       | usage                                                        |
+| ---- | ----------------- | ------------------------------------------------------------ |
+| jp2a | jpeg to ascii-art | ```bash<br>sudo apt install jp2a<br>jp2a filename.jpg<br>``` |
+
 ## 散热能力
 
 空气的导热系数：5-25 ${W}/{m^2K}$
