@@ -243,3 +243,12 @@ mp3_obj init_from_file(char *path) {}
 
 The difference between `ACaptureSessionOutput` and `ACameraOutputTarget` is fundamental to how the Android NDK Camera2 API structures its session and request hierarchy. Here's a clear breakdown:
 
+
+## C++ vs Rust
+
+C++和Rust的本质区别是对灵活度的约束。
+C++不约束开发者的灵活度。Rust则很大程度上约束开发者的灵活度。
+C++不现限开发者的灵活度，这让急于prototyping的开发者很开心，敢让遇到问题摸不着头脑的开发者很沮丧。
+其实，给人以灵活度从来都是容易的事情，定义一个约束程度才是真正的难，因为这肯定不会让所有人、所有时间都开心。
+很多新的编程语言都开始限制人的自由度，比如说golang，打动我就是它有一个官方的格式化标准。
+作为一个做过很多prototyping的人，我觉得还是需要将功夫放在平时，尽量不要欠技术债，欠债总是会要求你还得更多，而且不会让你欠很久。
