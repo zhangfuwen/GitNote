@@ -640,3 +640,4 @@ export LD_LIBRARY_PATH=/opt/tiger/native_libhdfs/lib/native:/opt/tiger/jdk/jdk8u
 
 LD_LIBRARY_PATH关系非常大，里面文件夹的顺序也很重要。
 特别是当你的系统里有多种方式安装的cuda runtime的时候，比如你linux的方式安装了一些，用conda的方式又在venv里安装了一些。这时最好只有一个发挥作用。
+
