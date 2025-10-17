@@ -178,12 +178,13 @@ mp3_obj init_from_file(char *path) {}
 ```
 
 
-| 快捷键   | 应用      | 功能     | 备注  |
-| ----- | ------- | ------ | --- |
-| M-a   | wezterm | Leader |     |
-| C-S-c | wezterm | 复制     |     |
-| C-S-v | wezterm | 粘贴     |     |
-|       |         |        |     |
+| 快捷键   | 应用      | 功能           | 备注  |
+| ----- | ------- | ------------ | --- |
+| M-a   | wezterm | Leader       |     |
+| C-S-c | wezterm | 复制           |     |
+| C-S-v | wezterm | 粘贴           |     |
+| C-S-k | wezterm | font size -- |     |
+| C-S-j | wezterm | font size ++ |     |
 
 
 
@@ -286,7 +287,14 @@ C++不现限开发者的灵活度，这让急于prototyping的开发者很开心
 
 
 
+## english words
 
+furious 狂怒的
+outburst 暴发，破裂
+cobble together 拼凑
+the grass isn't greener on the other side
+heavy lifting 举重
+aberration 失常
 
 
 
