@@ -1,7 +1,9 @@
 ---
 title: 101. GPU和内存硬件参数
 ---
+## 功耗数据
 
+1. LPDDR5X 9600的内存，在各个频率下的能耗相当，每访问1GB的能耗约50mJ(包括DDRC+DRAM)。DRAM的per bit能耗为3.2pJ，加上DDRC约6.xpJ。
 
 # Storage bandwidth of phones
 

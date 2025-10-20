@@ -296,8 +296,13 @@ the grass isn't greener on the other side
 heavy lifting 举重
 aberration 失常
 
+play innocent
 
+take over from people
 
+prescribled 规定的
+kneecap 护膝
+sustained funding of basic research
 
-
-
+I cannot thank you enough for that.
+mainly speculation 主要是投机买卖。
