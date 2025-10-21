@@ -342,3 +342,49 @@ crest 肉冠
 杨振宁说：做科研，taste很重要，就是知道什么是有趣的、有价值的
 
 
+what do people want?
+cheap products?
+useful enough
+my watch has a lot of limitations:
+ - can't use map
+ - can't use eSIM, which will change soon?
+ a phone is useful enough, what else do you want? 
+  - better camera for video creation
+  - more convenient features, but I guess only some people care about it
+  - battery life? no
+  - screen size? yes
+  - audio quality? no if not too bad
+  - gaming? only for people who play it every day
+
+a tablet, very rare reason to buy, useful only for reading, watch videos, drawing? note taking?
+
+a note book computer? 
+ - compute power, to do local experiments, to edit images and videos
+ - can be taken everywhere, namely portability, a phone can not serve this purpose because it does not have a large enough screen(way of output) and keyboard(way of input)
+ a car?
+  - self driving
+
+LLM
+- it lacks scenarios, it can analyze texts and images, but there is not that much need for text analyzing, 
+
+A robot
+ - why do you want it? what can it do for you. you can hire a real person at a very low price who can do pretty much everything a robot can offer. But you don't hire one. why? you don't need one. life is convenient enough and for those not so convenient part, a robot can do nothing to help you. 
+	- to travel fast enough, a robot can't help you
+	- to make money, a robot can't help you. however there is some potential that a model can generate videos and audios to entertain you.
+a robot is for:
+ - dangerous tasks, not so widely needed
+ - cumbersome tasks? already done
+ - creative task? they cannot do that since creative tasks need a lot a trial and error and robots lack way to try
+ - entertaining, people need entertainment created by real person for the most part but still there are some room for robots
+	 - talk show?
+	 - videos? now they are generating generic videos
+		 - with the aim to create a world model
+		 - a helper for video editing
+
+the thing is 'how needs help'? you want to serve the people. who needs help?
+ - young
+ - old 
+ - poor
+ - 
+
+
