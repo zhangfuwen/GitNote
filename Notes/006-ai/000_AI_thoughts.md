@@ -381,10 +381,10 @@ a robot is for:
 		 - with the aim to create a world model
 		 - a helper for video editing
 
-the thing is 'how needs help'? you want to serve the people. who needs help?
+the thing is 'who needs help'? you want to serve the people. who needs help?
  - young
  - old and disabled, a robot may help but now we don't have good enough robots.
  - poor
- - 
+
 
 
