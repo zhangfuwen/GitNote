@@ -306,3 +306,35 @@ sustained funding of basic research
 
 I cannot thank you enough for that.
 mainly speculation 主要是投机买卖。
+parochial 狭小的，小范围内的
+contagious 传染的，会蔓延的
+from my understanding
+it expanded my understanding of what this technology is and how it is going to be utilized
+of what those dangers will be, in a really interesting way. 
+demure 庄重的
+remedial 治疗的，补救的
+that is how it used to work，那是它曾经的工作方式
+subject matter 主题 
+cover all term 涵盖性术语
+genesis 起源
+political coalitions 政治联手
+big-tent 大帐篷，兼容并蓄的
+peer pressure 同侪(chai2)压力
+they over lap a lot
+domestic pet 家养宠物
+does it work from macro to micro? from general to specific?
+people are trying to put rules in computers. 
+所以CPU执行的任务分两种：计算任务、控制任务或人类给出的规则
+exquisite 过于细腻的
+the basic way you program a computer, is you figure out in exquisite detail how you would solve the problem.
+you deconstruct all the steps and you tell the computer exactly what to do.
+the brain doesn't work by someone else giving you rules.
+if the neural network has multiple layers, it is called deep learning.
+chiclets 芝兰口香糖
+seizure 癫痫发作
+that's a shame 很可惜，很遗憾
+what a shame 真可惜
+discernment 眼光，洞查力
+digress 离题，跑题
+beak 鸟嘴，喙
+crest 肉冠
