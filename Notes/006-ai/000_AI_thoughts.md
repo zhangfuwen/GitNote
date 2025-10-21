@@ -383,7 +383,7 @@ a robot is for:
 
 the thing is 'how needs help'? you want to serve the people. who needs help?
  - young
- - old 
+ - old and disabled, a robot may help but now we don't have good enough robots.
  - poor
  - 
 
