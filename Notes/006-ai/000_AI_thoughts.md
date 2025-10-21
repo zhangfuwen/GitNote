@@ -338,3 +338,7 @@ discernment 眼光，洞查力
 digress 离题，跑题
 beak 鸟嘴，喙
 crest 肉冠
+
+杨振宁说：做科研，taste很重要，就是知道什么是有趣的、有价值的
+
+
