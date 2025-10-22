@@ -405,7 +405,9 @@ visual cortex 视觉皮层
 missstep 失足，岐途
 zeitgeist 时代浪潮
 stumble 蹒跚
-people kept trying to get the full thing to early
+people kept trying to get the full thing too early
+
+
 
 
 
