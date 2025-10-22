@@ -386,5 +386,14 @@ the thing is 'who needs help'? you want to serve the people. who needs help?
  - old and disabled, a robot may help but now we don't have good enough robots.
  - poor
 
+discrepancy 不符，矛盾，差距
+hand wire in 手动把线插进去
+ascribe 归因于
+coarse 粗糙的，下等的
+there is a subjective process within that。这里面有主观的因素。
+moral code 道德准则
+emotional intelligence 情商
+
+you have to understand a difference between what you do automatically and rapidly without effort and what you do with effort and slower and consciously and deliberately 
 
 
