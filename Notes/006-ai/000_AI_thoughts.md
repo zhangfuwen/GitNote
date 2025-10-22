@@ -397,5 +397,15 @@ emotional intelligence 情商
 you have to understand a difference between what you do automatically and rapidly without effort and what you do with effort and slower and consciously and deliberately 
 this is just a different kettle of fish altogether.
 entranced 着迷的，狂喜的
+tractable 可处理的，可驾驭的
+surmountable 可以克服的，可以超越的
+seismic shifts 地壳移动，巨大变迁
+reorient 使再定位
+visual cortex 视觉皮层
+missstep 失足，岐途
+zeitgeist 时代浪潮
+stumble 蹒跚
+people kept trying to get the full thing to early
+
 
 
