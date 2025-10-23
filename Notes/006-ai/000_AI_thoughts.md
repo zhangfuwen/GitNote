@@ -407,6 +407,10 @@ zeitgeist 时代浪潮
 stumble 蹒跚
 people kept trying to get the full thing too early
 
+如果一直自己内部思考，就会collapse，所以你需要外部熵，可以通过与别人交流来增加外部熵。
+it you do it for too long, you go off-rails and you collapse way too much. you always have to seek entropy in you life. Talking to other people is a great source of entropy.
+[children]you're just an amnesiac about everything that happens before a certain year date.
+
 
 
 
