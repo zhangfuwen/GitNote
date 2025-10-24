@@ -1,11 +1,43 @@
 
 # 从显卡到GPGPU
 
-**日益增长的计算需求**
+## 日益增长的计算需求
+
+人类对计算需求的增加，是一个**指数级、多维度、持续加速**的过程, 有几次实在的需求，导致了计算形式发生了非常大的变化：
+
+| 业务需求              | 硬件        |
+| ----------------- | --------- |
+| 军事弹道计算、人口普查、办公自动化 | CPU       |
+| 游戏、科学模拟           | GPU、多核CPU |
+| 大数据               | 云计算、分布式计算 |
+| 大语言模型、AI          | GPGPU、NPU |
+
+这里不是说这些业务需求导致了某种硬件的出现。按时间来说，上述硬件有的早于相应的业务出现。但其大范围应用、重要性得到空间提升是由这些业务推动的。
+
+当前计算需求的特点：
+1. 数据量大
+	- 全球每天产生 **300+ EB** 数据（2025年估计）
+	- 一张高清街景图 ≈ 100 MB，一次自动驾驶路测 ≈ TB级
+	- 视频占互联网流量 **80%+**（Netflix、抖音、Zoom）
+2. **实时性要求提高**
+	 - 从“天级响应”到“毫秒级决策”：
+	  - 高频交易：微秒级
+	  - 自动驾驶：100ms 内完成感知-决策-控制闭环
+	  - 工业机器人：亚毫秒同步
 
 
 
-**三种不同的任务**
+变化趋势：算力需求的指数增长
+
+- **摩尔定律放缓**（晶体管密度增速下降），但**算力需求增速未减**。
+- OpenAI 数据：**2012–2022 年，AI训练算力每3.4个月翻倍**（远快于摩尔定律的18–24个月）。
+- 全球数据中心能耗：2025年预计占全球电力 **>5%**（超过多数国家总用电量）。
+- 英伟达 CEO 黄仁勋：“**每6个月，世界对AI算力的需求就翻一番。**”
+
+
+
+
+## 三种不同的任务
 
 在计算机系统中，存在三种不同的计算任务：
 1. 控制，主要处理if else逻辑，将人类规则应用于软件中。
@@ -13,7 +45,7 @@
 3. 专用计算，如3D渲染、视频编解码等。
 通用计算和专用计算有重叠的部分，控制和通用计算也有重叠的部分。
 
-**CPU无法满足日益增长的计算需求**
+## CPU无法满足日益增长的计算需求
 
 传统的CPU同时具备控制和计算能力，无论是控制、普通计算、还是专用计算，CPU都能处理。但时至今日，CPU越来越沦落为单纯的控制器件，而通用计算和专用计算都越来越多的交给GPU、NPU等来处理。
 
@@ -22,165 +54,25 @@
 2. 性能，CPU的计算能力提升主要途径是提高频率和多核，这两方面都存在限制。首先频率无法无限提升，现在CPU频率达到5GHz已经相当困难。其次核心数目的提升也比较难，因为CPU比较复杂，每增加一个核就会大量增加芯片面积，这会导致功耗增加，也会导致芯片的良率下降。
 基于以上原因，大量的计算需求CPU无法承接，从而只能流向其他计算部件。比如说硬件加速器或GPU。
 
-**硬件加速器研发滞后**
+## 硬件加速器研发滞后
 
 硬件加速器是一个非常专用的设备，它仅能执行固定的算法。比如说某些芯片上有zip压缩的硬件加速器，这个加速器只能进行zip压缩，别的什么事件都干不了。然后软件提出的计算需求是非常快速的。需要一个设备来满足快速提出的计算需求。
 
 
-当代的显卡功能早已经不局限于画面的渲染，而是变成一个通用的计算平台，称为GPGPU，即General Purpose GPU。GPGPU与传统的显卡与CPU有什么区别呢？
+## GPU的通用计算能力
 
-### GPU的通用计算能力
+当代的显卡功能早已经不局限于画面的渲染，而是变成一个通用的计算平台，称为GPGPU，即General Purpose GPU。
+使用GPU做通用计算的尝试开始得很早。早在1999年，就有要尝试通过着色器程序来计算科学问题。直接使用GPU做计算有一些困难：
+1. 输入输出的处理，传统图形API中，没有浮点数的输出方案，唯一的输出方式是渲染出图像。所以使用着色器来计算很多时候需要一个巧妙的方式把数据传换成图像输出。
+2. 计算能力不匹配，GPU是一个固定管线和shader共存的系统，两者有一定的匹配程度，即你在做一定量的计算的时候，一定会附带做了另一些无用的固定管线计算。
+3. 编程复杂，计算任务模型通常与着色器的抽象模型不同，需要巧妙的方式去映射。同时懂图形渲染和算法的专家不多。
 
-使用GPU做通用计算的尝试开始得很早。早在1999年，就有要尝试通过着色器程度来计算科学问题。
-# OpenGL
+随着计算需求的不断明确，GPU逐渐发展出一些API来支持通用计算任务。
+1. 在图形API中增加compute shader。
+2. OpenCL、Cuda等专用API。
 
-	下面一一段简单的OpenCL代码，用于绘制一个三角形：
+### 通过计算着色器来计算
 
-```c
-
-1 const char *vertexShaderSource = "#version 330 core\n"
-  2 "layout (location = 0) in vec3 aPos;// 位置变量的属性位置值为 0 \n"
-  3 "void main()\n"
-  4 "{\n"
-  5 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-  6 "}\0";
-  7 
-  8 const char *fragmentShaderSource = "#version 330 core\n"
-  9 "out vec4 FragColor;\n"
- 10 "void main()\n"
- 11 "{\n"
- 12 "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);//最终的输出颜色\n"
- 13 "}\0";
- 14 
- 15 int hello_triangle()
- 16 {
- 17     GLFWwindow* window = init_window();
- 18 
- 19     ///定义着色器
- 20     //创建一个顶点着色器对象，注意还是用ID来引用的
- 21     unsigned int vertexShader;
- 22     vertexShader = glCreateShader(GL_VERTEX_SHADER);
- 23 
- 24     //着色器源码附加到着色器对象上
- 25     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);//要编译的着色器对象作为第一个参数。第二参数指定了传递的源码字符串数量，这里只有一个。第三个参数是顶点着色器真正的源码，第四个参数我们先设置为NULL
- 26     glCompileShader(vertexShader);//编译源码
- 27     int  success;
- 28     char infoLog[512];
- 29     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);//用glGetShaderiv检查是否编译成功
- 30     if (!success)
- 31     {
- 32         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
- 33         std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
- 34     }
- 35 
- 36     //创建一个片段着色器对象，注意还是用ID来引用的
- 37     unsigned int fragmentShader;
- 38     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
- 39     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
- 40     glCompileShader(fragmentShader);//编译源码
- 41     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);//用glGetShaderiv检查是否编译成功
- 42     if (!success)
- 43     {
- 44         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
- 45         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
- 46     }
- 47 
- 48     //创建一个着色器对程序
- 49     unsigned int shaderProgram;
- 50     shaderProgram = glCreateProgram();
- 51     glAttachShader(shaderProgram, vertexShader);//把之前编译的着色器附加到程序对象上
- 52     glAttachShader(shaderProgram, fragmentShader);
- 53     glLinkProgram(shaderProgram);//glLinkProgram链接它们
- 54     glGetProgramiv(shaderProgram, GL_COMPILE_STATUS, &success);//用glGetProgramiv检查是否编译成功
- 55     if (!success)
- 56     {
- 57         glGetShaderInfoLog(shaderProgram, 512, NULL, infoLog);
- 58         std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n" << infoLog << std::endl;
- 59     }
- 60 
- 61     //链接后即可删除
- 62     glDeleteShader(vertexShader);
- 63     glDeleteShader(fragmentShader);//*/
- 64 
- 65     ///定义顶点对象
- 66     float vertices[] = {
- 67     -0.5f, -0.5f, 0.0f,
- 68     0.5f,-0.5f, 0.0f,
- 69     0.0f, 0.5f, 0.0f  70     
- 71     };
- 72 
- 73     //生成VAO对象，缓冲ID为VAO
- 74     unsigned int VAO;
- 75     glGenVertexArrays(1, &VAO);
- 76     glBindVertexArray(VAO);//绑定VAO,从绑定之后起，我们应该绑定和配置对应的VBO和属性指针，之后解绑VAO，供之后使用
- 77 
- 78     //生成VBO对象，缓冲ID为VBO
- 79     unsigned int VBO;
- 80     glGenBuffers(1, &VBO);//第一个参数GLsizei是要生成的缓冲对象的数量，第二个GLuint是要输入用来存储缓冲对象名称的数组
- 81 
- 82     //绑定到目标对象,VBO变成了一个顶点缓冲类型
- 83     glBindBuffer(GL_ARRAY_BUFFER, VBO);//第一个就是缓冲对象的类型，第二个参数就是要绑定的缓冲对象的名称
- 84     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);//数据传入缓冲内存中,GL_STATIC_DRAW：数据不会或几乎不会改变； GL_DYNAMIC_DRAW：数据会被改变很多； GL_DYNAMIC_DRAW：数据会被改变很多
- 85 
- 86     //设置顶点属性指针，如何解析顶点数据
- 87     /*
- 88     第一个参数指定我们要配置的顶点属性，顶点着色器中使用layout(location = 0)定义
- 89     第二个参数指定顶点属性的大小
- 90     第三个参数指定数据的类型
- 91     第四个参数定义我们是否希望数据被标准化(Normalize)。如果我们设置为GL_TRUE，所有数据都会被映射到0（对于有符号型signed数据是-1）到1之间
- 92     第五个参数步长(Stride)，它告诉我们在连续的顶点属性组之间的间隔
- 93     最后一个参数的类型是void*，数据在缓冲中起始位置的偏移量(Offset)
- 94     */
- 95     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
- 96     glEnableVertexAttribArray(0);//启用顶点属性layout(location = 0)，顶点属性默认是禁用的
- 97     glBindBuffer(GL_ARRAY_BUFFER, 0);//设置完属性，解绑VBO
- 98 
- 99     glBindVertexArray(0);//配置完VBO及其属性，解绑VAO
-100 
-101 
-102     //绘制模式为线条GL_LINE，填充面GL_FILL
-103     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//正反面
-104 
-105     while (!glfwWindowShouldClose(window))
-106     {
-107         processInput(window);
-108 
-109 
-110         //清空屏幕
-111         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-112         glClear(GL_COLOR_BUFFER_BIT);
-113 
-114 
-115         //绘制物体
-116         glUseProgram(shaderProgram);//激活程序对象
-117 
-118         glBindVertexArray(VAO);
-119         //使用VAO绘制
-120         glDrawArrays(GL_TRIANGLES, 0, 3);//绘制图元为三角形，起始索引0，绘制顶点数量3
-121 
-122         glfwSwapBuffers(window);//交换颜色缓冲（它是一个储存着GLFW窗口每一个像素颜色值的大缓冲）
-123         glfwPollEvents();//检查有没有触发什么事件
-124     }
-125 
-126     //释放对象
-127     glDeleteVertexArrays(1, &VAO);
-128     glDeleteBuffers(1, &VBO);
-129 
-130     std::cout << "finish!" << std::endl;
-131     glfwTerminate();//释放/删除之前的分配的所有资源
-132     return 0;
-133 }
-```
-
-代码很长，但功能很简单。它在120行每次调用glDrawArrays的时候，调用一次渲染流水线。流水线（管线）会执行一些固定的部分，也会执行两个shader，即vertex shader和fragment shader。
-1. 流水线在固定的部分中将输入顶点进行一定的加工，之后会传给vertex shader，vertex shader对单个顶点进行处理，输出一个处理后的顶点。在上述代码中，vertex shader几乎没有做什么事情，它只是把每个顶点的w分量设置为1.0.这代码顶点的部分没有进行任何的变换。你也可以修改代码，给每个顶点的位置加上一些偏移，或者缩放，你会看到最终输出的图像可能就不是一个三角形了。
-2. 在vertex shader之后，流水线的固定部分会将这些顶点组装成三角形，然后栅格化，根据viewport的大小，决定每个三角形中取多少个点。然后将这些点送给fragment shader。上述代码中，fragment shader也几乎没做什么事情，它只是给每个点一个固定的颜色。这样最终显示的三角形里面就被填充为这种颜色。
-
-当技术发展到这一部分的时候，人们就发现，vertex shader和fragment shader具有一些特点：
-1. 虽然要对很多点或像素（片元）进行计算，但是所做的计算的公式都是相同的，只有输入输出的数据不同。
-2. vertex shader和fragment shader可以复用一部分硬件逻辑单元。
-
-现实的计算任务中，有些任务（特别是大量数据情况下的任务）也具有计算步骤相同但数据不同的特点。所以也可以用显卡的这个单元来做这个计算。
 
 OpenGL ES 3.0版本的时候就引入了compute shader的概念，只用来做通用计算。
 
@@ -244,7 +136,7 @@ glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 这段代码中的compute shader直接从storage buffer读取输入，再将输出写入到storage buffer。
 
 
-# OpenCL
+### 专用API: OpenCL
 
 
 OpenCL是一个专门于通用计算任务的API。目前还比较尴尬。理论上来讲，它可以应用于各种各样的硬件，但实际情况是除了GPU外，支持OpenCL的硬件并不很多，使用OpenCL的开发者也比较少。
@@ -253,7 +145,170 @@ OpenCL是一个专门于通用计算任务的API。目前还比较尴尬。理�
 
 由于开发者和硬件vendor的双重不待见，它的性能如何其实是打个问号的。所以一般是万不得已才会用。
 
-详细可以参考：https://zhuanlan.zhihu.com/p/602844623
+OpenCL某种程度上与OpenGL类似，下面是一段示例代码：
+
+```cpp
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef __APPLE__
+#include <OpenCL/opencl.h>
+#else
+#include <CL/cl.h>
+#endif
+
+const char *kernelSource = 
+"__kernel void vectorAdd(__global const float* a, \n"
+"                        __global const float* b, \n"
+"                        __global float* c, \n"
+"                        const unsigned int n) {\n"
+"    int id = get_global_id(0);\n"
+"    if (id < n) {\n"
+"        c[id] = a[id] + b[id];\n"
+"    }\n"
+"}\n";
+
+int main() {
+    // 1. 平台与设备查询
+    cl_platform_id platform;
+    cl_device_id device;
+    clGetPlatformIDs(1, &platform, NULL);
+    clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, NULL);
+
+    // 2. 创建上下文和命令队列
+    cl_context context = clCreateContext(NULL, 1, &device, NULL, NULL, NULL);
+    cl_command_queue queue = clCreateCommandQueue(context, device, 0, NULL);
+
+    // 3. 准备数据
+    const int N = 1024;
+    size_t bytes = N * sizeof(float);
+    float *h_a = (float*)malloc(bytes);
+    float *h_b = (float*)malloc(bytes);
+    float *h_c = (float*)malloc(bytes);
+
+    for (int i = 0; i < N; i++) {
+        h_a[i] = i;
+        h_b[i] = i * 2;
+    }
+
+    // 4. 创建设备内存缓冲区
+    cl_mem d_a = clCreateBuffer(context, CL_MEM_READ_ONLY, bytes, NULL, NULL);
+    cl_mem d_b = clCreateBuffer(context, CL_MEM_READ_ONLY, bytes, NULL, NULL);
+    cl_mem d_c = clCreateBuffer(context, CL_MEM_WRITE_ONLY, bytes, NULL, NULL);
+
+    // 5. 将主机数据写入设备
+    clEnqueueWriteBuffer(queue, d_a, CL_TRUE, 0, bytes, h_a, 0, NULL, NULL);
+    clEnqueueWriteBuffer(queue, d_b, CL_TRUE, 0, bytes, h_b, 0, NULL, NULL);
+
+    // 6. 编译内核程序
+    cl_program program = clCreateProgramWithSource(context, 1, &kernelSource, NULL, NULL);
+    clBuildProgram(program, 1, &device, NULL, NULL, NULL);
+
+    cl_kernel kernel = clCreateKernel(program, "vectorAdd", NULL);
+
+    // 7. 设置内核参数
+    clSetKernelArg(kernel, 0, sizeof(cl_mem), &d_a);
+    clSetKernelArg(kernel, 1, sizeof(cl_mem), &d_b);
+    clSetKernelArg(kernel, 2, sizeof(cl_mem), &d_c);
+    clSetKernelArg(kernel, 3, sizeof(unsigned int), &N);
+
+    // 8. 执行内核
+    size_t globalSize = N;
+    clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &globalSize, NULL, 0, NULL, NULL);
+
+    // 9. 读取结果
+    clEnqueueReadBuffer(queue, d_c, CL_TRUE, 0, bytes, h_c, 0, NULL, NULL);
+
+    // 10. 验证结果（打印前5个）
+    for (int i = 0; i < 5; i++) {
+        printf("c[%d] = %f\n", i, h_c[i]); // 应为 0, 3, 6, 9, 12...
+    }
+
+    // 11. 释放资源
+    clReleaseMemObject(d_a);
+    clReleaseMemObject(d_b);
+    clReleaseMemObject(d_c);
+    clReleaseKernel(kernel);
+    clReleaseProgram(program);
+    clReleaseCommandQueue(queue);
+    clReleaseContext(context);
+    free(h_a); free(h_b); free(h_c);
+
+    return 0;
+}
+```
+
+这个例子展示了 OpenCL 的基本工作流：**准备数据 → 传输到设备 → 执行并行内核 → 取回结果**，是理解异构计算的重要起点。
+### Cuda
+
+OpenCL仍然是由一段C代码和一段shader代码组成的。也就是说，它的控制和计算部分是用不同的语言写形的。
+Cuda则将两者做到的统一， 一段Cuda代码的示例如下：
+
+```c
+#include <iostream>
+#include <cuda_runtime.h>
+
+// CUDA 核函数：每个线程处理一个元素
+__global__ void vectorAdd(const float* a, const float* b, float* c, int n) {
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx < n) {
+        c[idx] = a[idx] + b[idx];
+    }
+}
+
+int main() {
+    const int N = 1024;
+    const size_t bytes = N * sizeof(float);
+
+    // 1. 主机内存分配
+    float *h_a, *h_b, *h_c;
+    h_a = (float*)malloc(bytes);
+    h_b = (float*)malloc(bytes);
+    h_c = (float*)malloc(bytes);
+
+    // 2. 初始化数据
+    for (int i = 0; i < N; ++i) {
+        h_a[i] = i;
+        h_b[i] = i * 2.0f;
+    }
+
+    // 3. 设备内存分配
+    float *d_a, *d_b, *d_c;
+    cudaMalloc(&d_a, bytes);
+    cudaMalloc(&d_b, bytes);
+    cudaMalloc(&d_c, bytes);
+
+    // 4. 主机 → 设备 数据传输
+    cudaMemcpy(d_a, h_a, bytes, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_b, h_b, bytes, cudaMemcpyHostToDevice);
+
+    // 5. 配置执行配置（grid & block）
+    int blockSize = 256;
+    int gridSize = (N + blockSize - 1) / blockSize;  // 向上取整
+
+    // 6. 启动核函数
+    vectorAdd<<<gridSize, blockSize>>>(d_a, d_b, d_c, N);
+
+    // 7. 同步等待 GPU 完成
+    cudaDeviceSynchronize();
+
+    // 8. 设备 → 主机 数据传输
+    cudaMemcpy(h_c, d_c, bytes, cudaMemcpyDeviceToHost);
+
+    // 9. 验证结果（打印前5个）
+    for (int i = 0; i < 5; ++i) {
+        std::cout << "c[" << i << "] = " << h_c[i] << std::endl;
+    }
+
+    // 10. 释放内存
+    free(h_a); free(h_b); free(h_c);
+    cudaFree(d_a); cudaFree(d_b); cudaFree(d_c);
+
+    return 0;
+}
+```
+
+可以看到，cuda代码中，控制和计算都采用统一的语法。仅仅需要在计算函数的前面加上__kernel__标识。
+
 
 # nVidia显卡
 
@@ -420,3 +475,155 @@ Tensor Core不完全等同于传统意义上的SIMD（单指令多数据），�
 A100显卡的虽然中文叫显卡，英文叫GPGPU，但其实它跟显示或Graphics已经没有太大的关系了。
 
 A100
+
+
+
+# OpenGL
+
+	下面一一段简单的OpenCL代码，用于绘制一个三角形：
+
+```c
+
+1 const char *vertexShaderSource = "#version 330 core\n"
+  2 "layout (location = 0) in vec3 aPos;// 位置变量的属性位置值为 0 \n"
+  3 "void main()\n"
+  4 "{\n"
+  5 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+  6 "}\0";
+  7 
+  8 const char *fragmentShaderSource = "#version 330 core\n"
+  9 "out vec4 FragColor;\n"
+ 10 "void main()\n"
+ 11 "{\n"
+ 12 "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);//最终的输出颜色\n"
+ 13 "}\0";
+ 14 
+ 15 int hello_triangle()
+ 16 {
+ 17     GLFWwindow* window = init_window();
+ 18 
+ 19     ///定义着色器
+ 20     //创建一个顶点着色器对象，注意还是用ID来引用的
+ 21     unsigned int vertexShader;
+ 22     vertexShader = glCreateShader(GL_VERTEX_SHADER);
+ 23 
+ 24     //着色器源码附加到着色器对象上
+ 25     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);//要编译的着色器对象作为第一个参数。第二参数指定了传递的源码字符串数量，这里只有一个。第三个参数是顶点着色器真正的源码，第四个参数我们先设置为NULL
+ 26     glCompileShader(vertexShader);//编译源码
+ 27     int  success;
+ 28     char infoLog[512];
+ 29     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);//用glGetShaderiv检查是否编译成功
+ 30     if (!success)
+ 31     {
+ 32         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+ 33         std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+ 34     }
+ 35 
+ 36     //创建一个片段着色器对象，注意还是用ID来引用的
+ 37     unsigned int fragmentShader;
+ 38     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+ 39     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+ 40     glCompileShader(fragmentShader);//编译源码
+ 41     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);//用glGetShaderiv检查是否编译成功
+ 42     if (!success)
+ 43     {
+ 44         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+ 45         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+ 46     }
+ 47 
+ 48     //创建一个着色器对程序
+ 49     unsigned int shaderProgram;
+ 50     shaderProgram = glCreateProgram();
+ 51     glAttachShader(shaderProgram, vertexShader);//把之前编译的着色器附加到程序对象上
+ 52     glAttachShader(shaderProgram, fragmentShader);
+ 53     glLinkProgram(shaderProgram);//glLinkProgram链接它们
+ 54     glGetProgramiv(shaderProgram, GL_COMPILE_STATUS, &success);//用glGetProgramiv检查是否编译成功
+ 55     if (!success)
+ 56     {
+ 57         glGetShaderInfoLog(shaderProgram, 512, NULL, infoLog);
+ 58         std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n" << infoLog << std::endl;
+ 59     }
+ 60 
+ 61     //链接后即可删除
+ 62     glDeleteShader(vertexShader);
+ 63     glDeleteShader(fragmentShader);//*/
+ 64 
+ 65     ///定义顶点对象
+ 66     float vertices[] = {
+ 67     -0.5f, -0.5f, 0.0f,
+ 68     0.5f,-0.5f, 0.0f,
+ 69     0.0f, 0.5f, 0.0f  70     
+ 71     };
+ 72 
+ 73     //生成VAO对象，缓冲ID为VAO
+ 74     unsigned int VAO;
+ 75     glGenVertexArrays(1, &VAO);
+ 76     glBindVertexArray(VAO);//绑定VAO,从绑定之后起，我们应该绑定和配置对应的VBO和属性指针，之后解绑VAO，供之后使用
+ 77 
+ 78     //生成VBO对象，缓冲ID为VBO
+ 79     unsigned int VBO;
+ 80     glGenBuffers(1, &VBO);//第一个参数GLsizei是要生成的缓冲对象的数量，第二个GLuint是要输入用来存储缓冲对象名称的数组
+ 81 
+ 82     //绑定到目标对象,VBO变成了一个顶点缓冲类型
+ 83     glBindBuffer(GL_ARRAY_BUFFER, VBO);//第一个就是缓冲对象的类型，第二个参数就是要绑定的缓冲对象的名称
+ 84     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);//数据传入缓冲内存中,GL_STATIC_DRAW：数据不会或几乎不会改变； GL_DYNAMIC_DRAW：数据会被改变很多； GL_DYNAMIC_DRAW：数据会被改变很多
+ 85 
+ 86     //设置顶点属性指针，如何解析顶点数据
+ 87     /*
+ 88     第一个参数指定我们要配置的顶点属性，顶点着色器中使用layout(location = 0)定义
+ 89     第二个参数指定顶点属性的大小
+ 90     第三个参数指定数据的类型
+ 91     第四个参数定义我们是否希望数据被标准化(Normalize)。如果我们设置为GL_TRUE，所有数据都会被映射到0（对于有符号型signed数据是-1）到1之间
+ 92     第五个参数步长(Stride)，它告诉我们在连续的顶点属性组之间的间隔
+ 93     最后一个参数的类型是void*，数据在缓冲中起始位置的偏移量(Offset)
+ 94     */
+ 95     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+ 96     glEnableVertexAttribArray(0);//启用顶点属性layout(location = 0)，顶点属性默认是禁用的
+ 97     glBindBuffer(GL_ARRAY_BUFFER, 0);//设置完属性，解绑VBO
+ 98 
+ 99     glBindVertexArray(0);//配置完VBO及其属性，解绑VAO
+100 
+101 
+102     //绘制模式为线条GL_LINE，填充面GL_FILL
+103     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//正反面
+104 
+105     while (!glfwWindowShouldClose(window))
+106     {
+107         processInput(window);
+108 
+109 
+110         //清空屏幕
+111         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+112         glClear(GL_COLOR_BUFFER_BIT);
+113 
+114 
+115         //绘制物体
+116         glUseProgram(shaderProgram);//激活程序对象
+117 
+118         glBindVertexArray(VAO);
+119         //使用VAO绘制
+120         glDrawArrays(GL_TRIANGLES, 0, 3);//绘制图元为三角形，起始索引0，绘制顶点数量3
+121 
+122         glfwSwapBuffers(window);//交换颜色缓冲（它是一个储存着GLFW窗口每一个像素颜色值的大缓冲）
+123         glfwPollEvents();//检查有没有触发什么事件
+124     }
+125 
+126     //释放对象
+127     glDeleteVertexArrays(1, &VAO);
+128     glDeleteBuffers(1, &VBO);
+129 
+130     std::cout << "finish!" << std::endl;
+131     glfwTerminate();//释放/删除之前的分配的所有资源
+132     return 0;
+133 }
+```
+
+代码很长，但功能很简单。它在120行每次调用glDrawArrays的时候，调用一次渲染流水线。流水线（管线）会执行一些固定的部分，也会执行两个shader，即vertex shader和fragment shader。
+1. 流水线在固定的部分中将输入顶点进行一定的加工，之后会传给vertex shader，vertex shader对单个顶点进行处理，输出一个处理后的顶点。在上述代码中，vertex shader几乎没有做什么事情，它只是把每个顶点的w分量设置为1.0.这代码顶点的部分没有进行任何的变换。你也可以修改代码，给每个顶点的位置加上一些偏移，或者缩放，你会看到最终输出的图像可能就不是一个三角形了。
+2. 在vertex shader之后，流水线的固定部分会将这些顶点组装成三角形，然后栅格化，根据viewport的大小，决定每个三角形中取多少个点。然后将这些点送给fragment shader。上述代码中，fragment shader也几乎没做什么事情，它只是给每个点一个固定的颜色。这样最终显示的三角形里面就被填充为这种颜色。
+
+当技术发展到这一部分的时候，人们就发现，vertex shader和fragment shader具有一些特点：
+1. 虽然要对很多点或像素（片元）进行计算，但是所做的计算的公式都是相同的，只有输入输出的数据不同。
+2. vertex shader和fragment shader可以复用一部分硬件逻辑单元。
+
+现实的计算任务中，有些任务（特别是大量数据情况下的任务）也具有计算步骤相同但数据不同的特点。所以也可以用显卡的这个单元来做这个计算。
