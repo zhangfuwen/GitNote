@@ -435,5 +435,22 @@ archaea 古生菌
 spung up 萌生
 hominid intelligence 原始人类智能
 primates 灵长类动物
+evolutionary niche 进化生态位
+marginal increase
 
+it think it kicks off the skywheel 启动了飞轮
+miraculous 不可思议的
+sharp takeoff 急速起飞
+impediments 障碍，it's one of the impediments.
+repertoire 全部节目， a repertoire of knowledge 全部知识
+fallible 易犯错的
+capex 资本支出
+slog 难难跋涉， making it economical is still going to be a slog for them.
+deceiving 欺骗性的，I also think it's a little bit deceiving because there are very elaborate teleoperation centers.
+I don't have the full extent of it. 不知道全部情况。
+opex 操作执行，the opex of a session if quite low and you can amortize（摊销、分期偿还)， 
+tr the economics of deploying more widely are much more favorable. 更广泛部署的经济效益要有利得多。
+tr if you're sticking to the realm of bits 如果你坚持比特王国的话
+what are the legal remifications，法律后果是什么？
 
+determinism 决定论  i feel some amount of determinism around the things that AI labs are doing.
