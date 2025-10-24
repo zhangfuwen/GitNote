@@ -1,0 +1,6 @@
+.unotes/unotes_meta.json
+.idea
+node_modules
+package-lock.json
+cmake-build-debug
+.obsidian
