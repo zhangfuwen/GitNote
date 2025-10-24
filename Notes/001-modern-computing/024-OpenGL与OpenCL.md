@@ -309,6 +309,86 @@ int main() {
 
 可以看到，cuda代码中，控制和计算都采用统一的语法。仅仅需要在计算函数的前面加上__kernel__标识。
 
+### SIMD和SIMT
+
+SIMD和SIMT都是并行计算模型。nVidia GPU所采用的称为SIMT。相对于SIMD，SIMT的优势在于数据与计算代码分离。
+在SIMD中，计算流程和计算数据是耦合在一起的，程序员需明确每一步采用多大的寄存器，使用多宽的计算单元。这种计算模型中，程序员的心智负担较重，编译器也难于做出优化。在SIMT模型中，计算流程和计算数据是分离的。计算流程通过kernel来写，它认为自己处理的就是标量。如下面的代码所示：
+```cpp
+__global__ void vectorAdd(const float* a, const float* b, float* c, int n) {
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx < n) {
+        c[idx] = a[idx] + b[idx];
+    }
+}
+```
+
+实际计算中同时处理多少条数据则于控制代码决定，代码如下：
+
+```cpp
+ // 5. 配置执行配置（grid & block）
+    int blockSize = 256;
+    int gridSize = (N + blockSize - 1) / blockSize;  // 向上取整
+
+    // 6. 启动核函数
+    vectorAdd<<<gridSize, blockSize>>>(d_a, d_b, d_c, N);
+```
+
+这种解耦的设计带来的好处包括：
+1. 一个kernel可以适应各种不同的数据，代码复用性好
+2. 开发的心智负担小
+
+## GPGPU现状
+
+由于区块链技术和AI技术带来了大量的非渲染类计算需求，GPU中的通用计算部件做得越来越大，渲染专用部件的相对比例变得越来越小，以至于变得微不足道。很多称为GPGPU的计算部件中，已经完全删掉了渲染功能。现代GPU的计算能力和数据传输能力是CPU望尘莫及的。
+
+### GPU能力
+撇开集群不谈，只看单张卡的能力，主流nVidia显卡的能力如下：
+
+| 参数 | **NVIDIA A100** (Ampere, 2020) | **NVIDIA H100** (Hopper, 2022) | **NVIDIA A20** (Ampere, 2021) |
+|------|-------------------------------|-------------------------------|------------------------------|
+| **架构** | Ampere | Hopper | Ampere |
+| **制程** | TSMC 7nm | TSMC 4N（定制） | Samsung 8nm |
+| **FP32 算力** | 19.5 TFLOPS | 51 TFLOPS | 7.5 TFLOPS |
+| **FP16（Tensor Core）** | 312 TFLOPS | 756–1,979 TFLOPS（取决于格式） | 60 TFLOPS |
+| **BF16** | 312 TFLOPS | 1,979 TFLOPS（带 FP8 Transformer Engine） | 60 TFLOPS |
+| **INT8** | 624 TOPS | 1,513 TOPS | 120 TOPS |
+| **FP8（新）** | ❌ 不支持 | ✅ 1,979 TFLOPS（H100 特有） | ❌ 不支持 |
+| **显存容量** | 40 / 80 GB HBM2e | 80 GB HBM3 | 12 GB GDDR6 |
+| **显存带宽** | 1.6–2.0 TB/s | 3.35 TB/s | 336 GB/s |
+| **NVLink** | 600 GB/s（A100 80G） | 900 GB/s（H100） | ❌ 无 |
+| **TDP 功耗** | 250–400 W | 700 W | 150 W |
+| **PCIe 接口** | PCIe 4.0 x16 | PCIe 5.0 x16 | PCIe 4.0 x16 |
+| **主要用途** | AI 训练/推理、HPC | 大模型训练、AI 超算 | 工作站图形 + 轻量推理 |
+1. **AI 算力（Tensor Core 性能）**
+- **H100 是当前（2025）最强 AI GPU**：
+  - 支持 **FP8 精度**，配合 **Transformer Engine**，在 LLM 训练中比 A100 快 **3–6 倍**。
+  - BF16/FP16 算力接近 A100 的 **2.5 倍**。
+- **A100**：仍是主流 AI 服务器标配，性价比高，生态成熟。
+- **A20**：**不适用于大模型训练**，仅适合：
+  - 边缘端小模型推理（如 YOLOv5、ResNet）
+  - CAD/渲染 + 轻量 AI（如视频结构化）
+
+2. **显存与带宽**
+- **H100 的 HBM3 + 3.35 TB/s 带宽**，极大缓解“内存墙”问题，适合超大 batch 训练。
+- **A20 仅 12GB GDDR6 + 336 GB/s**，带宽不到 A100 的 1/5，**无法加载大模型**（如 Llama-7B 都困难）。
+
+3. **互联能力**
+- A100/H100 支持 **NVLink/NVSwitch**，可多卡高速互联（用于千卡集群）。
+- A20 仅 PCIe，多卡扩展性差。
+
+相比之于，当今最强CPU的单核算力都是1 TFLOPS以下。即使是几十个核的服务器端CPU，其整机算力与GPGPU相比也有几十倍的差距。
+### CPU能力
+
+当前最强单核 FP32 算力对比（理论峰值）：
+
+| CPU 型号 | 架构 | 基础频率 | 加速频率 | SIMD 指令集 | 单核 FP32 峰值（理论） |
+|--------|------|--------|--------|------------|------------------|
+| **Intel Core i9-14900KS** | Raptor Lake Refresh (14th Gen) | 3.2 GHz | **6.2 GHz** | AVX2（256-bit） | ≈ **99 GFLOPS** |
+| **AMD Ryzen 9 7950X3D** | Zen 4 | 4.2 GHz | 5.7 GHz | AVX2（256-bit） | ≈ **91 GFLOPS** |
+| **Intel Xeon w9-3495X** | Sapphire Rapids | 2.3 GHz | 4.8 GHz | **AVX-512（512-bit）** | ≈ **307 GFLOPS** |
+| **AMD EPYC 9754** | Genoa (Zen 4) | 2.25 GHz | 3.8 GHz | AVX2（256-bit） | ≈ **61 GFLOPS** |
+
+
 
 # nVidia显卡
 
