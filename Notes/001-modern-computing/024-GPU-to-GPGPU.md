@@ -388,9 +388,9 @@ __global__ void vectorAdd(const float* a, const float* b, float* c, int n) {
 | **Intel Xeon w9-3495X** | Sapphire Rapids | 2.3 GHz | 4.8 GHz | **AVX-512（512-bit）** | ≈ **307 GFLOPS** |
 | **AMD EPYC 9754** | Genoa (Zen 4) | 2.25 GHz | 3.8 GHz | AVX2（256-bit） | ≈ **61 GFLOPS** |
 
-
-
-# nVidia显卡
+---
+# 附录
+## nVidia显卡
 
 ## 显卡与cuda发展历程
 
