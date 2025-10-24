@@ -88,7 +88,8 @@ Page size: 差别比较大，有1K的也有4K的。
 LPDDR5X有四个power rail。VDDQ是外围电路。VDD2L也是外围电路。VDD2H和VDD1主要是在bank上。
 
 ![](assets/Pasted%20image%2020251024175542.png)
-现有方案中，VDD2L和VDD2H的分离已经能带来一些功耗下降。镁光提了一个更低VDD2H的方案，能进一步降低 
+现有方案中，VDD2L和VDD2H的分离已经能带来一些功耗下降。镁光提了一个更低VDD2H的方案，能进一步降低功耗8%左右。 [How does voltage scaling enable LPDDR5X to deliver efficient AI user experiences? \| Micron Technology Inc.](https://www.micron.com/about/blog/memory/dram/how-does-voltage-scaling-enable-lpddr5x-to-deliver-efficient-ai-user-experiences)这个大概是能将VDD2H从1.060V 降到 0.98V。
+
 ## UFS
 
 UFS 4的理论带宽是4GB/s，它有2个lane(差分线对)，单个差分线对速度是23.2GT/s（不算头部开销理论传输速度是5.8GB/s）.
