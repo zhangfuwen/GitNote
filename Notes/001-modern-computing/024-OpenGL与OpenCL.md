@@ -1,7 +1,11 @@
 
+# 从显卡到GPGPU
+
+当代的显卡功能早已经不局限于画面的渲染，而是变成一个通用的计算平台，称为GPGPU，即General Purpose GPU。GPGPU与传统的显卡与CPU有什么区别呢？
+
 # OpenGL
 
-下面一一段简单的OpenCL代码，用于绘制一个三角形：
+	下面一一段简单的OpenCL代码，用于绘制一个三角形：
 
 ```c
 
