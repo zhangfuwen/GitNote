@@ -423,5 +423,17 @@ hyper-exponential trend 超指数超势
 human in the server is qualitatively different from these other productivity-improving technologies.
 
 
+tangible 有形的， over the last 20 yours of doing AI research, you maybe have a more tangible sense of what intelligence is, what it takes to develop it.
+
+spontaneously 自发地，不由自主的， are you more or less surprised as a result that evolution just spontaneously stumbled upon it.
+
+if you buy the Sutton perspective that the crux(关键) of intelligence is animal intelligence, ...
+
+instigate (唆使，驱动): it seams like what instigated that was the oxygenation event 600 million years ago.
+eukaryote 真核细胞
+archaea 古生菌
+spung up 萌生
+hominid intelligence 原始人类智能
+primates 灵长类动物
 
 
