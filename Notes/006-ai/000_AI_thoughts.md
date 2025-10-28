@@ -454,3 +454,12 @@ tr if you're sticking to the realm of bits 如果你坚持比特王国的话
 what are the legal remifications，法律后果是什么？
 
 determinism 决定论  i feel some amount of determinism around the things that AI labs are doing.
+
+faculty 教职员工
+
+pre-AGI education is useful, post-AGI education is fun.
+we don't need their physical strength to manipulate things.
+
+we barely scratched the surface.
+bounce off 大发议论：people are just bouncing off of material that's too easy or too hard. 
+
