@@ -409,12 +409,12 @@ people kept trying to get the full thing too early
 
 如果一直自己内部思考，就会collapse，所以你需要外部熵，可以通过与别人交流来增加外部熵。
 it you do it for too long, you go off-rails and you collapse way too much. you always have to seek entropy in you life. Talking to other people is a great source of entropy.
-[children]you're just an amnesiac about everything that happens before a certain year date.
+[children]you're just an ==amnesiac== about everything that happens before a certain year date.
 these models will literally be able to regurgitate word-for-word 
 some jobs have some features that make it very amenable to automation earlier that later.  amenable 有责任的，顺从的
 I would expect a lot a rote stuff to be automatable today. rote stuff死记硬背的
 progression 前进，渐进改变， the way this progression would happen is that you take a little task that a consultant is doing, you take that out of the bucket. 
-programmers are getting more and more chiseled away at their work.
+programmers are getting more and more ==chiseled== away at their work.
 Extrapolating the trend of computing, there will be a gradual automation of a lot of things.
 let me probe on that a bit. 让我来探究一下。
 prestigious 有声望的 
@@ -423,7 +423,7 @@ hyper-exponential trend 超指数超势
 human in the server is qualitatively different from these other productivity-improving technologies.
 
 
-tangible 有形的， over the last 20 yours of doing AI research, you maybe have a more tangible sense of what intelligence is, what it takes to develop it.
+tangible 有形的， over the last 20 years of doing AI research, you maybe have a more tangible sense of what intelligence is, what it takes to develop it.
 
 spontaneously 自发地，不由自主的， are you more or less surprised as a result that evolution just spontaneously stumbled upon it.
 
@@ -434,11 +434,12 @@ eukaryote 真核细胞
 archaea 古生菌
 spung up 萌生
 hominid intelligence 原始人类智能
+
 primates 灵长类动物
 evolutionary niche 进化生态位
 marginal increase
 
-it think it kicks off the skywheel 启动了飞轮
+it think it kicks off the flywheel 启动了飞轮
 miraculous 不可思议的
 sharp takeoff 急速起飞
 impediments 障碍，it's one of the impediments.
@@ -449,9 +450,9 @@ slog 难难跋涉， making it economical is still going to be a slog for them.
 deceiving 欺骗性的，I also think it's a little bit deceiving because there are very elaborate teleoperation centers.
 I don't have the full extent of it. 不知道全部情况。
 opex 操作执行，the opex of a session if quite low and you can amortize（摊销、分期偿还)， 
-tr the economics of deploying more widely are much more favorable. 更广泛部署的经济效益要有利得多。
-tr if you're sticking to the realm of bits 如果你坚持比特王国的话
-what are the legal remifications，法律后果是什么？
+the economics of deploying more widely are much more favorable. 更广泛部署的经济效益要有利得多。
+if you're sticking to the realm of bits 如果你坚持比特王国的话
+what are the legal ramifications，法律后果是什么？
 
 determinism 决定论  i feel some amount of determinism around the things that AI labs are doing.
 
@@ -462,4 +463,7 @@ we don't need their physical strength to manipulate things.
 
 we barely scratched the surface.
 bounce off 大发议论：people are just bouncing off of material that's too easy or too hard. 
+
+democratize education 教育民主化
+
 
