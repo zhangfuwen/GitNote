@@ -6,6 +6,8 @@
     <title>Multi-Model Chatbot</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/marked/marked.min.css">
+    <!-- Highlight.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <style>
         :root {
             --primary: #4361ee;
@@ -147,6 +149,7 @@
             position: relative;
             animation: fadeIn 0.3s ease;
             word-wrap: break-word;
+            transition: var(--transition);
         }
 
         @keyframes fadeIn {
@@ -168,17 +171,54 @@
             border-bottom-left-radius: 4px;
         }
 
+        /* Copy button styling */
+        .message-actions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: none;
+            gap: 6px;
+        }
+
+        .message:hover .message-actions {
+            display: flex;
+        }
+
+        .copy-btn {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .message:hover .copy-btn {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .copy-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
         .bot-message-content {
             overflow-x: auto;
         }
 
+        /* Code blocks will be handled by Highlight.js */
         .bot-message-content pre {
-            background: #2d2d2d;
-            color: #f8f8f2;
-            padding: 15px;
+            margin: 10px 0;
             border-radius: 8px;
             overflow-x: auto;
-            margin: 10px 0;
         }
 
         .bot-message-content code {
@@ -186,11 +226,6 @@
             background: #f0f0f0;
             padding: 2px 4px;
             border-radius: 4px;
-        }
-
-        .bot-message-content pre code {
-            background: none;
-            padding: 0;
         }
 
         .bot-message-content blockquote {
@@ -389,7 +424,8 @@
             color: var(--dark);
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group textarea {
             width: 100%;
             padding: 10px 14px;
             border: 1px solid var(--border);
@@ -397,7 +433,13 @@
             font-size: 14px;
         }
 
-        .form-group input:focus {
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
         }
@@ -481,6 +523,10 @@
             .settings-panel {
                 margin-top: 20px;
             }
+            
+            .message {
+                max-width: 95%;
+            }
         }
         
         /* Error message styling */
@@ -522,6 +568,11 @@
                     <div class="message bot-message">
                         <div class="bot-message-content">
                             Hello! I'm your AI assistant. Select a model from the dropdown to get started.
+                        </div>
+                        <div class="message-actions">
+                            <button class="copy-btn" title="Copy markdown" data-content="Hello! I'm your AI assistant. Select a model from the dropdown to get started.">
+                                <i class="fas fa-copy"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -568,6 +619,10 @@
                             <label for="api-key">API Key</label>
                             <input type="password" id="api-key" placeholder="Enter your API key">
                         </div>
+                        <div class="form-group">
+                            <label for="system-prompt">System Prompt</label>
+                            <textarea id="system-prompt" placeholder="You are a helpful assistant."></textarea>
+                        </div>
                         <button class="btn-primary" id="save-model-btn">
                             <i class="fas fa-save"></i>
                             <span>Save Model</span>
@@ -592,6 +647,23 @@
     
     <div class="toast" id="toast"></div>
     
+    <!-- Highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- Load common languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         // DOM Elements
@@ -609,20 +681,25 @@
         const modelNameInput = document.getElementById('model-name');
         const baseUrlInput = document.getElementById('base-url');
         const apiKeyInput = document.getElementById('api-key');
+        const systemPromptInput = document.getElementById('system-prompt');
         const saveModelBtn = document.getElementById('save-model-btn');
         const cancelFormBtn = document.getElementById('cancel-form-btn');
         const exportConfigBtn = document.getElementById('export-config');
         const importConfigBtn = document.getElementById('import-config');
         const toast = document.getElementById('toast');
         
-        // Configure marked for markdown parsing
+        // Store original markdown content for copying
+        const messageContentMap = new Map();
+        
+        // Configure marked for markdown parsing with syntax highlighting
         marked.setOptions({
             breaks: true,
             gfm: true,
             highlight: function(code, lang) {
-                // Simple syntax highlighting would require a library like highlight.js
-                // For now, we'll just return the code as is
-                return code;
+                if (lang && hljs.getLanguage(lang)) {
+                    return hljs.highlight(code, { language: lang }).value;
+                }
+                return hljs.highlightAuto(code).value;
             }
         });
         
@@ -643,6 +720,8 @@
                 modelSelect.value = models[0].displayName;
                 currentModel = models[0];
                 sendBtn.disabled = false;
+                // Initialize message history with system prompt if it exists
+                initializeMessageHistory();
             }
         }
         
@@ -656,8 +735,8 @@
                 
                 if (currentModel) {
                     addMessage(`Switched to **${currentModel.displayName}**`, 'bot');
-                    // Clear message history when switching models
-                    messageHistory = [];
+                    // Initialize message history with the new model's system prompt
+                    initializeMessageHistory();
                 }
             });
             
@@ -680,7 +759,7 @@
             });
             
             // Save model
-            saveModelBtn.addEventListener('click', saveModel);
+            saveModelBtn.addEventListener('click', saveMessage);
             
             // Cancel form
             cancelFormBtn.addEventListener('click', () => {
@@ -721,6 +800,24 @@
                 };
                 input.click();
             });
+            
+            // Copy button event delegation
+            chatMessages.addEventListener('click', (e) => {
+                if (e.target.closest('.copy-btn')) {
+                    const button = e.target.closest('.copy-btn');
+                    const content = button.getAttribute('data-content');
+                    copyToClipboard(content);
+                }
+            });
+        }
+        
+        // Initialize message history with system prompt
+        function initializeMessageHistory() {
+            messageHistory = [];
+            const systemPrompt = currentModel.systemPrompt?.trim() || 'You are a helpful assistant.';
+            if (systemPrompt) {
+                messageHistory.push({ role: "system", content: systemPrompt });
+            }
         }
         
         // Render models list
@@ -735,6 +832,7 @@
             models.forEach((model, index) => {
                 const modelCard = document.createElement('div');
                 modelCard.className = 'model-card';
+                const systemPrompt = model.systemPrompt?.trim() || 'You are a helpful assistant.';
                 modelCard.innerHTML = `
                     <h4>
                         ${model.displayName} <small>(${model.modelName})</small>
@@ -748,6 +846,7 @@
                         </div>
                     </h4>
                     <p><strong>Base URL:</strong> ${model.baseUrl}</p>
+                    <p><strong>System Prompt:</strong> ${systemPrompt.length > 50 ? systemPrompt.substring(0, 50) + '...' : systemPrompt}</p>
                 `;
                 modelsList.appendChild(modelCard);
                 
@@ -770,7 +869,6 @@
                             modelSelect.value = '';
                             currentModel = null;
                             sendBtn.disabled = true;
-                            // Clear message history when model is deleted
                             messageHistory = [];
                         }
                     }
@@ -799,6 +897,7 @@
                 modelNameInput.value = model.modelName;
                 baseUrlInput.value = model.baseUrl;
                 apiKeyInput.value = model.apiKey;
+                systemPromptInput.value = model.systemPrompt || 'You are a helpful assistant.';
             } else {
                 resetForm();
             }
@@ -810,6 +909,7 @@
             modelNameInput.value = '';
             baseUrlInput.value = '';
             apiKeyInput.value = '';
+            systemPromptInput.value = 'You are a helpful assistant.';
             editingModelIndex = -1;
         }
         
@@ -819,9 +919,10 @@
             const modelName = modelNameInput.value.trim();
             const baseUrl = baseUrlInput.value.trim();
             const apiKey = apiKeyInput.value.trim();
+            const systemPrompt = systemPromptInput.value.trim();
             
             if (!displayName || !modelName || !baseUrl || !apiKey) {
-                showToast('Please fill in all fields!', 'error');
+                showToast('Please fill in all required fields!', 'error');
                 return;
             }
             
@@ -833,7 +934,13 @@
                 return;
             }
             
-            const newModel = { displayName, modelName, baseUrl, apiKey };
+            const newModel = { 
+                displayName, 
+                modelName, 
+                baseUrl, 
+                apiKey,
+                systemPrompt: systemPrompt || 'You are a helpful assistant.' // Ensure default is set
+            };
             
             if (editingModelIndex >= 0) {
                 models[editingModelIndex] = newModel;
@@ -860,7 +967,7 @@
             userInput.value = '';
             sendBtn.disabled = true;
             
-            // Add to message history
+            // Add to message history (system message is already there from initialization)
             messageHistory.push({ role: "user", content: message });
             
             // Show loading indicator
@@ -874,19 +981,15 @@
             
             try {
                 // Construct the full API endpoint URL
-                // Ensure the base URL doesn't have a trailing slash
                 let baseUrl = currentModel.baseUrl;
                 if (baseUrl.endsWith('/')) {
                     baseUrl = baseUrl.slice(0, -1);
                 }
-                
-                // The OpenAI-compatible endpoint is always /chat/completions
                 const apiUrl = `${baseUrl}/chat/completions`;
                 
-                // Prepare the API request - THIS IS THE KEY FIX
-                // We MUST send the model name in the request body
+                // Prepare the API request with the system prompt included in message history
                 const requestBody = {
-                    model: currentModel.modelName, // This is the actual model identifier
+                    model: currentModel.modelName,
                     messages: messageHistory,
                     stream: false
                 };
@@ -935,7 +1038,6 @@
                 console.error('Error:', error);
                 let errorMessage = 'Failed to get response from the model. Please check your configuration and try again.';
                 
-                // Try to extract more specific error
                 if (error.message) {
                     if (error.message.includes('401')) {
                         errorMessage = 'Authentication failed. Please check your API key.';
@@ -957,20 +1059,42 @@
             sendBtn.disabled = false;
         }
         
-        // Add message to chat with markdown rendering
+        // Add message to chat with markdown rendering and syntax highlighting
         function addMessage(text, sender, modelName = null) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}-message`;
             
+            // Store the original markdown content for copying
+            const messageId = 'msg-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            messageContentMap.set(messageId, text);
+            
             if (sender === 'bot') {
-                // Render markdown for bot messages
                 const contentDiv = document.createElement('div');
                 contentDiv.className = 'bot-message-content';
                 contentDiv.innerHTML = marked.parse(text);
+                
+                // Highlight code blocks after rendering
+                contentDiv.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+                
                 messageDiv.appendChild(contentDiv);
             } else {
                 messageDiv.textContent = text;
             }
+            
+            // Add message actions (copy button)
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'message-actions';
+            
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.title = 'Copy markdown';
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+            copyBtn.setAttribute('data-content', text);
+            
+            actionsDiv.appendChild(copyBtn);
+            messageDiv.appendChild(actionsDiv);
             
             if (modelName && sender === 'bot') {
                 const modelTag = document.createElement('div');
@@ -993,8 +1117,31 @@
             errorDiv.textContent = text;
             messageDiv.appendChild(errorDiv);
             
+            // Add copy button for error messages too
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'message-actions';
+            
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.title = 'Copy error message';
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+            copyBtn.setAttribute('data-content', text);
+            
+            actionsDiv.appendChild(copyBtn);
+            messageDiv.appendChild(actionsDiv);
+            
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Copy text to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copied to clipboard!', 'success');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                showToast('Failed to copy to clipboard', 'error');
+            });
         }
         
         // Export configuration
