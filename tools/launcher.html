@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>macOS Web Launcher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #8e9eab 0%, #eef2f3 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        
+        .status-left, .status-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .menu-item {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+        }
+        
+        .menu-item:hover {
+            color: #007aff;
+        }
+        
+        .battery, .wifi, .time {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #333;
+        }
+        
+        .battery-icon, .wifi-icon {
+            width: 16px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .welcome {
+            text-align: center;
+            margin-bottom: 60px;
+            z-index: 10;
+        }
+        
+        .welcome h1 {
+            font-size: 48px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .welcome p {
+            font-size: 18px;
+            color: #7f8c8d;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        /* App Grid */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 30px;
+            max-width: 800px;
+            margin-top: 20px;
+            z-index: 10;
+        }
+        
+        .app {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .app:hover {
+            transform: translateY(-10px);
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+        }
+        
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin-bottom: 12px;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        
+        .app-label {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        /* Dock */
+        .dock {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 12px 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            z-index: 90;
+        }
+        
+        .dock-item {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 8px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .dock-item:hover {
+            transform: scale(1.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            z-index: 10;
+        }
+        
+        .dock-item i {
+            font-size: 24px;
+        }
+        
+        /* App Colors */
+        .markdown { background: linear-gradient(135deg, #61dafb, #21a1c4); color: white; }
+        .chatbot { background: linear-gradient(135deg, #4a90e2, #1d5db5); color: white; }
+        
+        /* App Content Area */
+        .app-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: none;
+            flex-direction: column;
+            z-index: 5;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .app-header {
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f5f5f7;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .app-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .close-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ff5f57;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .app-iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 20px;
+            }
+            
+            .app-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 30px;
+            }
+            
+            .welcome h1 {
+                font-size: 36px;
+            }
+            
+            .dock-item {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .dock-item i {
+                font-size: 20px;
+            }
+            
+            .app-content {
+                border-radius: 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .status-bar {
+                padding: 6px 12px;
+            }
+            
+            .menu-item {
+                font-size: 12px;
+            }
+            
+            .app-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .app-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+            
+            .dock {
+                bottom: 15px;
+                padding: 8px 15px;
+            }
+            
+            .dock-item {
+                width: 45px;
+                height: 45px;
+                margin: 0 5px;
+            }
+            
+            .dock-item i {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-left">
+            <div class="menu-item"></div>
+            <div class="menu-item">File</div>
+            <div class="menu-item">Edit</div>
+            <div class="menu-item">View</div>
+            <div class="menu-item">Go</div>
+            <div class="menu-item">Window</div>
+            <div class="menu-item">Help</div>
+        </div>
+        <div class="status-right">
+            <div class="battery">
+                <span class="battery-icon"><i class="fas fa-battery-full"></i></span>
+                <span>100%</span>
+            </div>
+            <div class="wifi">
+                <span class="wifi-icon"><i class="fas fa-wifi"></i></span>
+            </div>
+            <div class="time">10:34 AM</div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content" id="main-content">
+        <div class="welcome">
+            <h1>macOS Web Launcher</h1>
+            <p>Launch your applications directly in this window. Click on any app to open it without leaving this page.</p>
+        </div>
+        
+        <!-- App Grid -->
+        <div class="app-grid">
+            <div class="app" data-app="markdown">
+                <div class="app-icon markdown">
+                    <i class="fab fa-markdown"></i>
+                </div>
+                <div class="app-label">Markdown Editor</div>
+            </div>
+            <div class="app" data-app="chatbot">
+                <div class="app-icon chatbot">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="app-label">Chatbot</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- App Content Area -->
+    <div class="app-content" id="app-content">
+        <div class="app-header">
+            <div class="app-title" id="app-title">Application</div>
+            <div class="close-btn" id="close-btn">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <iframe class="app-iframe" id="app-iframe"></iframe>
+    </div>
+    
+    <!-- Dock -->
+    <div class="dock">
+        <div class="dock-item" data-app="markdown">
+            <i class="fab fa-markdown"></i>
+        </div>
+        <div class="dock-item" data-app="chatbot">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="dock-item active">
+            <i class="fas fa-window-minimize"></i>
+        </div>
+    </div>
+    
+    <script>
+        // App configuration
+        const apps = {
+            markdown: {
+                name: "Markdown Editor",
+                url: "./markdown_editor.html"
+            },
+            chatbot: {
+                name: "Chatbot",
+                url: "./chatbox.html"
+            }
+        };
+        
+        // Update time in status bar
+        function updateTime() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            document.querySelector('.time').textContent = `${hours}:${minutes} ${ampm}`;
+        }
+        
+        // Initialize time and update every minute
+        updateTime();
+        setInterval(updateTime, 60000);
+        
+        // Launch app in the same page
+        function launchApp(appId) {
+            const app = apps[appId];
+            if (!app) return;
+            
+            // Show app content area
+            document.getElementById('app-content').style.display = 'flex';
+            document.getElementById('app-title').textContent = app.name;
+            document.getElementById('app-iframe').src = app.url;
+            
+            // Hide main content
+            document.getElementById('main-content').style.display = 'none';
+        }
+        
+        // Close app
+        function closeApp() {
+            document.getElementById('app-content').style.display = 'none';
+            document.getElementById('main-content').style.display = 'flex';
+            document.getElementById('app-iframe').src = '';
+        }
+        
+        // Add event listeners to app items
+        document.querySelectorAll('[data-app]').forEach(item => {
+            item.addEventListener('click', function() {
+                const appId = this.getAttribute('data-app');
+                launchApp(appId);
+            });
+            
+            // Add click effect
+            item.addEventListener('mousedown', function() {
+                this.style.transform = 'scale(0.95)';
+            });
+            
+            item.addEventListener('mouseup', function() {
+                this.style.transform = '';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+            });
+        });
+        
+        // Close button
+        document.getElementById('close-btn').addEventListener('click', closeApp);
+    </script>
+</body>
+</html>
