@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Markdown Editor — Copy as Rich Text</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --text: #333333;
+            --editor-bg: #fafafa;
+            --preview-bg: #ffffff;
+            --header-bg: #f5f7fa;
+            --border: #eaecef;
+            --accent: #4361ee;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --font-editor: "Fira Code", monospace;
+            --font-preview: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* All 8 themes */
+        .theme-academic { --bg: #f8f9fa; --text: #212529; --accent: #2c3e50; }
+        .theme-journal { --bg: #f9f5eb; --text: #4a3c30; --accent: #8b6b3d; }
+        .theme-ocean { --bg: #e6f2ff; --text: #0d3b66; --accent: #1d78c1; }
+        .theme-forest { --bg: #f0f7f4; --text: #2a4d3b; --accent: #3a7d5c; }
+        .theme-cyberpunk { --bg: #0a0a14; --text: #e0e0ff; --accent: #ff2a6d; }
+        .theme-neon { --bg: #121212; --text: #ffffff; --accent: #00f0ff; }
+        .theme-vintage { --bg: #fdf6f0; --text: #5a4a42; --accent: #c18c5d; }
+        .theme-glass { --bg: #f0f5ff; --text: #2c3e50; --accent: #6a5af9; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-preview);
+            padding: 20px;
+            min-height: 100vh;
+            transition: background 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--header-bg);
+            padding: 14px 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 14px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .platform-selector {
+            display: flex;
+            gap: 10px;
+        }
+
+        .platform-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.2);
+            color: var(--text);
+            min-width: 90px;
+        }
+
+        .platform-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .theme-selector {
+            min-width: 180px;
+        }
+
+        .theme-dropdown {
+            width: 100%;
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 600;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%236c757d' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 8px;
+            padding-right: 32px;
+        }
+
+        .editor-container {
+            display: flex;
+            gap: 20px;
+            height: calc(100vh - 220px);
+            min-height: 450px;
+        }
+
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background: var(--preview-bg);
+            border: 1px solid var(--border);
+        }
+
+        .panel-header {
+            padding: 14px 20px;
+            background: var(--header-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .copy-btn {
+            padding: 8px 18px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .editor-area {
+            flex: 1;
+            padding: 16px;
+            background: var(--editor-bg);
+        }
+
+        #markdown-editor {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            resize: none;
+            font-family: var(--font-editor);
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--text);
+            outline: none;
+            caret-color: var(--accent);
+        }
+
+        .preview-area {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            background: var(--preview-bg);
+        }
+
+        #preview {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        /* THEMED ELEMENTS */
+        #preview h1 { margin: 1.5em 0 0.8em; font-weight: 700; position: relative; }
+        #preview p { margin-bottom: 16px; }
+
+        .theme-academic #preview h1:after {
+            content: ""; position: absolute; bottom: 0; left: 0;
+            width: 50px; height: 2px; background: var(--accent);
+        }
+
+        .theme-journal #preview h1:before { content: "❖ "; color: var(--accent); }
+        .theme-journal #preview h1 { font-family: Georgia, serif; }
+
+        .theme-ocean #preview h1:after {
+            content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(to right, transparent, var(--accent), transparent);
+        }
+
+        .theme-cyberpunk #preview h1 { text-shadow: 0 0 5px var(--accent); }
+
+        .theme-neon #preview h1 { text-shadow: 0 0 10px var(--accent); }
+
+        .theme-vintage #preview h1 { 
+            font-family: "Times New Roman", serif; 
+            padding-left: 16px; 
+            border-left: 3px solid var(--accent); 
+        }
+
+        .theme-glass #preview h1:after {
+            content: ""; position: absolute; bottom: 0; left: 0;
+            width: 40px; height: 1.5px; background: var(--accent); opacity: 0.7;
+        }
+
+        #preview code { padding: 2px 5px; border-radius: 3px; font-family: var(--font-editor); background: #f0f0f0; }
+        #preview pre { 
+            padding: 14px; border-radius: 8px; overflow-x: auto; margin: 16px 0; 
+            font-family: var(--font-editor); background: #2d2d2d; color: #f8f8f2; 
+        }
+        #preview blockquote { 
+            padding: 14px; margin: 16px 0; border-radius: 8px; font-style: italic; 
+            border-left: 3px solid var(--accent); background: rgba(67, 97, 238, 0.1); 
+        }
+
+        /* Platform overrides */
+        .wechat #preview,
+        .zhihu #preview {
+            background: var(--preview-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .wechat #preview h1 {
+            color: #000 !important;
+            border-left: 4px solid var(--accent) !important;
+            padding-left: 14px !important;
+        }
+        .wechat #preview h1:after { display: none !important; }
+
+        .zhihu #preview h1 {
+            color: #000 !important;
+            position: relative !important;
+        }
+        .zhihu #preview h1:after {
+            content: "" !important;
+            position: absolute !important;
+            bottom: -6px !important;
+            left: 0 !important;
+            width: 60px !important;
+            height: 3px !important;
+            background: linear-gradient(to right, var(--accent), #7209b7) !important;
+        }
+
+        .copy-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            font-weight: 600;
+            z-index: 1000;
+        }
+
+        .copy-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 12px;
+            color: var(--text);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 850px) {
+            .editor-container { flex-direction: column; height: auto; }
+            .controls { flex-direction: column; align-items: stretch; }
+            .theme-selector { width: 100%; }
+        }
+    </style>
+</head>
+<body class="theme-minimalist">
+    <div class="container">
+        <div class="controls">
+            <div class="platform-selector">
+                <button class="platform-btn active" data-platform="standard">Standard</button>
+                <button class="platform-btn" data-platform="wechat">WeChat</button>
+                <button class="platform-btn" data-platform="zhihu">Zhihu</button>
+            </div>
+
+            <div class="theme-selector">
+                <select class="theme-dropdown" id="theme-select">
+                    <option value="theme-minimalist">Minimalist</option>
+                    <option value="theme-academic">Academic</option>
+                    <option value="theme-journal">Journal</option>
+                    <option value="theme-ocean">Ocean</option>
+                    <option value="theme-forest">Forest</option>
+                    <option value="theme-cyberpunk">Cyberpunk</option>
+                    <option value="theme-neon">Neon</option>
+                    <option value="theme-vintage">Vintage</option>
+                    <option value="theme-glass">Glassmorphism</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="editor-container">
+            <div class="panel">
+                <div class="panel-header">Markdown</div>
+                <div class="editor-area">
+                    <textarea id="markdown-editor"># Hello World
+
+This is a sample paragraph with **bold** and *italic* text.</textarea>
+                </div>
+            </div>
+
+            <div class="panel standard">
+                <div class="panel-header">
+                    Preview
+                    <button class="copy-btn" id="copy-btn">
+                        <i class="fas fa-copy"></i> Copy Rich Text
+                    </button>
+                </div>
+                <div class="preview-area">
+                    <div id="preview"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="copy-notification" id="copy-notification">
+            <i class="fas fa-check"></i> Rich text copied!
+        </div>
+
+        <footer>
+            <p>Paste into WeChat, Zhihu, Word, Gmail, etc. to see styled content</p>
+        </footer>
+    </div>
+
+    <script>
+        const markdownEditor = document.getElementById('markdown-editor');
+        const preview = document.getElementById('preview');
+        const copyBtn = document.getElementById('copy-btn');
+        const copyNotification = document.getElementById('copy-notification');
+        const platformBtns = document.querySelectorAll('.platform-btn');
+        const themeSelect = document.getElementById('theme-select');
+        const previewPanel = document.querySelector('.panel:last-child');
+
+        marked.setOptions({ breaks: true, gfm: true, sanitize: false });
+
+        function renderPreview() {
+            preview.innerHTML = marked.parse(markdownEditor.value);
+        }
+
+        // Copy as rich text (formatted HTML)
+        copyBtn.addEventListener('click', async () => {
+            // Create a temporary container with full styling
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = preview.innerHTML;
+            tempDiv.style.cssText = `
+                font-family: ${getComputedStyle(preview).fontFamily};
+                font-size: ${getComputedStyle(preview).fontSize};
+                line-height: ${getComputedStyle(preview).lineHeight};
+                color: ${getComputedStyle(document.body).color};
+                max-width: 700px;
+                padding: 20px;
+            `;
+            
+            // Apply theme/platform classes for styling
+            tempDiv.className = document.body.className + ' ' + previewPanel.className.replace('panel ', '');
+            
+            // Hide off-screen
+            tempDiv.style.position = 'absolute';
+            tempDiv.style.left = '-9999px';
+            document.body.appendChild(tempDiv);
+
+            try {
+                // Select the content
+                const range = document.createRange();
+                range.selectNode(tempDiv);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                
+                // Copy as rich text
+                const success = document.execCommand('copy');
+                if (success) {
+                    showNotification('Rich text copied!');
+                } else {
+                    showNotification('Copy failed.', true);
+                }
+            } catch (err) {
+                showNotification('Copy failed.', true);
+            } finally {
+                // Clean up
+                window.getSelection().removeAllRanges();
+                document.body.removeChild(tempDiv);
+            }
+        });
+
+        function showNotification(text, isError = false) {
+            copyNotification.textContent = text;
+            copyNotification.style.background = isError ? '#e53935' : '#4361ee';
+            copyNotification.classList.add('show');
+            setTimeout(() => copyNotification.classList.remove('show'), 2000);
+        }
+
+        // Platform switching
+        platformBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                platformBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                previewPanel.className = `panel ${btn.dataset.platform}`;
+                renderPreview();
+            });
+        });
+
+        // Theme switching
+        themeSelect.addEventListener('change', () => {
+            document.body.className = themeSelect.value;
+            renderPreview();
+        });
+
+        // Init
+        renderPreview();
+        markdownEditor.addEventListener('input', renderPreview);
+    </script>
+</body>
+</html>

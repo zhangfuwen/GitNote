@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Model Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/marked/marked.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --success: #4cc9f0;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border: #dee2e6;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --error: #e63946;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 28px;
+            color: var(--primary);
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .model-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .model-selector select {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: white;
+            min-width: 200px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .settings-btn {
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .settings-btn:hover {
+            background: var(--light-gray);
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+            height: calc(100vh - 200px);
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 16px 20px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-header i {
+            font-size: 20px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 18px;
+            line-height: 1.6;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+            word-wrap: break-word;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot-message {
+            background: var(--light-gray);
+            color: var(--dark);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .bot-message-content {
+            overflow-x: auto;
+        }
+
+        .bot-message-content pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .bot-message-content code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .bot-message-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .bot-message-content blockquote {
+            border-left: 3px solid var(--primary);
+            padding-left: 15px;
+            margin: 10px 0;
+            color: var(--gray);
+        }
+
+        .bot-message-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        .bot-message-content th, 
+        .bot-message-content td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .bot-message-content th {
+            background-color: #f5f5f5;
+        }
+
+        .model-tag {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .input-container {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            background: white;
+        }
+
+        .input-box {
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-box input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            font-size: 15px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .input-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .settings-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .settings-header {
+            padding: 16px 20px;
+            background: var(--secondary);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .settings-content {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .models-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .model-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            background: white;
+            transition: var(--transition);
+        }
+
+        .model-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .model-card h4 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .model-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .model-actions button {
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .model-actions button:hover {
+            background: var(--light-gray);
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            transition: var(--transition);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-error {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-error:hover {
+            background: #d90429;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .import-export {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .import-export button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .import-export button:hover {
+            background: var(--light-gray);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: #28a745;
+        }
+
+        .toast.error {
+            background: var(--error);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .settings-panel {
+                margin-top: 20px;
+            }
+        }
+        
+        /* Error message styling */
+        .error-message {
+            color: var(--error);
+            background: #ffebee;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 3px solid var(--error);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <h1>Multi-Model Chatbot</h1>
+            </div>
+            <div class="model-selector">
+                <select id="model-select">
+                    <option value="">Select a model</option>
+                </select>
+                <div class="settings-btn" id="settings-toggle">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-container">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <i class="fas fa-comments"></i>
+                    <h2>Chat</h2>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot-message">
+                        <div class="bot-message-content">
+                            Hello! I'm your AI assistant. Select a model from the dropdown to get started.
+                        </div>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <div class="input-box">
+                        <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off">
+                        <button class="send-btn" id="send-btn" disabled>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-panel" id="settings-panel">
+                <div class="settings-header">
+                    <i class="fas fa-sliders-h"></i>
+                    <h2>Model Settings</h2>
+                </div>
+                <div class="settings-content">
+                    <button class="btn-primary" id="add-model-btn">
+                        <i class="fas fa-plus"></i>
+                        Add New Model
+                    </button>
+                    
+                    <div class="models-list" id="models-list">
+                        <!-- Model cards will be added here dynamically -->
+                    </div>
+                    
+                    <div id="model-form" class="hidden">
+                        <h3 id="form-title">Add New Model</h3>
+                        <div class="form-group">
+                            <label for="display-name">Display Name</label>
+                            <input type="text" id="display-name" placeholder="e.g., My Custom GPT-4">
+                        </div>
+                        <div class="form-group">
+                            <label for="model-name">Model Name</label>
+                            <input type="text" id="model-name" placeholder="e.g., gpt-4-turbo">
+                        </div>
+                        <div class="form-group">
+                            <label for="base-url">Base URL</label>
+                            <input type="text" id="base-url" placeholder="https://api.example.com/v1">
+                        </div>
+                        <div class="form-group">
+                            <label for="api-key">API Key</label>
+                            <input type="password" id="api-key" placeholder="Enter your API key">
+                        </div>
+                        <button class="btn-primary" id="save-model-btn">
+                            <i class="fas fa-save"></i>
+                            <span>Save Model</span>
+                        </button>
+                        <button class="btn-primary" id="cancel-form-btn" style="background: #6c757d; width: 100%; margin-top: 8px;">
+                            Cancel
+                        </button>
+                    </div>
+                    
+                    <div class="import-export">
+                        <button id="export-config">
+                            <i class="fas fa-file-export"></i> Export
+                        </button>
+                        <button id="import-config">
+                            <i class="fas fa-file-import"></i> Import
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // DOM Elements
+        const modelSelect = document.getElementById('model-select');
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const settingsToggle = document.getElementById('settings-toggle');
+        const settingsPanel = document.getElementById('settings-panel');
+        const addModelBtn = document.getElementById('add-model-btn');
+        const modelsList = document.getElementById('models-list');
+        const modelForm = document.getElementById('model-form');
+        const formTitle = document.getElementById('form-title');
+        const displayNameInput = document.getElementById('display-name');
+        const modelNameInput = document.getElementById('model-name');
+        const baseUrlInput = document.getElementById('base-url');
+        const apiKeyInput = document.getElementById('api-key');
+        const saveModelBtn = document.getElementById('save-model-btn');
+        const cancelFormBtn = document.getElementById('cancel-form-btn');
+        const exportConfigBtn = document.getElementById('export-config');
+        const importConfigBtn = document.getElementById('import-config');
+        const toast = document.getElementById('toast');
+        
+        // Configure marked for markdown parsing
+        marked.setOptions({
+            breaks: true,
+            gfm: true,
+            highlight: function(code, lang) {
+                // Simple syntax highlighting would require a library like highlight.js
+                // For now, we'll just return the code as is
+                return code;
+            }
+        });
+        
+        // State
+        let models = JSON.parse(localStorage.getItem('models')) || [];
+        let currentModel = null;
+        let editingModelIndex = -1;
+        let messageHistory = [];
+        
+        // Initialize the app
+        function init() {
+            renderModelsList();
+            populateModelSelect();
+            setupEventListeners();
+            
+            // If there's a model, select the first one by default
+            if (models.length > 0) {
+                modelSelect.value = models[0].displayName;
+                currentModel = models[0];
+                sendBtn.disabled = false;
+            }
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Model selection
+            modelSelect.addEventListener('change', () => {
+                const selectedModel = models.find(m => m.displayName === modelSelect.value);
+                currentModel = selectedModel || null;
+                sendBtn.disabled = !currentModel;
+                
+                if (currentModel) {
+                    addMessage(`Switched to **${currentModel.displayName}**`, 'bot');
+                    // Clear message history when switching models
+                    messageHistory = [];
+                }
+            });
+            
+            // Send message
+            sendBtn.addEventListener('click', sendMessage);
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Settings toggle
+            settingsToggle.addEventListener('click', () => {
+                settingsPanel.classList.toggle('hidden');
+            });
+            
+            // Add model button
+            addModelBtn.addEventListener('click', () => {
+                showModelForm('Add');
+            });
+            
+            // Save model
+            saveModelBtn.addEventListener('click', saveModel);
+            
+            // Cancel form
+            cancelFormBtn.addEventListener('click', () => {
+                modelForm.classList.add('hidden');
+                resetForm();
+            });
+            
+            // Export config
+            exportConfigBtn.addEventListener('click', exportConfig);
+            
+            // Import config
+            importConfigBtn.addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            try {
+                                const importedModels = JSON.parse(e.target.result);
+                                if (Array.isArray(importedModels)) {
+                                    models = importedModels;
+                                    localStorage.setItem('models', JSON.stringify(models));
+                                    renderModelsList();
+                                    populateModelSelect();
+                                    showToast('Models imported successfully!', 'success');
+                                } else {
+                                    throw new Error('Invalid file format');
+                                }
+                            } catch (error) {
+                                showToast('Invalid configuration file!', 'error');
+                            }
+                        };
+                        reader.readAsText(file);
+                    }
+                };
+                input.click();
+            });
+        }
+        
+        // Render models list
+        function renderModelsList() {
+            modelsList.innerHTML = '';
+            
+            if (models.length === 0) {
+                modelsList.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 20px;">No models configured yet. Add one to get started.</p>';
+                return;
+            }
+            
+            models.forEach((model, index) => {
+                const modelCard = document.createElement('div');
+                modelCard.className = 'model-card';
+                modelCard.innerHTML = `
+                    <h4>
+                        ${model.displayName} <small>(${model.modelName})</small>
+                        <div class="model-actions">
+                            <button class="edit-btn" data-index="${index}">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="delete-btn" data-index="${index}">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </h4>
+                    <p><strong>Base URL:</strong> ${model.baseUrl}</p>
+                `;
+                modelsList.appendChild(modelCard);
+                
+                // Add event listeners to buttons
+                modelCard.querySelector('.edit-btn').addEventListener('click', () => {
+                    editingModelIndex = index;
+                    showModelForm('Edit', model);
+                });
+                
+                modelCard.querySelector('.delete-btn').addEventListener('click', () => {
+                    if (confirm(`Are you sure you want to delete "${model.displayName}"?`)) {
+                        models.splice(index, 1);
+                        localStorage.setItem('models', JSON.stringify(models));
+                        renderModelsList();
+                        populateModelSelect();
+                        showToast('Model deleted successfully!', 'success');
+                        
+                        // If the deleted model was selected, clear selection
+                        if (currentModel && currentModel.displayName === model.displayName) {
+                            modelSelect.value = '';
+                            currentModel = null;
+                            sendBtn.disabled = true;
+                            // Clear message history when model is deleted
+                            messageHistory = [];
+                        }
+                    }
+                });
+            });
+        }
+        
+        // Populate model select dropdown
+        function populateModelSelect() {
+            modelSelect.innerHTML = '<option value="">Select a model</option>';
+            models.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.displayName;
+                option.textContent = model.displayName;
+                modelSelect.appendChild(option);
+            });
+        }
+        
+        // Show model form
+        function showModelForm(action, model = null) {
+            formTitle.textContent = `${action} Model`;
+            modelForm.classList.remove('hidden');
+            
+            if (model) {
+                displayNameInput.value = model.displayName;
+                modelNameInput.value = model.modelName;
+                baseUrlInput.value = model.baseUrl;
+                apiKeyInput.value = model.apiKey;
+            } else {
+                resetForm();
+            }
+        }
+        
+        // Reset form
+        function resetForm() {
+            displayNameInput.value = '';
+            modelNameInput.value = '';
+            baseUrlInput.value = '';
+            apiKeyInput.value = '';
+            editingModelIndex = -1;
+        }
+        
+        // Save model
+        function saveModel() {
+            const displayName = displayNameInput.value.trim();
+            const modelName = modelNameInput.value.trim();
+            const baseUrl = baseUrlInput.value.trim();
+            const apiKey = apiKeyInput.value.trim();
+            
+            if (!displayName || !modelName || !baseUrl || !apiKey) {
+                showToast('Please fill in all fields!', 'error');
+                return;
+            }
+            
+            // Validate URL
+            try {
+                new URL(baseUrl);
+            } catch (e) {
+                showToast('Please enter a valid Base URL!', 'error');
+                return;
+            }
+            
+            const newModel = { displayName, modelName, baseUrl, apiKey };
+            
+            if (editingModelIndex >= 0) {
+                models[editingModelIndex] = newModel;
+                showToast('Model updated successfully!', 'success');
+            } else {
+                models.push(newModel);
+                showToast('Model added successfully!', 'success');
+            }
+            
+            localStorage.setItem('models', JSON.stringify(models));
+            renderModelsList();
+            populateModelSelect();
+            modelForm.classList.add('hidden');
+            resetForm();
+        }
+        
+        // Send message to model
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message || !currentModel) return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            userInput.value = '';
+            sendBtn.disabled = true;
+            
+            // Add to message history
+            messageHistory.push({ role: "user", content: message });
+            
+            // Show loading indicator
+            const loadingId = 'loading-' + Date.now();
+            const loadingMessage = document.createElement('div');
+            loadingMessage.className = 'message bot-message';
+            loadingMessage.id = loadingId;
+            loadingMessage.innerHTML = '<div class="loading"></div>';
+            chatMessages.appendChild(loadingMessage);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            try {
+                // Construct the full API endpoint URL
+                // Ensure the base URL doesn't have a trailing slash
+                let baseUrl = currentModel.baseUrl;
+                if (baseUrl.endsWith('/')) {
+                    baseUrl = baseUrl.slice(0, -1);
+                }
+                
+                // The OpenAI-compatible endpoint is always /chat/completions
+                const apiUrl = `${baseUrl}/chat/completions`;
+                
+                // Prepare the API request - THIS IS THE KEY FIX
+                // We MUST send the model name in the request body
+                const requestBody = {
+                    model: currentModel.modelName, // This is the actual model identifier
+                    messages: messageHistory,
+                    stream: false
+                };
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentModel.apiKey}`
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                // Remove loading indicator
+                document.getElementById(loadingId).remove();
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        if (errorJson.error && errorJson.error.message) {
+                            throw new Error(`API error: ${response.status} - ${errorJson.error.message}`);
+                        }
+                    } catch (e) {
+                        // If not JSON, use the raw text
+                    }
+                    throw new Error(`API error: ${response.status} - ${errorText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.choices && data.choices.length > 0) {
+                    const botResponse = data.choices[0].message.content;
+                    addMessage(botResponse, 'bot', currentModel.displayName);
+                    
+                    // Add bot response to history
+                    messageHistory.push({ role: "assistant", content: botResponse });
+                } else {
+                    throw new Error('Invalid response format from API');
+                }
+            } catch (error) {
+                // Remove loading indicator
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+                
+                console.error('Error:', error);
+                let errorMessage = 'Failed to get response from the model. Please check your configuration and try again.';
+                
+                // Try to extract more specific error
+                if (error.message) {
+                    if (error.message.includes('401')) {
+                        errorMessage = 'Authentication failed. Please check your API key.';
+                    } else if (error.message.includes('404')) {
+                        errorMessage = 'API endpoint not found. Please check your Base URL.';
+                    } else if (error.message.includes('CORS')) {
+                        errorMessage = 'CORS error. This model might not be accessible from the browser.';
+                    } else if (error.message.includes('Failed to fetch')) {
+                        errorMessage = 'Network error. Please check your internet connection and Base URL.';
+                    } else if (error.message.includes('model not found') || error.message.includes('invalid model')) {
+                        errorMessage = 'Model not found. Please check your Model Name setting.';
+                    }
+                }
+                
+                addErrorMessage(errorMessage);
+                showToast('Error: ' + (error.message || 'Unknown error'), 'error');
+            }
+            
+            sendBtn.disabled = false;
+        }
+        
+        // Add message to chat with markdown rendering
+        function addMessage(text, sender, modelName = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            
+            if (sender === 'bot') {
+                // Render markdown for bot messages
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'bot-message-content';
+                contentDiv.innerHTML = marked.parse(text);
+                messageDiv.appendChild(contentDiv);
+            } else {
+                messageDiv.textContent = text;
+            }
+            
+            if (modelName && sender === 'bot') {
+                const modelTag = document.createElement('div');
+                modelTag.className = 'model-tag';
+                modelTag.textContent = `Model: ${modelName}`;
+                messageDiv.appendChild(modelTag);
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Add error message to chat
+        function addErrorMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message';
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = text;
+            messageDiv.appendChild(errorDiv);
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Export configuration
+        function exportConfig() {
+            const dataStr = JSON.stringify(models, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'chatbot-models-config.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast('Configuration exported!', 'success');
+        }
+        
+        // Show toast notification
+        function showToast(message, type) {
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
