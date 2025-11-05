@@ -1,6 +1,12 @@
+readme page
 see [Summary](SUMMARY.md)
 
 # Summary
+
+[tools](/tools/launcher.html)
+[markdown_editor](/tools/markdown_editor.html)
+[chatbot](/tools/chatbot.html)
+[yazi](/tools/yazi.html)
 
 ## AI
 

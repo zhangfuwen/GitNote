@@ -5,6 +5,11 @@ see [Summary](SUMMARY.md)
  * [how to](./howto.md)
  * [writerside](./Writerside/topics/starter-topic.md)
 
+[tools](/tools/launcher.html)
+[markdown_editor](/tools/markdown_editor.html)
+[chatbot](/tools/chatbot.html)
+[yazi](/tools/yazi.html)
+
 ## AI
 
 * [000. AI 个人思考（稿纸）](Notes/006-ai/000_AI_thoughts.md)

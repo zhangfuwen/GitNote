@@ -1,9 +1,14 @@
+index page:
 see [Summary](SUMMARY.md)
 
 # Summary
 
  * [how to](./howto.md)
 
+[tools](/tools/launcher.html)
+[markdown_editor](/tools/markdown_editor.html)
+[chatbot](/tools/chatbot.html)
+[yazi](/tools/yazi.html)
 ## 现代计算机
 
   * [001\. x86启动](Notes/001-modern-computing/001-x86qi-dong.md)
