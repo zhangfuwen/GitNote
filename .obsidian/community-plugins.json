@@ -12,5 +12,6 @@
   "obsidian-tasks-plugin",
   "homepage",
   "obsidian-wakatime",
-  "auto-number-headings"
+  "auto-number-headings",
+  "copy-image-text"
 ]
