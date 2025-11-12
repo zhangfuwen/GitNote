@@ -86,21 +86,18 @@
 from ultralytics import YOLO
 import os
 
-# 创建文件夹存放猫狗照片
-os.makedirs("data/cats", exist_ok=True)
-os.makedirs("data/dogs", exist_ok=True)
+# 下载一个数据集
+!curl -L -o dog-and-cat-classification-dataset.zip \
+	https://www.kaggle.com/api/v1/datasets/download/bhavikjikadara/dog-and-cat-classification-dataset
+# 解压数据集
+!unzip ./dog-and-cat-classification-dataset.zip
+# 这个数据集解压后把生成一个文件夹加PetImages, 里面有两个文件夹，一个是Cat,另一个是Dog，里面分别是很多猫和狗的照片。
+# 一个简单的数据集就是只需要这样的一个目录结构就可以了，训练构架会自动识别
 
-# 下载10张猫和10张狗的照片（系统自动帮你找）
-!wget -O data/cats/cat1.jpg https://tinyurl.com/ai-cat1
-!wget -O data/cats/cat2.jpg https://tinyurl.com/ai-cat2
-!wget -O data/cats/cat3.jpg https://tinyurl.com/ai-cat3
-!wget -O data/cats/cat4.jpg https://tinyurl.com/ai-cat4
-!wget -O data/cats/cat5.jpg https://tinyurl.com/ai-cat5
-!wget -O data/dogs/dog1.jpg https://tinyurl.com/ai-dog1
-!wget -O data/dogs/dog2.jpg https://tinyurl.com/ai-dog2
-!wget -O data/dogs/dog3.jpg https://tinyurl.com/ai-dog3
-!wget -O data/dogs/dog4.jpg https://tinyurl.com/ai-dog4
-!wget -O data/dogs/dog5.jpg https://tinyurl.com/ai-dog5
+# 开始训练！AI会看这些图片，自己学会分辨
+model = YOLO("yolov8n-cls.pt")  # 加载一个“聪明的AI大脑”
+
+model.train(data="PetImages", epochs=10, imgsz=224)  # 看20张图，练10轮
 
 # 开始训练！AI会看这20张图，自己学会分辨
 model = YOLO("yolov8n-cls.pt")  # 加载一个“聪明的AI大脑”
@@ -152,6 +149,7 @@ from PIL import Image
 import requests
 from ultralytics import YOLO
 
+# 加载训练好的模型中最好的一个
 model = YOLO("runs/classify/train/weights/best.pt")
 
 # 下载一张新的猫或狗照片（你也可以上传自己的）
@@ -260,6 +258,3 @@ img.show()  # 弹出图片给你看
 是猫？是狗？还是你家的拖鞋？
 
 #AI小白入门 #零基础训练AI #Colab教程 #教AI认猫狗 #免费AI工具 #AI科普 #不用代码学AI #AI也能这么简单 #2025最实用AI技能
-
----  
-*本文首发于AI研习社，2025年11月11日。转载请注明出处。*
