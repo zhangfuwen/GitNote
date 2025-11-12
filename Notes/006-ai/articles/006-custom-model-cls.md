@@ -337,18 +337,90 @@ classifier = CatDogClassifier(
  dataset = classifier.train_model(
      data_dir="/content/PetImages",
      num_epochs=5,
-#     learning_rate=0.001
-# )
+     learning_rate=0.001
+ )
 
 # 3. 保存模型
-# classifier.save_model("my_cat_dog_model.pth")
+ classifier.save_model("my_cat_dog_model.pth")
 
 # 4. 预测图片
-# result = classifier.predict("/content/PetImages/Cat/cat.1.jpg", dataset)
-# print(f"预测结果: {result}")
+ result = classifier.predict("/content/PetImages/Cat/cat.1.jpg", dataset)
+ print(f"预测结果: {result}")
 
 # 5. 显示预测结果
-# classifier.show_prediction("/content/PetImages/Cat/cat.1.jpg", dataset)
+ classifier.show_prediction("/content/PetImages/Cat/cat.1.jpg", dataset)
+```
+
+
+输出结果：
+```
+✅ 分类器初始化完成，使用设备: cuda
+✅ 数据加载完成！
+数据集大小: 24998
+类别: ['Cat', 'Dog']
+🚀 开始训练，共 5 轮...
+Epoch [1/5], Step [100], Loss: 0.9792, Accuracy: 56.22%
+Epoch [1/5], Step [200], Loss: 0.6519, Accuracy: 58.91%
+Epoch [1/5], Step [300], Loss: 0.6095, Accuracy: 61.34%
+Epoch [1/5], Step [400], Loss: 0.5851, Accuracy: 63.34%
+Epoch [1/5], Step [500], Loss: 0.5688, Accuracy: 64.86%
+Epoch [1/5], Step [600], Loss: 0.5620, Accuracy: 65.91%
+
+/usr/local/lib/python3.12/dist-packages/PIL/TiffImagePlugin.py:950: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+
+Epoch [1/5], Step [700], Loss: 0.5509, Accuracy: 66.71%
+Epoch [1/5] 完成, 准确率: 67.28%
+Epoch [2/5], Step [100], Loss: 0.4743, Accuracy: 77.50%
+Epoch [2/5], Step [200], Loss: 0.4829, Accuracy: 77.19%
+Epoch [2/5], Step [300], Loss: 0.4654, Accuracy: 77.43%
+Epoch [2/5], Step [400], Loss: 0.4719, Accuracy: 77.13%
+Epoch [2/5], Step [500], Loss: 0.4590, Accuracy: 77.33%
+Epoch [2/5], Step [600], Loss: 0.4577, Accuracy: 77.60%
+Epoch [2/5], Step [700], Loss: 0.4683, Accuracy: 77.62%
+
+/usr/local/lib/python3.12/dist-packages/PIL/TiffImagePlugin.py:950: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+
+Epoch [2/5] 完成, 准确率: 77.67%
+
+/usr/local/lib/python3.12/dist-packages/PIL/TiffImagePlugin.py:950: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+
+Epoch [3/5], Step [100], Loss: 0.3498, Accuracy: 84.91%
+Epoch [3/5], Step [200], Loss: 0.3406, Accuracy: 85.00%
+Epoch [3/5], Step [300], Loss: 0.3633, Accuracy: 84.65%
+Epoch [3/5], Step [400], Loss: 0.3659, Accuracy: 84.38%
+Epoch [3/5], Step [500], Loss: 0.3483, Accuracy: 84.53%
+Epoch [3/5], Step [600], Loss: 0.3580, Accuracy: 84.58%
+Epoch [3/5], Step [700], Loss: 0.3690, Accuracy: 84.30%
+Epoch [3/5] 完成, 准确率: 84.49%
+
+/usr/local/lib/python3.12/dist-packages/PIL/TiffImagePlugin.py:950: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+
+Epoch [4/5], Step [100], Loss: 0.2034, Accuracy: 91.84%
+Epoch [4/5], Step [200], Loss: 0.1820, Accuracy: 92.81%
+Epoch [4/5], Step [300], Loss: 0.1831, Accuracy: 92.65%
+Epoch [4/5], Step [400], Loss: 0.2010, Accuracy: 92.47%
+Epoch [4/5], Step [500], Loss: 0.1875, Accuracy: 92.46%
+Epoch [4/5], Step [600], Loss: 0.2005, Accuracy: 92.33%
+Epoch [4/5], Step [700], Loss: 0.2169, Accuracy: 92.09%
+Epoch [4/5] 完成, 准确率: 92.07%
+Epoch [5/5], Step [100], Loss: 0.0590, Accuracy: 98.66%
+Epoch [5/5], Step [200], Loss: 0.0572, Accuracy: 98.28%
+Epoch [5/5], Step [300], Loss: 0.0598, Accuracy: 98.20%
+Epoch [5/5], Step [400], Loss: 0.0555, Accuracy: 98.19%
+Epoch [5/5], Step [500], Loss: 0.0833, Accuracy: 98.00%
+
+/usr/local/lib/python3.12/dist-packages/PIL/TiffImagePlugin.py:950: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+
+Epoch [5/5], Step [600], Loss: 0.0728, Accuracy: 97.90%
+Epoch [5/5], Step [700], Loss: 0.0716, Accuracy: 97.81%
+Epoch [5/5] 完成, 准确率: 97.79%
+✅ 训练完成！
+✅ 模型已保存到: my_model.pth
 ```
 
 ---
@@ -403,8 +475,7 @@ classifier = CatDogClassifier(
 ---
 
 📌 **现在就去试试！**  
-👉 打开 [https://colab.research.google.com](https://colab.research.google.com)  
-👉 复制上面的所有代码  
+👉 打开 [https://colab.research.google.com](https://colab.research.google.com/drive/1TkKJ1BJ8bqBiND_bq7u78ZbUP0CuWDvJ?usp=sharing)  
 👉 按顺序运行  
 👉 看你的AI学会认猫狗的那一刻！
 
