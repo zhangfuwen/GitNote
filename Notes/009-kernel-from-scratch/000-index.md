@@ -67,6 +67,12 @@
 - [307-node-numa-container.md](Notes/009-kernel-from-scratch/307-node-numa-container.md) — NUMA/节点/容器化  
 
 
+### 权限管理
+
+传统权限
+selinux
+seccomp
+apparmor
 
 ## 升华篇 - 理论再实践
 
