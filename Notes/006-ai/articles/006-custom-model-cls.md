@@ -475,7 +475,7 @@ Epoch [5/5] 完成, 准确率: 97.79%
 ---
 
 📌 **现在就去试试！**  
-👉 打开 [https://colab.research.google.com](https://colab.research.google.com/drive/1TkKJ1BJ8bqBiND_bq7u78ZbUP0CuWDvJ?usp=sharing)  
+👉 打开https://colab.research.google.com/drive/1TkKJ1BJ8bqBiND_bq7u78ZbUP0CuWDvJ?usp=sharing
 👉 按顺序运行  
 👉 看你的AI学会认猫狗的那一刻！
 
