@@ -84,3 +84,9 @@ apparmor
 ## 附加篇 - 有趣的知识
 
 - [900-BIOS.md](Notes/009-kernel-from-scratch/900-BIOS.md) — BIOS 与传统启动流程  
+
+
+## 仓库介绍
+
+从0写OS内核代码仓库：[WandOS: An OS kernel developed using C++](https://github.com/zhangfuwen/wandos)
+欢迎加星 + 贡献代码~
