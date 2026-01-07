@@ -55,4 +55,14 @@ Linux使用的是虚拟地址，以提供进程地址空间的隔离。它还带
 
   
 
-_原创文章，转载请注明出处。_
+_原创文章，转载请注明出处。
+
+## 内存带宽
+
+### mem stall
+
+```bash
+simpleperf record -a -e raw-stall --duration 10
+simpleperf report | head -n 20
+```
+
