@@ -34,6 +34,6 @@ CPU发出一个访存指令，怎么才能知道目标地址上的数据在Cache
 
 针对做法2，考虑到同时访问多个映射到同一个Cache line的内存地址的可能性也不是那么大，提出了一个优化办法，即在做法2的基础上，每个Cache line引入几个影子行。比如说原来的一个Cache line现在变成了4个Cache line，则只要同一段时间使用的映射到这一行的内存地址不多于4，就不会出现换出。这种一个内存地址对应一组几个Cache line的方式称为n路组相联缓存。
 
-![](/assets/Screenshot at 2月 16 20-18-16.png)
+![2-way associative](/assets/Screenshot at 2月 16 20-18-16.png)
 
 **两路组相联缓存（2-way associative 8-entry cache)**
