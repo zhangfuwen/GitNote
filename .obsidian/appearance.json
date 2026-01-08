@@ -1,5 +1,6 @@
 {
-  "accentColor": "#9f6de8",
-  "cssTheme": "Typewriter",
-  "theme": "moonstone"
+  "accentColor": "#8066a9",
+  "cssTheme": "Tokyo Night",
+  "theme": "moonstone",
+  "interfaceFontFamily": "ComicShannsMono Nerd Font"
 }

@@ -1,5 +1,7 @@
 
-![Linux中的Memory Compaction [一]](https://picx.zhimg.com/v2-0866738ee070d04e77f6ade81b9040de_720w.jpg?source=172ae18b)
+## ![Linux中的Memory Compaction [一]](https://picx.zhimg.com/v2-0866738ee070d04e77f6ade81b9040de_720w.jpg?source=172ae18b)
+
+`Memory Compation`: 内存归整
 
 Linux使用的是虚拟地址，以提供进程地址空间的隔离。它还带来另一个好处，就是像vmalloc()这种分配，不用太在乎实际使用的物理内存的分布是否**连续**，因而也就弱化了物理内存才会面临的「内存碎片」问题。
 
@@ -62,7 +64,141 @@ _原创文章，转载请注明出处。
 ### mem stall
 
 ```bash
+simpleperf stat \
+        -e cpu-cycles \
+        -e instructions \
+        -e raw-stall \
+        -e stalled-cycles-frontend \
+        -e stalled-cycles-backend \
+        -e raw-stall-frontend \
+        -e raw-stall-frontend-mem \
+        -e raw-stall-frontend-membound \
+        -e raw-stall-backend \
+        -e raw-stall-backend-mem \
+        -e raw-stall-backend-membound \
+        -e raw-stall-slot \
+        --duration 20 -a
+```
+或者
+```bash
 simpleperf record -a -e raw-stall --duration 10
 simpleperf report | head -n 20
 ```
 
+结果解读：
+```bash
+Performance counter statistics:
+
+#          count  event_name                    # count / runtime             
+  25,118,448,822  cpu-cycles                    # 0.156965 GHz                   
+  18,300,407,346  instructions                  # 1.372562 cycles per instruction
+  18,523,652,445  raw-stall                     # 115.738 M/sec                  
+  11,356,241,264  stalled-cycles-frontend       # 70.953 M/sec                   
+   7,168,103,841  stalled-cycles-backend        # 44.785 M/sec                   
+  11,356,444,789  raw-stall-frontend            # 70.951 M/sec                   
+               0  raw-stall-frontend-mem        # 0.000 /sec                     
+   5,002,356,389  raw-stall-frontend-membound   # 31.253 M/sec                   
+   7,167,739,361  raw-stall-backend             # 44.781 M/sec                   
+   1,378,331,738  raw-stall-backend-mem         # 8.611 M/sec                    
+   1,378,274,808  raw-stall-backend-membound    # 8.611 M/sec                    
+  77,979,205,840  raw-stall-slot                # 487.187 M/sec                  
+
+Total test time: 20.000292 seconds.
+```
+
+这些事件都是 **CPU流水线停顿（stall）** 的性能计数器，用于分析程序运行时因资源争用、依赖或缓存缺失导致的 **性能瓶颈**。它们源自 **ARM Cortex 系列 CPU（如 A520）的 PMU（Performance Monitoring Unit）**。
+
+---
+
+### 一、基本概念
+现代 CPU 采用 **流水线（pipeline）** 结构，分为：
+- **Frontend（取指/解码）**：从内存取指令、解码。
+- **Backend（执行/写回）**：执行指令、访问数据、写结果。
+
+当流水线因某种原因无法继续推进，就发生 **stall（停顿）**。
+
+---
+
+### 二、事件分类与含义
+
+#### 1. **通用/高层事件**
+| 事件 | 含义 |
+|------|------|
+| `stalled-cycles-frontend` | 前端停顿周期（如取不到指令） |
+| `stalled-cycles-backend`  | 后端停顿周期（如等待数据） |
+| `raw-stall`               | 任意槽位（slot）无操作发出（总停顿） |
+
+> 这些是抽象事件，底层映射到具体 CPU 的原始事件。
+
+---
+
+#### 2. **按停顿位置分**
+| 前缀 | 位置 |
+|------|------|
+| `frontend` | 停顿发生在 **取指/解码阶段** |
+| `backend`  | 停顿发生在 **执行/数据访问阶段** |
+| `slot`     | 从 **发射槽（slot）视角** 看是否发出操作 |
+
+> 一个 cycle 可同时有 frontend 和 backend stall，但 `raw-stall` 是整体指标。
+
+---
+
+#### 3. **按停顿原因分（关键！）**
+| 原因 | 示例事件 | 说明 |
+|------|--------|------|
+| **Cache/内存** | `raw-stall-backend-l1d`, `-l1i`, `-mem`, `-membound` | L1 数据/指令缓存缺失、内存延迟高 |
+| **TLB** | `...-tlb` | 页表缓存缺失，需遍历页表 |
+| **数据依赖** | `...-ilock`, `-rename` | 指令等待前一条结果（如 `a = b + c; d = a + 1`） |
+| **资源争用** | `...-busy`, `-vpu-hazard` | 执行单元（如 VPU、ALU）忙 |
+| **控制流** | `...-flush`, `-flow` | 分支预测失败、异常等导致流水线 flush |
+
+---
+
+### 三、事件关系（层级）
+```
+raw-stall
+├── raw-stall-frontend
+│   ├── raw-stall-frontend-l1i    ← 指令缓存缺失
+│   ├── raw-stall-frontend-tlb    ← 指令 TLB 缺失
+│   └── ...
+└── raw-stall-backend
+    ├── raw-stall-backend-l1d     ← 数据缓存缺失
+    ├── raw-stall-backend-mem     ← 内存延迟
+    ├── raw-stall-backend-ilock   ← 数据依赖
+    └── ...
+```
+
+- `raw-stall` = 所有停顿的总和。
+- `frontend`/`backend` 是互斥视角（但可能同时存在）。
+- 具体原因事件（如 `-l1d`）是 `backend` 的子集。
+
+---
+
+### 四、如何使用？
+1. **先看高层**：
+   ```bash
+   simpleperf record -e raw-stall,raw-stall-frontend,raw-stall-backend ...
+   ```
+   → 判断瓶颈在前端（代码布局、分支）还是后端（数据访问、计算）。
+
+2. **再钻取原因**：
+   - 若 `backend` 高 → 看 `-l1d`, `-mem`, `-ilock`。
+   - 若 `frontend` 高 → 看 `-l1i`, `-tlb`, `-flush`。
+
+3. **优化方向**：
+   - **`-mem`/`-l1d` 高** → 优化数据局部性、减少指针 chasing。
+   - **`-ilock` 高** → 减少长依赖链（如循环累加 → 分段并行）。
+   - **`-flush` 高** → 优化分支（减少 unpredictable if）。
+
+### 五、内存相关的事件
+
+| 事件                            | 含义                             |
+| ----------------------------- | ------------------------------ |
+| `raw-stall-backend-mem`       | **后端内存停顿**：因等待内存（含 LLC/DRAM）响应 |
+| `raw-stall-backend-membound`  | **内存带宽瓶颈**导致的后端停顿              |
+| `raw-stall-backend-l1d`       | **L1 数据缓存缺失**（需访问 L2 或内存）      |
+| `raw-stall-backend-tlb`       | **数据 TLB 缺失**（需遍历页表）           |
+| `raw-stall-frontend-l1i`      | **L1 指令缓存缺失**（取指需访问内存）         |
+| `raw-stall-frontend-mem`      | **前端因内存延迟停顿**（取指卡在内存）          |
+| `raw-stall-frontend-membound` | **前端因内存带宽不足停顿**                |
+| `raw-stall-frontend-tlb`      | **指令 TLB 缺失**                  |
