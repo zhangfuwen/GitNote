@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>白板应用</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f9fafb;
+      color: #1f2937;
+      overflow-x: hidden;
+    }
+    #toolbar {
+      background: white;
+      padding: 16px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+    .tool-group {
+      display: flex;
+      gap: 8px;
+    }
+    .tool-btn {
+      padding: 9px 16px;
+      border: 1px solid #d1d5db;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.15s ease;
+      color: #374151;
+    }
+    .tool-btn:hover {
+      background-color: #f3f4f6;
+      border-color: #9ca3af;
+    }
+    .tool-btn.active {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+    }
+    .control-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .control-label {
+      font-size: 13px;
+      color: #4b5563;
+      font-weight: 500;
+    }
+    .color-input {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background: white;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .line-width-input {
+      width: 100px;
+    }
+    .font-size-input {
+      width: 70px;
+      padding: 6px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    #clear-btn {
+      margin-left: auto;
+      padding: 9px 20px;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    #clear-btn:hover {
+      background: #dc2626;
+    }
+    #number-reset-btn {
+      padding: 9px 16px;
+      background: #f59e0b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    #number-reset-btn:hover {
+      background: #d97706;
+    }
+    #canvas-container {
+      position: relative;
+      margin: 20px auto;
+      max-width: 1400px;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      width: 100%;
+    }
+    canvas {
+      display: block;
+      background: white;
+    }
+    #main-canvas {
+      cursor: crosshair;
+    }
+    .instructions {
+      text-align: center;
+      margin-top: 12px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+    /* Text box styles */
+    .text-box {
+      position: absolute;
+      border: 2px solid #3b82f6;
+      background: white;
+      z-index: 100;
+      min-width: 50px;
+      min-height: 20px;
+    }
+    .text-box-content {
+      border: none;
+      outline: none;
+      width: 100%;
+      height: 100%;
+      resize: none;
+      font-family: Arial, sans-serif;
+      padding: 4px;
+      background: transparent;
+    }
+    /* Image overlay styles */
+    .image-overlay {
+      position: absolute;
+      border: 2px solid #3b82f6;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 100;
+      cursor: move;
+    }
+    .resize-handle {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #3b82f6;
+      border-radius: 50%;
+      cursor: se-resize;
+    }
+    .resize-handle-se {
+      bottom: -6px;
+      right: -6px;
+    }
+  </style>
+</head>
+<body>
+  <div id="toolbar">
+    <div class="tool-group">
+      <button class="tool-btn active" data-tool="pen">✏️ 画笔</button>
+      <button class="tool-btn" data-tool="rect">⬜ 矩形</button>
+      <button class="tool-btn" data-tool="circle">⭕ 圆形</button>
+      <button class="tool-btn" data-tool="line">📏 直线</button>
+      <button class="tool-btn" data-tool="arrow">➡️ 箭头</button>
+      <button class="tool-btn" data-tool="number">🔢 数字</button>
+      <button class="tool-btn" data-tool="text">🔤 文本</button>
+    </div>
+
+    <div class="control-item">
+      <span class="control-label">边框</span>
+      <input type="color" id="strokeColor" class="color-input" value="#000000">
+    </div>
+    <div class="control-item">
+      <span class="control-label">填充</span>
+      <input type="color" id="fillColor" class="color-input" value="#ffffff">
+    </div>
+    <div class="control-item">
+      <span class="control-label">线宽</span>
+      <input type="range" id="lineWidth" class="line-width-input" min="1" max="20" value="2">
+    </div>
+    <div class="control-item">
+      <span class="control-label">字体</span>
+      <input type="number" id="fontSize" class="font-size-input" min="8" max="72" value="16">
+    </div>
+
+    <button id="undo-btn" class="tool-btn">↩️ 撤销</button>
+    <button id="redo-btn" class="tool-btn">↪️ 重做</button>
+    <button id="number-reset-btn" style="display: none;">🔄 重置数字</button>
+    <button id="paste-btn" class="tool-btn">📋 粘贴</button>
+    <button id="clear-btn">🗑️ 清空</button>
+  </div>
+
+  <div id="canvas-container">
+    <canvas id="main-canvas"></canvas>
+  </div>
+
+  <div class="instructions">
+    提示：绘制图形时拖动鼠标预览效果，释放完成绘制
+  </div>
+
+  <script>
+    // 初始化画布
+    const canvasContainer = document.getElementById('canvas-container');
+    const canvas = document.getElementById('main-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // 设置初始尺寸
+    function setCanvasSize() {
+      const maxWidth = Math.min(canvasContainer.clientWidth, 1400);
+      const maxHeight = Math.min(window.innerHeight - 250, 800);
+      
+      canvas.width = maxWidth;
+      canvas.height = maxHeight;
+    }
+    
+    setCanvasSize();
+    window.addEventListener('resize', setCanvasSize);
+
+    // 默认设置
+    let tool = 'pen';
+    let isDrawing = false;
+    let startX, startY;
+    let strokeColor = '#000000';
+    let fillColor = '#ffffff';
+    let lineWidth = 2;
+    let fontSize = 16;
+    let lastX = 0;
+    lastY = 0;
+    let savedState = null;
+    let history = [];
+    let historyIndex = -1;
+    let numberCounter = 1;
+
+    // 工具默认设置
+    const toolSettings = {
+      pen: { strokeColor: '#000000', fillColor: '#ffffff', lineWidth: 2, fontSize: 16 },
+      rect: { strokeColor: '#000000', fillColor: '#ffffff', lineWidth: 2, fontSize: 16 },
+      circle: { strokeColor: '#000000', fillColor: '#ffffff', lineWidth: 2, fontSize: 16 },
+      line: { strokeColor: '#000000', fillColor: '#ffffff', lineWidth: 2, fontSize: 16 },
+      arrow: { strokeColor: '#ef4444', fillColor: '#ef4444', lineWidth: 3, fontSize: 16 },
+      number: { strokeColor: '#ef4444', fillColor: '#ef4444', lineWidth: 2, fontSize: 16 },
+      text: { strokeColor: '#000000', fillColor: '#ffffff', lineWidth: 2, fontSize: 16 }
+    };
+
+    // 初始化画布
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    // 更新画笔光标
+    function updateCursor() {
+      if (tool === 'pen') {
+        canvas.style.cursor = 'crosshair';
+      } else if (tool === 'text') {
+        canvas.style.cursor = 'text';
+      } else {
+        canvas.style.cursor = 'crosshair';
+      }
+    }
+
+    // 工具按钮事件
+    document.querySelectorAll('.tool-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        tool = btn.dataset.tool;
+        updateCursor();
+        
+        // 取消当前绘制
+        if (isDrawing && tool !== 'text') {
+          isDrawing = false;
+          savedState = null;
+        }
+        
+        // 应用当前工具的默认设置
+        if (toolSettings[tool]) {
+          strokeColor = toolSettings[tool].strokeColor;
+          fillColor = toolSettings[tool].fillColor;
+          lineWidth = toolSettings[tool].lineWidth;
+          fontSize = toolSettings[tool].fontSize;
+        }
+        
+        // 更新UI
+        document.getElementById('strokeColor').value = strokeColor;
+        document.getElementById('fillColor').value = fillColor;
+        document.getElementById('lineWidth').value = lineWidth;
+        document.getElementById('fontSize').value = fontSize;
+        
+        // 显示/隐藏数字重置按钮
+        const numberResetBtn = document.getElementById('number-reset-btn');
+        if (tool === 'number') {
+          numberResetBtn.style.display = 'inline-block';
+        } else {
+          numberResetBtn.style.display = 'none';
+        }
+      });
+    });
+
+    // 控件事件
+    document.getElementById('strokeColor').addEventListener('input', e => strokeColor = e.target.value);
+    document.getElementById('fillColor').addEventListener('input', e => fillColor = e.target.value);
+    document.getElementById('lineWidth').addEventListener('input', e => lineWidth = e.target.value);
+    document.getElementById('fontSize').addEventListener('input', e => {
+      fontSize = e.target.value;
+      // 更新当前所有文本框的字体大小
+      document.querySelectorAll('.text-box-content').forEach(textbox => {
+        textbox.style.fontSize = fontSize + 'px';
+      });
+    });
+    document.getElementById('clear-btn').addEventListener('click', () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // 移除所有文本框
+      document.querySelectorAll('.text-box').forEach(el => el.remove());
+      // 移除所有图片
+      document.querySelectorAll('.image-overlay').forEach(el => el.remove());
+      saveStateToHistory();
+    });
+
+    // 数字重置按钮事件
+    document.getElementById('number-reset-btn').addEventListener('click', () => {
+      numberCounter = 1;
+      alert('数字已重置为 1');
+    });
+
+    // 粘贴按钮事件
+    document.getElementById('paste-btn').addEventListener('click', () => {
+      // 提示用户粘贴内容
+      alert('请在画布上右键粘贴或使用 Ctrl+V 粘贴内容');
+    });
+
+    // 撤销重做功能
+    document.getElementById('undo-btn').addEventListener('click', () => {
+      if (historyIndex > 0) {
+        historyIndex--;
+        restoreStateFromHistory();
+      }
+    });
+
+    document.getElementById('redo-btn').addEventListener('click', () => {
+      if (historyIndex < history.length - 1) {
+        historyIndex++;
+        restoreStateFromHistory();
+      }
+    });
+
+    function saveStateToHistory() {
+      // 保存当前画布状态
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      history = history.slice(0, historyIndex + 1);
+      history.push(imageData);
+      historyIndex++;
+    }
+
+    function restoreStateFromHistory() {
+      if (historyIndex >= 0 && historyIndex < history.length) {
+        ctx.putImageData(history[historyIndex], 0, 0);
+      }
+    }
+
+    // 鼠标事件处理
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', cancelDrawing);
+
+    // 粘贴事件处理
+    document.addEventListener('paste', (e) => {
+      const items = e.clipboardData.items;
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        
+        if (item.type.indexOf('image') !== -1) {
+          // 处理图片粘贴
+          const blob = item.getAsFile();
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            const img = new Image();
+            img.onload = function() {
+              // 创建图片元素
+              const imgElement = document.createElement('img');
+              imgElement.src = event.target.result;
+              imgElement.style.width = '100%';
+              imgElement.style.height = '100%';
+              imgElement.style.objectFit = 'contain';
+              
+              // 创建容器
+              const container = document.createElement('div');
+              container.className = 'image-overlay';
+              container.style.left = '50px';
+              container.style.top = '50px';
+              container.style.width = Math.min(img.width, 200) + 'px';
+              container.style.height = Math.min(img.height, 200) + 'px';
+              
+              // 添加图片
+              container.appendChild(imgElement);
+              
+              // 添加调整大小的句柄
+              const handle = document.createElement('div');
+              handle.className = 'resize-handle resize-handle-se';
+              container.appendChild(handle);
+              
+              // 添加到画布容器
+              canvasContainer.appendChild(container);
+              
+              // 实现拖拽和调整大小功能
+              let isDragging = false;
+              let isResizing = false;
+              let offsetX, offsetY;
+              
+              container.addEventListener('mousedown', (e) => {
+                if (e.target === handle) {
+                  isResizing = true;
+                  e.preventDefault();
+                } else {
+                  isDragging = true;
+                  const containerRect = container.getBoundingClientRect();
+                  offsetX = e.clientX - containerRect.left;
+                  offsetY = e.clientY - containerRect.top;
+                  e.preventDefault();
+                }
+              });
+              
+              document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                  const containerRect = canvasContainer.getBoundingClientRect();
+                  let x = e.clientX - containerRect.left - offsetX;
+                  let y = e.clientY - containerRect.top - offsetY;
+                  
+                  // 限制在画布范围内
+                  x = Math.max(0, Math.min(x, canvasContainer.clientWidth - container.offsetWidth));
+                  y = Math.max(0, Math.min(y, canvasContainer.clientHeight - container.offsetHeight));
+                  
+                  container.style.left = x + 'px';
+                  container.style.top = y + 'px';
+                } else if (isResizing) {
+                  const containerRect = container.getBoundingClientRect();
+                  const newWidth = e.clientX - containerRect.left;
+                  const newHeight = e.clientY - containerRect.top;
+                  
+                  if (newWidth > 20 && newHeight > 20) {
+                    container.style.width = newWidth + 'px';
+                    container.style.height = newHeight + 'px';
+                  }
+                }
+              });
+              
+              document.addEventListener('mouseup', () => {
+                isDragging = false;
+                isResizing = false;
+              });
+            };
+            img.src = event.target.result;
+          };
+          reader.readAsDataURL(blob);
+        } else if (item.type === 'text/plain') {
+          // 处理文本粘贴
+          item.getAsString(function(str) {
+            createTextBox(50, 50, str);
+          });
+        }
+      }
+    });
+
+    function getMousePos(e) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    }
+
+    function startDrawing(e) {
+      if (tool === 'text') {
+        const pos = getMousePos(e);
+        createTextBox(pos.x, pos.y);
+        return;
+      }
+      
+      isDrawing = true;
+      const pos = getMousePos(e);
+      startX = pos.x;
+      startY = pos.y;
+      lastX = pos.x;
+      lastY = pos.y;
+
+      if (tool !== 'pen' && tool !== 'text') {
+        // 保存当前画布状态
+        savedState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    function draw(e) {
+      if (!isDrawing || tool === 'text') return;
+
+      const pos = getMousePos(e);
+      const currentX = pos.x;
+      const currentY = pos.y;
+
+      if (tool === 'pen') {
+        // 直接绘制到主画布
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = lineWidth;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(currentX, currentY);
+        ctx.stroke();
+        lastX = currentX;
+        lastY = currentY;
+      } else if (tool === 'arrow') {
+        // 恢复保存的状态
+        if (savedState) {
+          ctx.putImageData(savedState, 0, 0);
+        }
+        
+        // 设置样式
+        ctx.strokeStyle = strokeColor;
+        ctx.fillStyle = strokeColor; // 箭头填充颜色
+        ctx.lineWidth = lineWidth;
+        
+        // 绘制直线
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(currentX, currentY);
+        ctx.stroke();
+        
+        // 计算箭头方向
+        const angle = Math.atan2(currentY - startY, currentX - startX);
+        const arrowSize = 10 + lineWidth; // 箭头大小随线宽变化
+        
+        // 绘制箭头
+        ctx.beginPath();
+        ctx.moveTo(currentX, currentY);
+        ctx.lineTo(
+          currentX - arrowSize * Math.cos(angle - Math.PI / 6),
+          currentY - arrowSize * Math.sin(angle - Math.PI / 6)
+        );
+        ctx.lineTo(
+          currentX - arrowSize * Math.cos(angle + Math.PI / 6),
+          currentY - arrowSize * Math.sin(angle + Math.PI / 6)
+        );
+        ctx.closePath();
+        ctx.fill();
+      } else if (tool === 'number') {
+        // 恢复保存的状态
+        if (savedState) {
+          ctx.putImageData(savedState, 0, 0);
+        }
+        
+        // 设置样式
+        ctx.strokeStyle = '#ef4444'; // 红色边框
+        ctx.fillStyle = '#ef4444'; // 红色填充
+        ctx.lineWidth = 2;
+        
+        // 绘制圆圈
+        const radius = 15;
+        ctx.beginPath();
+        ctx.arc(currentX, currentY, radius, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // 绘制数字
+        ctx.fillStyle = '#ffffff'; // 白色文字
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(numberCounter.toString(), currentX, currentY);
+      } else {
+        // 恢复保存的状态
+        if (savedState) {
+          ctx.putImageData(savedState, 0, 0);
+        }
+        
+        // 设置样式
+        ctx.strokeStyle = strokeColor;
+        ctx.fillStyle = fillColor;
+        ctx.lineWidth = lineWidth;
+        
+        if (tool === 'rect') {
+          const w = currentX - startX;
+          const h = currentY - startY;
+          
+          // 处理负宽高
+          const x = w < 0 ? currentX : startX;
+          const y = h < 0 ? currentY : startY;
+          const width = Math.abs(w);
+          const height = Math.abs(h);
+          
+          // 先填充再描边，确保边框可见
+          if (fillColor !== 'transparent') {
+            ctx.fillRect(x, y, width, height);
+          }
+          ctx.strokeRect(x, y, width, height);
+        } else if (tool === 'circle') {
+          // 使用起始点和结束点作为直径的两个端点
+          const centerX = (startX + currentX) / 2;
+          const centerY = (startY + currentY) / 2;
+          const radius = Math.sqrt(Math.pow(currentX - startX, 2) + Math.pow(currentY - startY, 2)) / 2;
+          
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+          
+          if (fillColor !== 'transparent') {
+            ctx.fill();
+          }
+          ctx.stroke();
+        } else if (tool === 'line') {
+          ctx.beginPath();
+          ctx.moveTo(startX, startY);
+          ctx.lineTo(currentX, currentY);
+          ctx.stroke();
+        }
+      }
+    }
+
+    function stopDrawing(e) {
+      if (tool === 'text' || !isDrawing) return;
+      
+      const pos = getMousePos(e);
+      const endX = pos.x;
+      const endY = pos.y;
+
+      // 恢复保存的状态
+      if (savedState) {
+        ctx.putImageData(savedState, 0, 0);
+      }
+      
+      ctx.strokeStyle = strokeColor;
+      ctx.fillStyle = strokeColor; // 箭头填充颜色
+      ctx.lineWidth = lineWidth;
+      
+      if (tool === 'rect') {
+        const w = endX - startX;
+        const h = endY - startY;
+        
+        // 处理负宽高
+        const x = w < 0 ? endX : startX;
+        const y = h < 0 ? endY : startY;
+        const width = Math.abs(w);
+        const height = Math.abs(h);
+        
+        if (fillColor !== 'transparent') {
+          ctx.fillRect(x, y, width, height);
+        }
+        ctx.strokeRect(x, y, width, height);
+      } else if (tool === 'circle') {
+        // 使用起始点和结束点作为直径的两个端点
+        const centerX = (startX + endX) / 2;
+        const centerY = (startY + endY) / 2;
+        const radius = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)) / 2;
+        
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+        
+        if (fillColor !== 'transparent') {
+          ctx.fill();
+        }
+        ctx.stroke();
+      } else if (tool === 'line') {
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+      } else if (tool === 'arrow') {
+        // 绘制最终箭头
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+        
+        // 计算箭头方向
+        const angle = Math.atan2(endY - startY, endX - startX);
+        const arrowSize = 10 + lineWidth; // 箭头大小随线宽变化
+        
+        // 绘制箭头
+        ctx.beginPath();
+        ctx.moveTo(endX, endY);
+        ctx.lineTo(
+          endX - arrowSize * Math.cos(angle - Math.PI / 6),
+          endY - arrowSize * Math.sin(angle - Math.PI / 6)
+        );
+        ctx.lineTo(
+          endX - arrowSize * Math.cos(angle + Math.PI / 6),
+          endY - arrowSize * Math.sin(angle + Math.PI / 6)
+        );
+        ctx.closePath();
+        ctx.fill();
+      } else if (tool === 'number') {
+        // 绘制数字圈
+        ctx.strokeStyle = '#ef4444'; // 红色边框
+        ctx.fillStyle = '#ef4444'; // 红色填充
+        ctx.lineWidth = 2;
+        
+        // 绘制圆圈
+        const radius = 15;
+        ctx.beginPath();
+        ctx.arc(endX, endY, radius, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // 绘制数字
+        ctx.fillStyle = '#ffffff'; // 白色文字
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(numberCounter.toString(), endX, endY);
+        
+        // 增加数字计数
+        numberCounter++;
+      }
+      
+      savedState = null;
+      isDrawing = false;
+      
+      // 保存状态到历史记录
+      saveStateToHistory();
+    }
+
+    function cancelDrawing() {
+      if (isDrawing && tool !== 'text') {
+        // 恢复保存的状态
+        if (savedState) {
+          ctx.putImageData(savedState, 0, 0);
+        }
+        savedState = null;
+      }
+      isDrawing = false;
+    }
+
+    // 创建文本框
+    function createTextBox(x, y, initialText = '') {
+      const textBox = document.createElement('div');
+      textBox.className = 'text-box';
+      textBox.style.left = x + 'px';
+      textBox.style.top = y + 'px';
+      textBox.style.width = '150px';
+      textBox.style.height = '60px';
+      textBox.style.fontSize = fontSize + 'px';
+      
+      const textContent = document.createElement('textarea');
+      textContent.className = 'text-box-content';
+      textContent.style.fontSize = fontSize + 'px';
+      textContent.value = initialText;
+      textContent.placeholder = '输入文本...';
+      
+      textBox.appendChild(textContent);
+      canvasContainer.appendChild(textBox);
+      
+      // 添加调整大小的句柄
+      const handle = document.createElement('div');
+      handle.className = 'resize-handle resize-handle-se';
+      textBox.appendChild(handle);
+      
+      // 实现拖拽和调整大小功能
+      let isDragging = false;
+      let isResizing = false;
+      let offsetX, offsetY;
+      let startX, startY;
+      let startWidth, startHeight;
+      
+      textBox.addEventListener('mousedown', (e) => {
+        if (e.target === handle) {
+          isResizing = true;
+          const rect = textBox.getBoundingClientRect();
+          startX = e.clientX;
+          startY = e.clientY;
+          startWidth = textBox.offsetWidth;
+          startHeight = textBox.offsetHeight;
+          e.preventDefault();
+        } else if (e.target !== textContent) {
+          isDragging = true;
+          const rect = textBox.getBoundingClientRect();
+          offsetX = e.clientX - rect.left;
+          offsetY = e.clientY - rect.top;
+          e.preventDefault();
+        }
+      });
+      
+      document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          const containerRect = canvasContainer.getBoundingClientRect();
+          let x = e.clientX - containerRect.left - offsetX;
+          let y = e.clientY - containerRect.top - offsetY;
+          
+          // 限制在画布范围内
+          x = Math.max(0, Math.min(x, canvasContainer.clientWidth - textBox.offsetWidth));
+          y = Math.max(0, Math.min(y, canvasContainer.clientHeight - textBox.offsetHeight));
+          
+          textBox.style.left = x + 'px';
+          textBox.style.top = y + 'px';
+        } else if (isResizing) {
+          const newWidth = startWidth + (e.clientX - startX);
+          const newHeight = startHeight + (e.clientY - startY);
+          
+          if (newWidth > 50 && newHeight > 30) {
+            textBox.style.width = newWidth + 'px';
+            textBox.style.height = newHeight + 'px';
+          }
+        }
+      });
+      
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+        isResizing = false;
+      });
+      
+      // 处理失去焦点时删除空文本框
+      textContent.addEventListener('blur', () => {
+        if (textContent.value.trim() === '') {
+          textBox.remove();
+          // 保存状态到历史记录
+          saveStateToHistory();
+        }
+      });
+    }
+
+    // 初始化时保存初始状态
+    saveStateToHistory();
+
+    // Initialize cursor
+    updateCursor();
+  </script>
+</body>
+</html>

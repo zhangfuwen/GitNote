@@ -1,0 +1,387 @@
+" 0. Language setup {{{
+if(has('python2'))
+    set pyx=2
+    set pyxversion=3
+endif
+"}}}
+"
+source ~/.vim/plugins.vim
+
+" 2. MyScripts {{{
+command! FindAllHere :call FindAll()
+function! FindAll()
+    call inputsave()
+    let p=input('Enter pattern to search in this file:')
+    call inputrestore()
+    try
+        execute 'vimgrep "'.p.'" %|copen'
+        execute 'cope'
+    catch a:exception
+        echo "not anything found"
+    endtry
+endfunction
+
+command! GREP :execute 'vimgrep '.expand('<cword>').' '.expand('%')|:copen|:cc
+" }}}
+
+" 7. Configurations {{{
+
+set mouse=a
+filetype plugin on
+set nocompatible
+filetype on
+syntax enable
+set backspace=indent,eol,start
+set cursorline
+if !empty(glob("~/.vim/plugged/papercolor-theme/colors/PaperColor.vim"))
+    colo PaperColor
+endif
+
+" 7.1 folding {{{
+set nofoldenable
+autocmd FileType c,cpp,perl set foldmethod=syntax
+autocmd FileType python set foldmethod=indent
+autocmd FileType vim set foldmethod=marker
+autocmd FileType vim set nowrap
+" }}}
+
+
+" 7.2 indentation {{{
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+
+set autoindent
+set smartindent
+" }}}
+
+" 7.3 scrolling {{{
+set scrolloff=4
+set sidescrolloff=7
+" }}}
+
+
+" 7.4 encoding {{{
+set helplang=cn
+set encoding=utf-8
+set termencoding=utf-8
+set fileencodings=utf-8,ucs-bom,cp936,gb18030,latin1
+set fileencoding=utf-8
+set fileformat=unix
+"language messages zh_CN.utf-8
+" }}}
+
+" 7.5 searching {{{
+set hlsearch
+set incsearch
+set ignorecase
+" }}}
+
+" 7.6 {{{ completion
+inoremap <expr> <silent> <Tab> pumvisible()?"\<C-n>":"\<TAB>"
+inoremap <expr> <silent> <S-TAB> pumvisible()?"\<C-p>":"\<S-TAB>"
+" }}}
+"
+" 7.7 ctags {{{
+" 少用 CTRL-] 直接在当前窗口里跳转到定义，
+" 多使用 CTRL-W ] 用新窗口打开并查看光标下符号的定义，
+" 或者 CTRL-W } 使用 preview 窗口预览光标下符号的定义
+set tags=./.tags;,.tags,tags
+let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+let g:gutentags_ctags_tagfile = '.tags'
+" 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录
+let s:vim_tags = expand('~/.cache/tags')
+let g:gutentags_cache_dir = s:vim_tags
+
+" 配置 ctags 的参数
+let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+
+" 检测 ~/.cache/tags 不存在就新建
+if !isdirectory(s:vim_tags)
+    silent! call mkdir(s:vim_tags, 'p')
+endif
+" }}}
+"
+"
+" 7.8 nerdtree {{{
+let  NERDTreeQuitOnOpen = 1
+" }}}
+
+set number
+set autoread
+set showmatch " show bracket matches
+set laststatus=2 " last window will always has status line
+filetype plugin on
+filetype indent on
+set t_Co=256 " 256 colors
+
+set completeopt=menu,menuone
+set background=light
+
+set wildmenu " vim 自身命令行模式智能补全
+set mouse=a
+" }}} end 7
+
+" 8. QuickMenu {{{
+" clear all the menus
+if !empty(glob("~/.vim/plugged/vim-quickui/README.md"))
+call quickui#menu#reset()
+
+" install a 'File' menu, use [text, command] to represent an item.
+let g:quickui_border_style = 2
+call quickui#menu#install('&Find', [
+            \ [ "Switch &Header/Source\tts", 'FSHere'],
+            \ [ "Search &In This File\tt/", 'silent! FindAllHere' ],
+            \ [ "--", '' ],
+            \ [ "E&xit\tAlt+x", 'echo 6' ],
+            \ ])
+
+call quickui#menu#install('&Quickfix', [
+            \ [ "&Open\t copen", 'copen' ],
+            \ [ "&Close\t cclose", 'ccl' ],
+            \ [ "&Next\t cnext", 'cnext' ],
+            \ [ "&Prev\t cprev", 'cprev' ],
+            \ [ "&First\t cfirst", 'cfirst' ],
+            \ [ "&Last\t clast", 'clast' ],
+            \ [ "Olde&r\t colder", 'colder' ],
+            \ [ "Ne&wer\t cnewer", 'cnewer' ],
+            \ ])
+
+call quickui#menu#install('&Locationlist', [
+            \ [ "&Open\t lopen", 'lopen' ],
+            \ [ "&Close\t lclose", 'lcl' ],
+            \ [ "&Next\t lnext", 'lnext' ],
+            \ [ "&Prev\t lprev", 'lprev' ],
+            \ [ "&First\t lfirst", 'lfirst' ],
+            \ [ "&Last\t llast", 'llast' ],
+            \ [ "Olde&r\t lolder", 'lolder' ],
+            \ [ "Ne&wer\t lnewer", 'lnewer' ],
+            \ ])
+
+call quickui#menu#install('Leader&f', [
+            \ [ "&File\t file", 'Leaderf file' ],
+            \ [ "&Tag\t tag", 'Leaderf tag' ],
+            \ [ "&Snippet\t snippet", 'Leaderf snippet' ],
+            \ [ "&Grep\t search", 'Leaderf rg' ],
+            \ [ "Rg &Interactive", 'LeaderfRgInteractive' ],
+            \ [ "Grep search &recall", 'LeaderfRgRecall' ],
+            \ [ "F&unction\t function", 'Leaderf function' ],
+            \ [ "&Buffers", 'Leaderf buffer' ],
+            \ ])
+
+call quickui#menu#install('&Coc', [
+            \ [ "List &diagnostics\t ", 'CocList diagnostics' ],
+            \ [ "List &extentions\t ", 'CocList extentions' ],
+            \ [ "List &commands\t ", 'CocList commands' ],
+            \ [ "List &outline\t ", 'CocList outline' ],
+            \ [ "List &symbols\t ", 'CocList symbols' ],
+            \ [ "List &resume\t ", 'CocListResume' ],
+            \ [ "&Next\t ", 'CocNext' ],
+            \ [ "&Prev\t ", 'CocPrev' ],
+            \ [ "For&mat", "Format" ],
+            \ [ "Fo&ld", "Fold" ],
+            \ [ "Rearra&ge imports ", "OR" ],
+            \ [ "Ren&ame", "<Plug>(coc-rename)" ],
+            \ ])
+
+let g:cmake_compile_commands=1
+let g:cmake_compile_commands_link='.'
+call quickui#menu#install('&CMake', [
+            \ ['&Generate','CMake'],
+            \ ['&Build','CMakeBuild'],
+            \ ['&Test','CTest'],
+            \ ['&CTest!','CTest!'],
+            \ ['&Info','CMakeInfo'],
+            \ ['&Select Target', 'call Prompt_targets()'],
+            \ ['Select Build T&ype', 'call Prompt_buildType()'],
+            \ ['&Run','call Run_target()'],
+            \ ['R&un!','CMakeRun!'],
+            \ ['C&lean','CMakeClean'],
+            \ ['Res&et','CMakeReset'],
+            \ ['Reset&Relo&ad','CMakeResetAndReload' ],
+            \ ])
+
+call quickui#menu#install('&Preview', [
+            \ [ "&Close\t pc", 'pc' ],
+            \ [ "&Search\t ps", 'ps' ],
+            \ [ "&Edit\t ped", 'ped' ],
+            \ [ "&Jump\t ptjump", 'ptjump' ],
+            \ [ "&Tag\t ptag", 'ptag' ],
+            \ ])
+
+call quickui#menu#install('&Git', [
+            \ [ "&Status\t G", 'G' ],
+            \ [ "&Llog\t Gllog", 'Gllog' ],
+            \ [ "&Clog\t Gclog", 'Gclog' ],
+            \ ])
+
+call quickui#menu#install('P&ython', [
+            \ [ "&Run this file with python3", ":exec '!python3' shellescape(@%, 1)" ],
+            \ ])
+
+" list
+call quickui#menu#install('&List', [
+            \ [ "&Buffers", "call quickui#tools#list_buffer('e')" ],
+            \ [ "&Functions", "call quickui#tools#list_function()" ],
+            \ ])
+" items containing tips, tips will display in the cmdline
+call quickui#menu#install('&Open', [
+            \ [ '&Terminal', "call quickui#terminal#open('bash', {'title':'terminal'})", 'help 1' ],
+            \ ])
+"            \ [ '&Terminal', "call quickui#terminal#open('bash', {'w':60, 'h':8, 'callback':'TermExit', 'title':'terminal'})", 'help 1' ],
+
+" script inside %{...} will be evaluated and expanded in the string
+call quickui#menu#install("&Option", [
+            \ ['Set &Spell %{&spell? "Off":"On"}', 'set spell!'],
+            \ ['Set &Cursor Line %{&cursorline? "Off":"On"}', 'set cursorline!'],
+            \ ['Set &Paste %{&paste? "Off":"On"}', 'set paste!'],
+            \ ])
+
+" register HELP menu with weight 10000
+call quickui#menu#install('H&elp', [
+            \ ["&Cheatsheet", 'help index', ''],
+            \ ['T&ips', 'help tips', ''],
+            \ ['--',''],
+            \ ["&Tutorial", 'help tutor', ''],
+            \ ['&Quick Reference', 'help quickref', ''],
+            \ ['&Summary', 'help summary', ''],
+            \ ], 10000)
+nmap to :call quickui#menu#open()<CR>
+let g:quickui_show_tip = 1
+function! TermExit(code)
+    echom "terminal exit code: ". a:code
+endfunc
+
+" define your context menu as a list of (text, command) pairs
+let g:context_menu_k = [
+            \ ["&Help Keyword\t\\ch", 'echo expand("<cword>")' ],
+            \ ["&Signature\t\\cs", 'echo 101'],
+            \ ['-'],
+            \ ["Find in &File\t\\cx", 'exec "/" . expand("<cword>")' ],
+            \ ["Find in &Project\t\\cp", 'exec "vimgrep " . expand("<cword>") . "*"' ],
+            \ ["Find in &Defintion\t\\cd", 'YcmCompleter GotoDefinition' ],
+            \ ["Search &References\t\\cr", 'YcmCompleter GoToReferences'],
+            \ ['-'],
+            \ ["&Documentation\t\\cm", 'exec "PyDoc " . expand("<cword>")'],
+            \ ]
+
+" map 'space to display the context menu
+nnoremap <silent><space> :call quickui#tools#clever_context('k', g:context_menu_k, {})<cr>
+
+let g:context_menu_git = [
+      \ ["&Stage (add)\ts", 'exec "normal s"' ],
+      \ ["&Unstage (reset)\tu", 'exec "normal u"' ],
+      \ ["&Toggle stage/unstage\t-", 'exec "normal -"' ],
+      \ ["Unstage &Everything\tU", 'exec "normal U"' ],
+      \ ["D&iscard change\tX", 'exec "normal X"' ],
+      \ ["--"],
+      \ ["Inline &Diff\t=", 'exec "normal ="' ],
+      \ ["Diff Split\tdd", 'exec "normal dd"' ],
+      \ ["Diff Horizontal\tdh", 'exec "normal dh"' ],
+      \ ["Diff &Vertical\tdv", 'exec "normal dv"' ],
+      \ ["--"],
+      \ ["&Open File\t<CR>", 'exec "normal \<cr>"' ],
+      \ ["Open in New Split\to", 'exec "normal o"' ],
+      \ ["Open in New Vsplit\tgO", 'exec "normal gO"' ],
+      \ ["Open in New Tab\tO", 'exec "normal O"' ],
+      \ ["Open in &Preview\tp", 'exec "normal p"' ],
+      \ ["--"],
+      \ ["&0. Commit", 'Git commit' ],
+      \ ["&1. Push", 'Git push' ],
+      \ ["&2. Pull", 'Git pull' ],
+      \ ]
+
+function! s:setup_fugitive()
+    nnoremap <silent><buffer><space> :call quickui#tools#clever_context('g', g:context_menu_git, {})<cr>
+endfunc
+
+augroup MenuEvents
+    au!
+    au FileType fugitive call s:setup_fugitive()
+augroup END
+
+endif
+" }}} ends QuickMenu
+
+" 8. KeyMaps {{{
+nmap tt :NERDTreeToggle<CR>
+nmap tl :TagbarToggle<CR>
+nmap t/ :silent! FindAllHere<CR>
+nmap ts :FSHere<CR> "头文件切换
+nmap tv :PreviewTag<CR>
+
+" optional: preview
+"let g:Lf_PreviewResult = get(g:, 'Lf_PreviewResult', {})
+"let g:Lf_PreviewResult.snippet = 1
+
+" easy motion {{{
+"nmap te <Plug>(easymotion-prefix)
+" <Leader>f{char} to move to {char}
+map  <Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader>f <Plug>(easymotion-overwin-f)
+
+" s{char}{char} to move to {char}{char}
+nmap s <Plug>(easymotion-overwin-f2)
+
+" Move to line
+map <C-L> <Plug>(easymotion-bd-jk)
+nmap <C-L> <Plug>(easymotion-overwin-line)
+
+" Move to word
+map  <C-L>u <Plug>(easymotion-bd-w)
+nmap <C-L>u <Plug>(easymotion-overwin-w)
+" end easymotion }}}
+
+"nmap <F6> :exec '!'.getline('.')<CR>
+vmap <F6> :w !bash<CR>
+"ctrl / to add comment
+nmap <C-_>  <leader>c<space>
+nnoremap <F3> :call quickui#tools#preview_tag('')<cr>
+"vmap <F6> :terminal bash
+"namp td :Doc<CR> " 函数生成注释
+":set foldenable
+" }}}
+
+" 9. help {{{
+
+" :h nerdtree
+" :h tagbar
+" :h leaderf
+" :h denite
+" :h deoplete
+
+" 9.1 folding {{{
+" set fen
+" set fde
+"
+" zo unfold under cursor
+" zO unfold recursively under cursor
+" zc fold under cursor
+" zC fold under cursor recursively
+"
+" zM fold all
+" zR unfold all
+"}}}
+
+" 9.2 Doxygen {{{
+" :Dox
+"}}}
+
+" 9.3 VCS Help {{{
+"
+":Git difftool -y HEAD~1  to compare current directory file with historical
+"versions
+"
+":Glog to show log
+"
+"}}}
+
+"}}}
+
+"if !empty(glob("~/.vim/plugged/coc.nvim/plugin/coc.vim"))
+"    source ~/.vim/coc.vim
+"endif
+let g:cmake_ctest_args='-j8 --output-on-failure'

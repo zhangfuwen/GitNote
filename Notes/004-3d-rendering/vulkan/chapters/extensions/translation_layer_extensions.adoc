@@ -1,0 +1,62 @@
+---
+permalink:/Notes/004-3d-rendering/vulkan/chapters/extensions/translation_layer_extensions.html
+layout: default
+---
+
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters: ../]
+
+[[translation-layer-extensions]]
+= Translation Layer Extensions
+
+There is a class of extensions that were only created to allow efficient ways for xref:{chapters}portability_initiative.adoc#translation-layer[translation layers] to map to Vulkan.
+
+This includes replicating legacy behavior that is challenging for drivers to implement efficiently. This functionality is **not** considered forward looking, and is **not** expected to be promoted to a KHR extension or to core Vulkan.
+
+Unless this is needed for translation, it is **highly recommended** that developers use alternative techniques of using the GPU to achieve the same functionality.
+
+[[VK_EXT_custom_border_color]]
+== VK_EXT_custom_border_color
+
+Vulkan provides a transparent black, opaque black, and opaque white `VkBorderColor` for `VkSampler` objects in the core spec. Both OpenGL and D3D have the option to set the sampler border to be a custom color.
+
+[[VK_EXT_border_color_swizzle]]
+== VK_EXT_border_color_swizzle
+
+After the publication of `VK_EXT_custom_border_color`, it was discovered that some implementations had undefined behavior when combining a sampler that uses a custom border color with image views whose component mapping is not the identity mapping.
+
+[[VK_EXT_depth_clip_enable]]
+== VK_EXT_depth_clip_enable
+
+The depth clip enable functionality is specified differently from D3D11 and Vulkan. Instead of `VkPipelineRasterizationStateCreateInfo::depthClampEnable`, D3D11 has link:https://docs.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_rasterizer_desc[DepthClipEnable (D3D12_RASTERIZER_DESC)], which only affects the viewport clip of depth values before rasterization and does not affect the depth clamp that always occurs in the output merger stage of the D3D11 graphics pipeline.
+
+[[VK_EXT_depth_clip_control]]
+== VK_EXT_depth_clip_control
+
+The depth clip control functionality allows the application to use the OpenGL depth range in NDC. In OpenGL it is `[-1, 1]` as opposed to Vulkan’s default of `[0, 1]`. Support for clip control was supported in OpenGL via the link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_clip_control.txt[ARB_clip_control] extension.
+
+More info in the xref:{chapters}depth.adoc#user-defined-clipping-and-culling[depth chapter]
+
+[[VK_EXT_provoking_vertex]]
+== VK_EXT_provoking_vertex
+
+Vulkan's defaults convention for provoking vertex is "`first vertex`" while OpenGL's defaults convention is "`last vertex`".
+
+[[VK_EXT_transform_feedback]]
+== VK_EXT_transform_feedback
+
+Everything needed for transform feedback can be done via a compute shader in Vulkan. There is also a great link:https://www.jlekstrand.net/jason/blog/2018/10/transform-feedback-is-terrible-so-why/[blog by Jason Ekstrand] on why transform feedback is terrible and should be avoided.
+
+[[VK_EXT_image_view_min_lod]]
+== VK_EXT_image_view_min_lod
+
+This extension provides an API-side version of the `MinLod` SPIR-V qualifier.
+The new value is associated with the image view, and is
+intended to match D3D12's SRV ResourceMinLODClamp parameter.
+Using MinLod and similar functionality is primarily intended for sparse texturing since higher resolution mip levels can be paged in and out on demand.
+There are many ways to achieve a similar clamp in Vulkan. A `VkImageView` can clamp the base level, but a `MinLod` can also clamp to a fractional LOD
+and does not have to modify the base texture dimension, which might simplify some algorithms. `VkSampler`&#8203;s can also clamp to fractional LOD, but
+using many unique samplers for this purpose might not be practical.

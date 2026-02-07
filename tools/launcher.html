@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>macOS Web Launcher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #8e9eab 0%, #eef2f3 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 8px;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+            z-index: 100;
+            align-items: center;
+        }
+        
+        .status-left, .status-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .menu-item {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .menu-item:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .battery, .wifi, .time {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #333;
+            padding: 2px 6px;
+        }
+        
+        .battery-icon, .wifi-icon {
+            width: 16px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .welcome {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .welcome h1 {
+            font-size: 48px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .welcome p {
+            font-size: 18px;
+            color: #7f8c8d;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        /* App Grid */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 30px;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+        
+        .app {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .app:hover {
+            transform: translateY(-10px);
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+        }
+        
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin-bottom: 12px;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        
+        .app-label {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        /* macOS Window Style */
+        .app-window {
+            position: absolute;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 
+                0 10px 20px rgba(0,0,0,0.15),
+                0 4px 8px rgba(0,0,0,0.1),
+                0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            z-index: 200;
+            overflow: hidden;
+            min-width: 400px;
+            min-height: 300px;
+        }
+        
+        .window-header {
+            height: 28px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            background: linear-gradient(to bottom, #f5f5f7, #eaeaea);
+            border-bottom: 1px solid #d2d2d7;
+            cursor: move;
+        }
+        
+        /* macOS Title Bar Buttons */
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 8px;
+        }
+        
+        .window-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .close-btn { 
+            background: #ff5f57; 
+            color: white;
+        }
+        
+        .close-btn:hover {
+            background: #ff4842;
+            box-shadow: 0 0 0 3px rgba(255, 95, 87, 0.3);
+        }
+        
+        .minimize-btn { 
+            background: #ffbd2e; 
+            color: #333;
+        }
+        
+        .minimize-btn:hover {
+            background: #ffaf00;
+            box-shadow: 0 0 0 3px rgba(255, 189, 46, 0.3);
+        }
+        
+        .maximize-btn { 
+            background: #28c940; 
+            color: white;
+        }
+        
+        .maximize-btn:hover {
+            background: #21a131;
+            box-shadow: 0 0 0 3px rgba(40, 201, 64, 0.3);
+        }
+        
+        .window-title {
+            flex: 1;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            color: #666;
+            margin-right: 40px; /* Make space for buttons */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .window-content {
+            flex: 1;
+            width: 100%;
+            border: none;
+            background: #f0f0f0;
+        }
+        
+        /* Dock */
+        .dock {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 28px;
+            padding: 10px 16px;
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.15),
+                0 2px 6px rgba(0, 0, 0, 0.1);
+            z-index: 150;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .dock-item {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 6px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            box-shadow: 
+                0 2px 8px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.5);
+        }
+        
+        .dock-item:hover {
+            transform: scale(1.15) translateY(-8px);
+            box-shadow: 
+                0 8px 20px rgba(0,0,0,0.25),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 10;
+        }
+        
+        .dock-item i {
+            font-size: 22px;
+        }
+        
+        /* App Colors */
+        .markdown { background: linear-gradient(135deg, #61dafb, #21a1c4); color: white; }
+        .chatbot { background: linear-gradient(135deg, #4a90e2, #1d5db5); color: white; }
+        .filemanager { background: linear-gradient(135deg, #5ac8fa, #007aff); color: white; }
+        
+        /* Minimized Window in Dock */
+        .minimized-window {
+            position: absolute;
+            bottom: 90px;
+            width: 120px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transform: translateX(-50%);
+            z-index: 160;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .minimized-window:hover {
+            transform: translateX(-50%) scale(1.05);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 20px;
+            }
+            
+            .app-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 30px;
+            }
+            
+            .welcome h1 {
+                font-size: 36px;
+            }
+            
+            .dock-item {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .dock-item i {
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .status-bar {
+                padding: 0 6px;
+                height: 20px;
+            }
+            
+            .menu-item {
+                font-size: 12px;
+                padding: 1px 4px;
+            }
+            
+            .app-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .app-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+            
+            .dock {
+                bottom: 12px;
+                padding: 8px 12px;
+                border-radius: 24px;
+            }
+            
+            .dock-item {
+                width: 42px;
+                height: 42px;
+                margin: 0 4px;
+            }
+            
+            .dock-item i {
+                font-size: 18px;
+            }
+        }
+        
+        /* macOS-specific styling */
+        @supports (-webkit-backdrop-filter: blur(20px)) {
+            .status-bar,
+            .dock {
+                background: rgba(255, 255, 255, 0.5);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-left">
+            <div class="menu-item"></div>
+            <div class="menu-item">Finder</div>
+            <div class="menu-item">File</div>
+            <div class="menu-item">Edit</div>
+            <div class="menu-item">View</div>
+            <div class="menu-item">Go</div>
+            <div class="menu-item">Window</div>
+            <div class="menu-item">Help</div>
+        </div>
+        <div class="status-right">
+            <div class="battery">
+                <span class="battery-icon"><i class="fas fa-battery-full"></i></span>
+                <span>100%</span>
+            </div>
+            <div class="wifi">
+                <span class="wifi-icon"><i class="fas fa-wifi"></i></span>
+            </div>
+            <div class="time">10:34 AM</div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content" id="main-content">
+        <div class="welcome">
+            <h1>macOS Web Launcher</h1>
+            <p>Launch multiple applications with authentic macOS window styling. Each window features the exact look and feel of native macOS apps.</p>
+        </div>
+        
+        <!-- App Grid -->
+        <div class="app-grid">
+            <div class="app" data-app="markdown">
+                <div class="app-icon markdown">
+                    <i class="fab fa-markdown"></i>
+                </div>
+                <div class="app-label">Markdown Editor</div>
+            </div>
+            <div class="app" data-app="chatbot">
+                <div class="app-icon chatbot">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="app-label">Chatbot</div>
+            </div>
+            <div class="app" data-app="filemanager">
+                <div class="app-icon filemanager">
+                    <i class="fas fa-folder"></i>
+                </div>
+                <div class="app-label">File Manager</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dock -->
+    <div class="dock" id="dock">
+        <div class="dock-item" data-app="markdown">
+            <i class="fab fa-markdown"></i>
+        </div>
+        <div class="dock-item" data-app="chatbot">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="dock-item" data-app="filemanager">
+            <i class="fas fa-folder"></i>
+        </div>
+        <div class="dock-item active">
+            <i class="fas fa-window-minimize"></i>
+        </div>
+    </div>
+    
+    <script>
+        // App configuration
+        const apps = {
+            markdown: {
+                name: "Markdown Editor",
+                url: "./markdown_editor.html",
+                icon: "fab fa-markdown"
+            },
+            chatbot: {
+                name: "Chatbot",
+                url: "./chatbot.html",
+                icon: "fas fa-robot"
+            },
+            filemanager: {
+                name: "File Manager",
+                url: "./yazi.html",
+                icon: "fas fa-folder"
+            }
+        };
+        
+        // Track open windows
+        let openWindows = {};
+        let windowCounter = 0;
+        let activeWindowId = null;
+        
+        // Update time in status bar
+        function updateTime() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            document.querySelector('.time').textContent = `${hours}:${minutes} ${ampm}`;
+        }
+        
+        // Initialize time and update every minute
+        updateTime();
+        setInterval(updateTime, 60000);
+        
+        // Create a new app window
+        function createAppWindow(appId) {
+            const app = apps[appId];
+            if (!app) return;
+            
+            // Generate unique ID for this window instance
+            const windowId = `${appId}-${++windowCounter}`;
+            
+            // Create window element
+            const windowEl = document.createElement('div');
+            windowEl.className = 'app-window';
+            windowEl.id = `window-${windowId}`;
+            windowEl.dataset.appId = appId;
+            windowEl.dataset.windowId = windowId;
+            
+            // Set initial position (centered with offset for multiple windows)
+            const offset = (Object.keys(openWindows).length * 20) % 200;
+            windowEl.style.left = `${window.innerWidth / 2 - 200 + offset}px`;
+            windowEl.style.top = `${window.innerHeight / 2 - 150 + offset}px`;
+            windowEl.style.width = '800px';
+            windowEl.style.height = '600px';
+            
+            // Create window header with macOS styling
+            const header = document.createElement('div');
+            header.className = 'window-header';
+            header.innerHTML = `
+                <div class="window-controls">
+                    <div class="window-btn close-btn" onclick="closeWindow('${windowId}')"></div>
+                    <div class="window-btn minimize-btn" onclick="minimizeWindow('${windowId}')"></div>
+                    <div class="window-btn maximize-btn" onclick="maximizeWindow('${windowId}')"></div>
+                </div>
+                <div class="window-title">${app.name}</div>
+            `;
+            
+            // Create iframe for content
+            const iframe = document.createElement('iframe');
+            iframe.className = 'window-content';
+            iframe.src = app.url;
+            iframe.setAttribute('frameborder', '0');
+            
+            // Assemble window
+            windowEl.appendChild(header);
+            windowEl.appendChild(iframe);
+            
+            // Add to document
+            document.body.appendChild(windowEl);
+            
+            // Store reference
+            openWindows[windowId] = {
+                element: windowEl,
+                appId: appId,
+                minimized: false,
+                maximized: false
+            };
+            
+            // Make window draggable
+            makeWindowDraggable(windowEl, header);
+            
+            // Bring to front when clicked
+            windowEl.addEventListener('mousedown', () => {
+                bringWindowToFront(windowId);
+            });
+            
+            // Focus on new window
+            bringWindowToFront(windowId);
+        }
+        
+        // Close a window
+        function closeWindow(windowId) {
+            const windowData = openWindows[windowId];
+            if (!windowData) return;
+            
+            // Remove from DOM
+            windowData.element.remove();
+            
+            // Remove minimized representation if exists
+            const minimizedEl = document.getElementById(`minimized-${windowId}`);
+            if (minimizedEl) minimizedEl.remove();
+            
+            // Remove from tracking
+            delete openWindows[windowId];
+            
+            // If this was the active window, focus another if available
+            if (activeWindowId === windowId) {
+                const remainingWindows = Object.keys(openWindows);
+                if (remainingWindows.length > 0) {
+                    bringWindowToFront(remainingWindows[0]);
+                } else {
+                    activeWindowId = null;
+                }
+            }
+        }
+        
+        // Minimize a window
+        function minimizeWindow(windowId) {
+            const windowData = openWindows[windowId];
+            if (!windowData || windowData.minimized) return;
+            
+            // Hide window
+            windowData.element.style.display = 'none';
+            windowData.minimized = true;
+            
+            // Create minimized representation in dock
+            const minimizedEl = document.createElement('div');
+            minimizedEl.className = 'minimized-window';
+            minimizedEl.id = `minimized-${windowId}`;
+            minimizedEl.innerHTML = apps[windowData.appId].name;
+            minimizedEl.style.left = `${window.innerWidth / 2}px`;
+            
+            minimizedEl.addEventListener('click', () => {
+                restoreWindow(windowId);
+            });
+            
+            document.body.appendChild(minimizedEl);
+        }
+        
+        // Restore a minimized window
+        function restoreWindow(windowId) {
+            const windowData = openWindows[windowId];
+            if (!windowData || !windowData.minimized) return;
+            
+            // Show window
+            windowData.element.style.display = 'flex';
+            windowData.minimized = false;
+            
+            // Remove minimized representation
+            const minimizedEl = document.getElementById(`minimized-${windowId}`);
+            if (minimizedEl) minimizedEl.remove();
+            
+            // Bring to front
+            bringWindowToFront(windowId);
+        }
+        
+        // Maximize/restore a window
+        function maximizeWindow(windowId) {
+            const windowData = openWindows[windowId];
+            if (!windowData) return;
+            
+            const windowEl = windowData.element;
+            
+            if (windowData.maximized) {
+                // Restore
+                windowEl.style.width = windowData.restoreWidth;
+                windowEl.style.height = windowData.restoreHeight;
+                windowEl.style.left = windowData.restoreLeft;
+                windowEl.style.top = windowData.restoreTop;
+                windowData.maximized = false;
+            } else {
+                // Maximize
+                windowData.restoreWidth = windowEl.style.width;
+                windowData.restoreHeight = windowEl.style.height;
+                windowData.restoreLeft = windowEl.style.left;
+                windowData.restoreTop = windowEl.style.top;
+                
+                windowEl.style.width = '100%';
+                windowEl.style.height = `calc(100% - ${document.querySelector('.status-bar').offsetHeight}px)`;
+                windowEl.style.left = '0';
+                windowEl.style.top = `${document.querySelector('.status-bar').offsetHeight}px`;
+                windowData.maximized = true;
+            }
+        }
+        
+        // Bring window to front
+        function bringWindowToFront(windowId) {
+            const windowData = openWindows[windowId];
+            if (!windowData) return;
+            
+            // Set highest z-index
+            let maxZ = 200;
+            for (const id in openWindows) {
+                const zIndex = parseInt(openWindows[id].element.style.zIndex) || 200;
+                if (zIndex > maxZ) maxZ = zIndex;
+            }
+            windowData.element.style.zIndex = maxZ + 1;
+            activeWindowId = windowId;
+        }
+        
+        // FIXED DRAG IMPLEMENTATION
+        function makeWindowDraggable(windowEl, header) {
+            let isDragging = false;
+            let offsetX, offsetY;
+            
+            // Start dragging
+            header.addEventListener('mousedown', (e) => {
+                // Only drag if not clicking on controls
+                if (e.target.closest('.window-controls')) return;
+                
+                isDragging = true;
+                // Calculate offset from mouse to window top-left
+                offsetX = e.clientX - windowEl.getBoundingClientRect().left;
+                offsetY = e.clientY - windowEl.getBoundingClientRect().top;
+                
+                // Bring to front
+                bringWindowToFront(windowEl.dataset.windowId);
+                
+                // Prevent text selection during drag
+                e.preventDefault();
+            });
+            
+            // Handle dragging
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging || openWindows[windowEl.dataset.windowId].maximized) return;
+                
+                const x = e.clientX - offsetX;
+                const y = e.clientY - offsetY;
+                
+                // Keep window within viewport bounds
+                const maxX = window.innerWidth - windowEl.offsetWidth;
+                const maxY = window.innerHeight - windowEl.offsetHeight;
+                
+                windowEl.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+                windowEl.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
+            });
+            
+            // Stop dragging
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+            
+            // Also stop dragging if mouse leaves window (safety)
+            document.addEventListener('mouseleave', () => {
+                isDragging = false;
+            });
+        }
+        
+        // Add event listeners to app items
+        document.querySelectorAll('[data-app]').forEach(item => {
+            item.addEventListener('click', function() {
+                const appId = this.getAttribute('data-app');
+                createAppWindow(appId);
+            });
+            
+            // Add click effect
+            item.addEventListener('mousedown', function() {
+                this.style.transform = 'scale(0.95)';
+            });
+            
+            item.addEventListener('mouseup', function() {
+                this.style.transform = '';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+            });
+        });
+    </script>
+</body>
+</html>
+
