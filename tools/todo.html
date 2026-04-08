@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事项与产出管理器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 15px;
+            padding-top: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 18px 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        header h1 {
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .add-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 18px;
+        }
+        
+        .add-btn:hover {
+            background: #27ae60;
+            transform: scale(1.1);
+        }
+        
+        header p {
+            opacity: 0.85;
+            font-size: 14px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 50%;
+            margin-top: 12px;
+        }
+        
+        .search-section {
+            padding: 12px 20px;
+            background: #f8f9fa;
+            display: flex;
+            gap: 8px;
+        }
+        
+        #search-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d1d8e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        #search-input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        #clear-search {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 13px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            color: #3498db;
+            font-weight: 700;
+        }
+        
+        .todos-container {
+            padding: 0 20px 15px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .todos-list {
+            list-style: none;
+            margin-top: 12px;
+        }
+        
+        .todo-item {
+            background: white;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            border-left: 3px solid #3498db;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 14px;
+        }
+        
+        .todo-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .todo-content {
+            margin-bottom: 8px;
+        }
+        
+        .todo-content p {
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .todo-output {
+            margin-top: 6px;
+        }
+        
+        .todo-output p {
+            color: #27ae60;
+            line-height: 1.4;
+            font-style: italic;
+        }
+        
+        .todo-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .complete-btn {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .complete-btn:hover {
+            background: #27ae60;
+        }
+        
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px 10px;
+            color: #7f8c8d;
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #bdc3c7;
+        }
+        
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        
+        .completed {
+            opacity: 0.75;
+            border-left-color: #2ecc71;
+        }
+        
+        .completed .todo-content p {
+            text-decoration: line-through;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: #2ecc71;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 6px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            transform: translateX(200%);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+            font-size: 14px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .storage-warning {
+            background: #f1c40f;
+            color: #2c3e50;
+            text-align: center;
+            padding: 6px;
+            font-size: 12px;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-header h2 {
+            color: #2c3e50;
+            font-size: 20px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #7f8c8d;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        
+        .close-modal:hover {
+            background: #f5f6fa;
+            color: #2c3e50;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 16px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d8e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        
+        .input-field:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+        
+        .btn-secondary:hover {
+            background: #d5dbdb;
+        }
+        
+        /* Scrollbar styling */
+        .todos-container::-webkit-scrollbar,
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .todos-container::-webkit-scrollbar-track,
+        .modal-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .todos-container::-webkit-scrollbar-thumb,
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #bdc3c7;
+            border-radius: 3px;
+        }
+        
+        .todos-container::-webkit-scrollbar-thumb:hover,
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #95a5a6;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                padding-top: 15px;
+            }
+            
+            .container {
+                border-radius: 12px;
+            }
+            
+            header {
+                padding: 14px 16px;
+            }
+            
+            header h1 {
+                font-size: 20px;
+            }
+            
+            .search-section {
+                padding: 10px 16px;
+            }
+            
+            .stats {
+                padding: 8px 0;
+                font-size: 12px;
+            }
+            
+            .stat-value {
+                font-size: 16px;
+            }
+            
+            .todo-item {
+                padding: 12px;
+                font-size: 13px;
+            }
+            
+            .action-btn {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-tasks"></i> 事项与产出管理器</h1>
+            <button class="add-btn" id="open-modal">
+                <i class="fas fa-plus"></i>
+            </button>
+            <p>记录待办事项及其预期产出</p>
+        </header>
+        
+        <div class="storage-warning" id="storage-warning" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i> 浏览器存储受限，数据可能无法持久保存
+        </div>
+        
+        <div class="search-section">
+            <input type="text" id="search-input" class="input-field" placeholder="搜索事项内容或产出...">
+            <button id="clear-search" class="btn-secondary">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="total-count">0</div>
+                <div>总计</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="completed-count">0</div>
+                <div>已完成</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="pending-count">0</div>
+                <div>待完成</div>
+            </div>
+        </div>
+        
+        <div class="todos-container">
+            <ul class="todos-list" id="todos-list">
+                <!-- Todo items will be added here dynamically -->
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Modal for adding new todo -->
+    <div class="modal" id="todo-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>添加新事项</h2>
+                <button class="close-modal" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="modal-todo-content"><i class="fas fa-pencil-alt"></i> 事项内容</label>
+                    <input type="text" id="modal-todo-content" class="input-field" placeholder="输入待办事项内容...">
+                </div>
+                
+                <div class="input-group">
+                    <label for="modal-todo-output"><i class="fas fa-lightbulb"></i> 事项产出</label>
+                    <input type="text" id="modal-todo-output" class="input-field" placeholder="预期产出/成果...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-modal">取消</button>
+                <button class="btn btn-primary" id="save-todo">保存事项</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">数据已保存</div>
+
+    <script>
+        // DOM元素获取
+        const openModalBtn = document.getElementById('open-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const cancelModalBtn = document.getElementById('cancel-modal');
+        const saveTodoBtn = document.getElementById('save-todo');
+        const todoModal = document.getElementById('todo-modal');
+        const todoContentInput = document.getElementById('modal-todo-content');
+        const todoOutputInput = document.getElementById('modal-todo-output');
+        const todosList = document.getElementById('todos-list');
+        const totalCountEl = document.getElementById('total-count');
+        const completedCountEl = document.getElementById('completed-count');
+        const pendingCountEl = document.getElementById('pending-count');
+        const searchInput = document.getElementById('search-input');
+        const clearSearchBtn = document.getElementById('clear-search');
+        const notification = document.getElementById('notification');
+        const storageWarning = document.getElementById('storage-warning');
+        
+        // 检测存储是否可用
+        let storageAvailable = false;
+        let todos = [];
+        
+        // 尝试检测存储可用性
+        function checkStorageAvailability() {
+            try {
+                const testKey = '__storage_test__';
+                localStorage.setItem(testKey, testKey);
+                localStorage.removeItem(testKey);
+                storageAvailable = true;
+                return true;
+            } catch (e) {
+                storageAvailable = false;
+                return false;
+            }
+        }
+        
+        // 初始化应用
+        function init() {
+            // 检查存储是否可用
+            if (!checkStorageAvailability()) {
+                storageWarning.style.display = 'block';
+                // 初始化空数组
+                todos = [];
+            } else {
+                // 从存储加载数据
+                loadFromStorage();
+            }
+            
+            renderTodos();
+            updateStats();
+            
+            // Modal事件监听
+            openModalBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            cancelModalBtn.addEventListener('click', closeModal);
+            saveTodoBtn.addEventListener('click', addTodo);
+            
+            // 搜索功能
+            searchInput.addEventListener('input', handleSearch);
+            clearSearchBtn.addEventListener('click', clearSearch);
+            
+            // 键盘事件
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && todoModal.classList.contains('show')) {
+                    closeModal();
+                }
+            });
+            
+            // 自动保存（如果存储可用）
+            if (storageAvailable) {
+                setInterval(saveToStorage, 30000); // 每30秒自动保存一次
+            }
+        }
+        
+        // 打开模态框
+        function openModal() {
+            todoContentInput.value = '';
+            todoOutputInput.value = '';
+            todoModal.classList.add('show');
+            todoContentInput.focus();
+        }
+        
+        // 关闭模态框
+        function closeModal() {
+            todoModal.classList.remove('show');
+        }
+        
+        // 添加新事项
+        function addTodo() {
+            const content = todoContentInput.value.trim();
+            const output = todoOutputInput.value.trim();
+            
+            if (content === '' || output === '') {
+                showNotification('请填写事项内容和事项产出！', '#e74c3c');
+                return;
+            }
+            
+            const newTodo = {
+                id: Date.now(),
+                content,
+                output,
+                completed: false,
+                timestamp: new Date().toISOString()
+            };
+            
+            todos.push(newTodo);
+            if (storageAvailable) {
+                saveToStorage();
+                showNotification('事项已添加并保存');
+            } else {
+                showNotification('事项已添加（无法保存到存储）', '#f39c12');
+            }
+            
+            renderTodos();
+            updateStats();
+            closeModal();
+        }
+        
+        // 渲染事项列表
+        function renderTodos() {
+            const todosToRender = filteredTodos.length > 0 ? filteredTodos : todos;
+            
+            if (todosToRender.length === 0) {
+                todosList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>暂无事项</h3>
+                        <p>${searchInput.value ? '没有找到匹配的事项' : '点击右上角+号添加第一个事项'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            todosList.innerHTML = '';
+            todosToRender.forEach(todo => {
+                const todoElement = document.createElement('li');
+                todoElement.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+                todoElement.innerHTML = `
+                    <div class="todo-content">
+                        <p>${todo.content}</p>
+                    </div>
+                    <div class="todo-output">
+                        <p>产出: ${todo.output}</p>
+                    </div>
+                    <div class="todo-actions">
+                        <button class="action-btn complete-btn" data-id="${todo.id}">
+                            <i class="fas ${todo.completed ? 'fa-undo' : 'fa-check'}"></i>
+                        </button>
+                        <button class="action-btn delete-btn" data-id="${todo.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                todosList.appendChild(todoElement);
+            });
+            
+            // 为按钮添加事件监听
+            document.querySelectorAll('.complete-btn').forEach(btn => {
+                btn.addEventListener('click', toggleComplete);
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', deleteTodo);
+            });
+        }
+        
+        // 切换完成状态
+        function toggleComplete(e) {
+            const id = parseInt(e.currentTarget.dataset.id);
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.completed = !todo.completed;
+                if (storageAvailable) {
+                    saveToStorage();
+                    showNotification('事项状态已更新');
+                } else {
+                    showNotification('事项状态已更新（无法保存到存储）', '#f39c12');
+                }
+                renderTodos();
+                updateStats();
+            }
+        }
+        
+        // 删除事项
+        function deleteTodo(e) {
+            const id = parseInt(e.currentTarget.dataset.id);
+            todos = todos.filter(t => t.id !== id);
+            if (storageAvailable) {
+                saveToStorage();
+                showNotification('事项已删除');
+            } else {
+                showNotification('事项已删除（无法保存到存储）', '#f39c12');
+            }
+            renderTodos();
+            updateStats();
+        }
+        
+        // 更新统计信息
+        function updateStats() {
+            const total = todos.length;
+            const completed = todos.filter(t => t.completed).length;
+            const pending = total - completed;
+            
+            totalCountEl.textContent = total;
+            completedCountEl.textContent = completed;
+            pendingCountEl.textContent = pending;
+        }
+        
+        // 保存到存储（安全方式）
+        function saveToStorage() {
+            if (!storageAvailable) return;
+            
+            try {
+                localStorage.setItem('todos', JSON.stringify(todos));
+            } catch (e) {
+                console.error('保存失败:', e);
+                storageAvailable = false;
+                storageWarning.style.display = 'block';
+                showNotification('存储空间不足，请清理浏览器数据', '#e74c3c');
+            }
+        }
+        
+        // 从存储加载数据（安全方式）
+        function loadFromStorage() {
+            if (!storageAvailable) return;
+            
+            try {
+                const stored = localStorage.getItem('todos');
+                if (stored) {
+                    todos = JSON.parse(stored);
+                } else {
+                    todos = [];
+                }
+            } catch (e) {
+                console.error('加载失败:', e);
+                todos = [];
+            }
+        }
+        
+        // 搜索功能
+        function handleSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            if (searchTerm === '') {
+                filteredTodos = [...todos];
+            } else {
+                filteredTodos = todos.filter(todo => 
+                    todo.content.toLowerCase().includes(searchTerm) || 
+                    todo.output.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            renderTodos();
+        }
+        
+        // 清除搜索
+        function clearSearch() {
+            searchInput.value = '';
+            filteredTodos = [...todos];
+            renderTodos();
+        }
+        
+        // 显示通知
+        function showNotification(message, bgColor = '#2ecc71') {
+            notification.textContent = message;
+            notification.style.backgroundColor = bgColor;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 全局变量用于搜索
+        let filteredTodos = [];
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            if (storageAvailable) {
+                showNotification('数据已加载');
+            }
+        });
+        
+        // 在页面卸载前保存数据（如果存储可用）
+        if (storageAvailable) {
+            window.addEventListener('beforeunload', saveToStorage);
+        }
+    </script>
+</body>
+</html>
